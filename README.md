@@ -10,13 +10,19 @@ Casual users interested in seeing address data may find the hosted version at ht
 If you are indeed interested in the backend, e.g. to see usage of libosmium in a bigger project, you have come to the right place. This software will take OSM data (XML or PBF; planet file or parts of it) data as input and produce a SpatiaLite file as output. The output format is easily changeable due to GDAL/OGR being utilized to hold and write data.
 
 A file can be processed like this:
+
     ./osmi planet-latest.osm.pbf
+
 By default a file called out.sqlite is written. If a second parameter is given, the name of the output file can be changed:
+
     ./osmi planet-latest.osm.pbf my-output-file.sqlite
+
 An existing file will not be overwritten, the program will be aborted instead.
 
 To improve overall calculation speed, spatial indices are not calculated while writing the SpatiaLite file. Instead you are supposed to call
+
     ./create_spatial_indices.sh out.sqlite
+
 to add them afterwards. 
 
 The software was tested on Ubuntu but probably runs under other Unix variants (incl. Mac OS X) as well.
@@ -27,9 +33,11 @@ The software was tested on Ubuntu but probably runs under other Unix variants (i
 You will need a C++11 compiler and libosmium to compile the software. libosmium itself comes with a list of prerequisites, which you can find at https://github.com/osmcode/libosmium#prerequisites.
 
 Compile using GCC:
+
     make
 
 Or compile using clang:
+
     CXX=clang++ make
 
 The compiled executable osmi is a standalone application and needs no installation.
