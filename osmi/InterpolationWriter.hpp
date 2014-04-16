@@ -88,7 +88,7 @@ public:
 						first_node_housenumber.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
 						 last_node_housenumber.length() != floor(log10(last) )+1    //
 					) {
-					feature->SetField("error", "endpoint hast wrong format");
+					feature->SetField("error", "endpoint has wrong format");
 				} else 	if (abs(first-last) > 1000) {
 					feature->SetField("error", "range too large");
 				} else if (((!strcmp(interpolation,"even") || !strcmp(interpolation,"odd")) && abs(first-last)==2) ||
