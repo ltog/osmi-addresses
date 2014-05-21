@@ -1,7 +1,12 @@
 #ifndef CONNECTIONLINEPREPROCESSOR_HPP_
 #define CONNECTIONLINEPREPROCESSOR_HPP_
 
+#include <math.h> 
+
 #define DUMMY_ID 0
+#define MAXDIST 0.06
+#define PI 3.14159265358979323846
+#define DEG2RAD(DEG) ((DEG)*((PI)/(180.0)))
 
 #include "NearestPointsWriter.hpp"
 #include "NearestRoadsWriter.hpp"
@@ -92,13 +97,14 @@ private:
 		double min_dist = std::numeric_limits<double>::max();
 		double dist;
 		bool assigned = false;
+		float corrected = MAXDIST / cos(DEG2RAD(ogr_point.getY()));
 
 		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair;
 		name2highw_it_pair = mp_name2highways.equal_range(std::string(addrstreet));
 
 		for (name2highways_type::iterator it = name2highw_it_pair.first; it!=name2highw_it_pair.second; ++it) {
-			if (fabs(static_cast<float>(it->second.lat - ogr_point.getY())) < 0.02 &&
-				fabs(static_cast<float>(it->second.lon - ogr_point.getX())) < 0.02    ) {
+			if (fabs(static_cast<float>(it->second.lat - ogr_point.getY())) < MAXDIST &&
+				fabs(static_cast<float>(it->second.lon - ogr_point.getX())) < corrected ) {
 
 				OGRLineString linestring = *(static_cast<OGRLineString*>(it->second.compr_way.get()->uncompress().get()->clone()));
 				dist = linestring.Distance(&ogr_point);
