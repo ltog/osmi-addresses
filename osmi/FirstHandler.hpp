@@ -45,6 +45,8 @@ public:
 				const char* name    = way.tags().get_value_by_key("name");
 				if (highway && name){
 
+					// FIXME - if the geometry of this way is weird OR the way is very long,
+					// it should be split up for more accurate results later.
 					highway_lookup_type mylookup;
 
 					mylookup.way_id    = way.id();
