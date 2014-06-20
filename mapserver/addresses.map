@@ -2,12 +2,12 @@
 # THIS FILE HAS BEEN GENERATED AUTOMATICALLY. DO NOT EDIT!
 #----------------------------------------------------------
 MAP
-    NAME geofabrik_tools_osminspector_addrx
+    NAME geofabrik_tools_osminspector_addresses
     EXTENT -90 -180 90 180
     FONTSET "../fontset"
     SYMBOLSET "../symbolset"
     CONFIG PROJ_LIB "/srv/tools/svn-tools/osm-inspector/proj/"
-    CONFIG MS_ERRORFILE "/var/log/mapserver/addrx.log"
+    CONFIG MS_ERRORFILE "/var/log/mapserver/addresses.log"
     DEBUG 3
     SHAPEPATH "/srv/tools/shapes"
 
@@ -23,10 +23,10 @@ MAP
 
     WEB
         METADATA
-            OWS_NAME geofabrik_tools_osminspector_addrx
+            OWS_NAME geofabrik_tools_osminspector_addresses
             OWS_TITLE "Geofabrik Tools: OSM Inspector (Addresses)"
             OWS_ABSTRACT "OSM Inspector is a debugging tool for OpenStreetMap data."
-            OWS_ONLINERESOURCE "http://tools.geofabrik.de/osmi/views/addrx/wxs?"
+            OWS_ONLINERESOURCE "http://tools.geofabrik.de/osmi/views/addresses/wxs?"
             OWS_SERVER_VERSION "1.1.1"
             OWS_SRS "EPSG:4326 EPSG:900913"
             OWS_ATTRIBUTION_TITLE "Geofabrik GmbH/OpenStreetMap Contributors"
@@ -137,7 +137,7 @@ MAP
 #    END
 
     #-------------------------------------------------------------------
-	#CONFIG "MS_ERRORFILE" "/raid0/sqlite/debug.txt"
+	#CONFIG "MS_ERRORFILE" "/srv/tools/sqlite/debug.txt"
   	#DEBUG 5
 #   LAYER
 #       NAME uncovered_area
@@ -186,9 +186,9 @@ MAP
         TYPE LINE
         STATUS ON
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_nearest_roads.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_nearest_roads.shp"
         TILEITEM "LOCATION"
-        TEMPLATE "/srv/tools/views/addrx/nearest_roads-template.html"
+        TEMPLATE "/srv/tools/views/addresses/nearest_roads-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -234,10 +234,10 @@ MAP
         TYPE LINE
         STATUS ON
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_connection_line.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_connection_line.shp"
         TILEITEM "LOCATION"
 	#    POSTGIS osmi_addresses_connection_line
-        TEMPLATE "/srv/tools/views/addrx/connection_lines-template.html"
+        TEMPLATE "/srv/tools/views/addresses/connection_lines-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -267,9 +267,9 @@ MAP
         TYPE POINT
         STATUS ON
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_nearest_points.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_nearest_points.shp"
         TILEITEM "LOCATION"
-        TEMPLATE "/srv/tools/views/addrx/nearest_points-template.html"
+        TEMPLATE "/srv/tools/views/addresses/nearest_points-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -301,9 +301,9 @@ MAP
         TYPE LINE
         STATUS ON
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_interpolation.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_interpolation.shp"
         TILEITEM "LOCATION"
-        TEMPLATE "/srv/tools/views/addrx/interpolation-template.html"
+        TEMPLATE "/srv/tools/views/addresses/interpolation-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -362,7 +362,7 @@ MAP
 	END
 
 #	    POSTGIS osmi_addresses_buildings
-        TEMPLATE "/srv/tools/views/addrx/buildings-template.html"
+        TEMPLATE "/srv/tools/views/addresses/buildings-template.html"
         DUMP true
         METADATA
             OWS_NAME buildings
@@ -392,11 +392,11 @@ MAP
         STATUS ON
 	#    POSTGIS osmi_addresses_ways_with_addresses
 	CONNECTIONTYPE OGR
-	#CONNECTION "/raid0/sqlite/europe-neu.sqlite"
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_ways_with_addresses.shp"
+	#CONNECTION "/srv/tools/sqlite/europe-neu.sqlite"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_ways_with_addresses.shp"
         TILEITEM "LOCATION"
 	#DATA "osmi_addresses_ways_with_addresses"
-        TEMPLATE "/srv/tools/views/addrx/buildings_with_addresses-template.html"
+        TEMPLATE "/srv/tools/views/addresses/buildings_with_addresses-template.html"
         DUMP true
         METADATA
             OWS_NAME buildings_with_addresses
@@ -433,14 +433,107 @@ MAP
 
     #-------------------------------------------------------------------
     LAYER
+        NAME nodes_with_addresses_interpolated
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTIONTYPE OGR
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
+        TILEITEM "LOCATION"
+	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=1"
+        TEMPLATE "/srv/tools/views/addresses/nodes_with_addresses_interpolated-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nodes_with_addresses_interpolated
+            OWS_TITLE "Nodes with interpolated addresses"
+            OWS_ABSTRACT "Virtual nodes with addresses computed from interpolation lines and their endpoints. These nodes are not in the OSM database."
+            OWS_KEYWORDLIST "datasrc=OSM,min=17,max=22,label=house number,labelmin=22,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 5000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 2500
+        LABELMINSCALEDENOM 1
+        LABELITEM "houseno"
+        FILTER ([is_ip]=1)
+        CLASS
+            NAME "Nodes with addresses"
+            STYLE
+                SYMBOL "circle"
+                SIZE 6
+                COLOR 100 100 100
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 0 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME nodes_with_addresses_defined
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTIONTYPE OGR
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
+        TILEITEM "LOCATION"
+	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=0 and node_id is not null"
+        TEMPLATE "/srv/tools/views/addresses/nodes_with_addresses_defined-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nodes_with_addresses_defined
+            OWS_TITLE "Nodes with defined addresses"
+            OWS_ABSTRACT "Nodes with addresses."
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=house number,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "houseno"
+        # Filter out interpolated nodes and centroid nodes of building polygons
+        FILTER ([is_ip]=0 AND [node_id] is not null)
+        #FILTER ([is_ip]=0)
+        CLASS
+            NAME "Nodes with defined addresses"
+            STYLE
+                SYMBOL "circle"
+                SIZE 6
+                COLOR 0 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 0 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+            END
+        END
+    END
+    LAYER
         NAME postal_code
         TYPE LINE
         STATUS ON
 	#    POSTGIS osmi_addresses_ways_with_postal_code
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_ways_with_postal_code.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_ways_with_postal_code.shp"
         TILEITEM "LOCATION"
-        TEMPLATE "/srv/tools/views/addrx/postal_code-template.html"
+        TEMPLATE "/srv/tools/views/addresses/postal_code-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -485,9 +578,9 @@ MAP
         STATUS ON
 	#    POSTGIS osmi_addresses_interpolation
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_interpolation.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_interpolation.shp"
         TILEITEM "LOCATION"
-        TEMPLATE "/srv/tools/views/addrx/interpolation_errors-template.html"
+        TEMPLATE "/srv/tools/views/addresses/interpolation_errors-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -530,9 +623,9 @@ MAP
         TYPE POINT
         STATUS ON
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
         TILEITEM "LOCATION"
-        TEMPLATE "/srv/tools/views/addrx/no_addr_street-template.html"
+        TEMPLATE "/srv/tools/views/addresses/no_addr_street-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -549,7 +642,7 @@ MAP
         LABELMAXSCALEDENOM 12500
         LABELMINSCALEDENOM 1
         LABELITEM "street"
-        FILTER (([is_ip]=0) AND ("[street]" = ''))
+        FILTER (([is_ip]=0) AND ("[street]" = '') AND ("[fulladdr]" = ''))
         CLASS
             NAME "Nodes with defined addresses but no addr:street tag"
             STYLE
@@ -576,10 +669,10 @@ MAP
         STATUS ON
 	#    POSTGIS osmi_addresses_nodes_with_addresses
 	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
+	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
         TILEITEM "LOCATION"
 	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
-        TEMPLATE "/srv/tools/views/addrx/street_not_found-template.html"
+        TEMPLATE "/srv/tools/views/addresses/street_not_found-template.html"
         DUMP true
         TOLERANCE 5
         METADATA
@@ -618,98 +711,52 @@ MAP
     END
 
     #-------------------------------------------------------------------
-    LAYER
-        NAME nodes_with_addresses_interpolated
-        TYPE POINT
-        STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
-        TILEITEM "LOCATION"
-	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=1"
-        TEMPLATE "/srv/tools/views/addrx/nodes_with_addresses_interpolated-template.html"
-        DUMP true
-        TOLERANCE 5
-        METADATA
-            OWS_NAME nodes_with_addresses_interpolated
-            OWS_TITLE "Nodes with interpolated addresses"
-            OWS_ABSTRACT "Virtual nodes with addresses computed from interpolation lines and their endpoints. These nodes are not in the OSM database."
-            OWS_KEYWORDLIST "datasrc=OSM,min=17,max=22,label=house number,labelmin=22,labelmax=22"
-            OWS_SRS "EPSG:4326 EPSG:900913"
-            GML_FEATUREID "ID"
-            GML_INCLUDE_ITEMS "all"
-        END
-        MAXSCALEDENOM 5000
-        MINSCALEDENOM 1
-        LABELMAXSCALEDENOM 2500
-        LABELMINSCALEDENOM 1
-        LABELITEM "houseno"
-        FILTER ([is_ip]=1)
-        CLASS
-            NAME "Nodes with addresses"
-            STYLE
-                SYMBOL "circle"
-                SIZE 6
-                COLOR 100 100 100
-                ANTIALIAS true
-            END
-            LABEL
-                SIZE 8
-                COLOR 0 0 0
-                OUTLINECOLOR 255 255 255
-                TYPE TRUETYPE
-                FONT "DejaVuSans,unifont"
-                OFFSET 0 0
-            END
-        END
-    END
 
-    #-------------------------------------------------------------------
     LAYER
-        NAME nodes_with_addresses_defined
-        TYPE POINT
-        STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTIONTYPE OGR
-	TILEINDEX "/raid0/sqlite/tileindex_osmi_addresses_nodes_with_addresses.shp"
-        TILEITEM "LOCATION"
-	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=0 and node_id is not null"
-        TEMPLATE "/srv/tools/views/addrx/nodes_with_addresses_defined-template.html"
-        DUMP true
-        TOLERANCE 5
-        METADATA
-            OWS_NAME nodes_with_addresses_defined
-            OWS_TITLE "Nodes with defined addresses"
-            OWS_ABSTRACT "Nodes with addresses."
-            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=house number,labelmin=16,labelmax=22"
-            OWS_SRS "EPSG:4326 EPSG:900913"
-            GML_FEATUREID "ID"
-            GML_INCLUDE_ITEMS "all"
+        NAME "sponsor_mask"
+        STATUS OFF
+        TYPE polygon
+        TRANSFORM ll
+        FEATURE
+            POINTS
+                440 -6   
+                5000 -6
+                5000 0
+                440 0
+                440 -6
+            END
         END
-        MAXSCALEDENOM 750000
-        MINSCALEDENOM 1
-        LABELMAXSCALEDENOM 12500
-        LABELMINSCALEDENOM 1
-        LABELITEM "houseno"
-        # Filter out interpolated nodes and centroid nodes of building polygons
-        #FILTER ([is_ip]=0 AND [node_id] is not null)
-        FILTER ([is_ip]=0)
+	CLASS
+	  STYLE
+	   COLOR "#88888801"
+	  END
+	END
+        UNITS PIXELS
+    END
+    LAYER
+        NAME "sponsor"
+        STATUS DEFAULT
+        TYPE annotation
+        TRANSFORM lr
+        MASK "sponsor_mask"
+        FEATURE
+            POINTS
+                -95 -6
+            END
+            TEXT "this view sponsored by Geotab"
+        END
         CLASS
-            NAME "Nodes with defined addresses"
-            STYLE
-                SYMBOL "circle"
-                SIZE 6
-                COLOR 0 0 0
-                ANTIALIAS true
-            END
             LABEL
-                SIZE 8
-                COLOR 0 0 0
-                OUTLINECOLOR 255 255 255
+                FONT "DejaVuSans"
                 TYPE TRUETYPE
-                FONT "DejaVuSans,unifont"
+                SIZE 8
+                BUFFER 1
+                COLOR 20 0 0
+                OUTLINECOLOR 255 255 255
+                FORCE TRUE
             END
         END
+        UNITS PIXELS
     END
 
 END
