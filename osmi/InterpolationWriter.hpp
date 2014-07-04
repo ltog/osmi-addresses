@@ -64,6 +64,9 @@ public:
 
 				unsigned int first;
 				unsigned int last;
+				std::string first_number;
+				std::string last_number;
+				bool correct_alphanumeric = false;
 
 				if (first_node_housenumber != "") {
 					feature->SetField("firstno", first_node_housenumber.c_str());
@@ -79,15 +82,38 @@ public:
 					last = 0;
 				}
 
+				if (!strcmp(interpolation, "alphabetic"))
+				{
+					if(!isalpha(first_node_housenumber[first_node_housenumber.length()-2]) && !isalpha(last_node_housenumber[last_node_housenumber.length()-2])){
+						if (isalpha(first_node_housenumber[first_node_housenumber.length()-1]) && isalpha(last_node_housenumber[last_node_housenumber.length()-1])) {
+							std::string firstnumber (first_node_housenumber.begin(), first_node_housenumber.end() - 1);
+							std::string lastnumber (last_node_housenumber.begin(), last_node_housenumber.end() - 1);
+							first_number = firstnumber;
+							last_number = lastnumber;
+							if (firstnumber == lastnumber) {
+								first = first_node_housenumber[first_node_housenumber.length() - 1];
+								last = last_node_housenumber[last_node_housenumber.length() - 1];
+								correct_alphanumeric = true;
+							} else {
+								correct_alphanumeric = false;
+								feature->SetField("error", "is alphanumeric but housenumber is not the same");
+							}
+						} else {
+							correct_alphanumeric = false;
+							feature->SetField("error", "is not alphanumeric");
+						}
+					}
+				}
 
-				if (!(!strcmp(interpolation,"all") || !strcmp(interpolation,"even") || !strcmp(interpolation,"odd"))) { // TODO: add support for 'alphabetic'
+
+				if (!(!strcmp(interpolation,"all") || !strcmp(interpolation,"even") || !strcmp(interpolation,"odd") || !strcmp(interpolation,"alphabetic"))) { // TODO: add support for 'alphabetic'
 					feature->SetField("error", "unknown interpolation type");
 				} else if (
-						first == 0 ||
+						(first == 0 ||
 						last  == 0 ||
 						first_node_housenumber.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
 						 last_node_housenumber.length() != floor(log10(last) )+1    //
-					) {
+					) && correct_alphanumeric != true) {
 					feature->SetField("error", "endpoint has wrong format");
 				} else 	if (abs(first-last) > 1000) {
 					feature->SetField("error", "range too large");
@@ -110,16 +136,21 @@ public:
 				} else if ( // no interpolation error
 						(!strcmp(interpolation, "all")) ||
 						(!strcmp(interpolation, "odd")) ||
-						(!strcmp(interpolation, "even")) ) {
+						(!strcmp(interpolation, "even")) ||
+						(correct_alphanumeric == 1)) {
 					double length = ogr_linestring.get()->get_Length();
 					int increment;
-					if (strcmp(interpolation, "all")) {
-						increment = 2;
+
+					if (strcmp(interpolation, "all") && strcmp(interpolation, "alphabetic")) {
+						increment = 2; // even , odd
 					} else {
-						increment = 1;
+						increment = 1; //all , alphabetic
 					}
+
 					double fraction;
 					unsigned int lower, upper;
+
+					
 					if (first < last) {
 						fraction = 1/static_cast<double>(last-first);
 						lower = first;
@@ -130,7 +161,7 @@ public:
 						lower = last;
 						upper = first;
 					}
-
+					
 					for (unsigned int nr=first+increment; nr<upper && nr>lower; nr+=increment) {
 						std::unique_ptr<OGRPoint> point (new OGRPoint);
 						if (increment > 0) {
@@ -140,16 +171,25 @@ public:
 						}
 
 						std::string road_id("");
+						std::string nrstr;
+						
+						if(strcmp(interpolation, "alphabetic")) {
+							nrstr = std::to_string(nr);
+						} else { // is alphabetic
+							// std::string strend = printf("%d", nr);
+							nrstr = first_number + static_cast<char>(nr);
+						}
 
-						m_clpp.process_interpolated_node(
+						m_clpp.process_interpolated_node( // osmi_addresses_connection_line 
 								*(point.get()),
 								road_id,
 								first_taglist.get_value_by_key(std::string("addr:street"))
 						);
-
-						m_nwa_writer.process_interpolated_node(
-								*(point.get()),
-								nr,
+						m_nwa_writer.process_interpolated_node( //osmi_addresses_nodes_with_addresses
+							*(point.get()),
+								nrstr,
+								//nr,
+								//std::to_string(nr),
 								first_taglist.get_value_by_key(std::string("addr:street")),
 								first_taglist.get_value_by_key(std::string("addr:postcode")),
 								first_taglist.get_value_by_key(std::string("addr:city")),
@@ -177,8 +217,8 @@ public:
 
 private:
 	GeometryHelper m_geometry_helper;
-	NodesWithAddressesWriter& m_nwa_writer;
-	ConnectionLinePreprocessor& m_clpp;
+	NodesWithAddressesWriter& m_nwa_writer; //osmi_addresses_nodes_with_addresses
+	ConnectionLinePreprocessor& m_clpp; //osmi_addresses_connection_line 
 
 };
 
