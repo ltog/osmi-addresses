@@ -1,12 +1,12 @@
-#ifndef NEARESTROADSWRITER_HPP_
-#define NEARESTROADSWRITER_HPP_
+#ifndef NEARESTAREASWRITER_HPP_
+#define NEARESTAREASWRITER_HPP_
 
-class NearestRoadsWriter : public Writer {
+class NearestAreasWriter : public Writer {
 
 public:
 
-	NearestRoadsWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_nearest_roads", USE_TRANSACTIONS, wkbLineString)  {
+	NearestAreasWriter(OGRDataSource* data_source) :
+		Writer(data_source, "osmi_addresses_nearest_areas", USE_TRANSACTIONS, wkbPolygon)  {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"way_id",     OFTString, NO_WIDTH});
@@ -16,16 +16,21 @@ public:
 		create_fields(field_configurations);
 	}
 
-	void write_road(
+	void write_area(
 			const std::unique_ptr<OGRLineString>&  way,
 			const osmium::unsigned_object_id_type& way_id,
-			const char*                            addrstreet,
+			const char*                            addrarea,
 			const std::string&                     lastchange) {
-		
+
 		if (written_ways.find(way_id) == written_ways.end()) {
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
-			feature->SetGeometry(way.get());
-			feature->SetField("name", addrstreet);
+			OGRPolygon polygon;
+			polygon.addRing(static_cast<OGRLinearRing*>(way.get()));
+			feature->SetGeometry(static_cast<OGRGeometry*>(&polygon));
+
+			// OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
+			// feature->SetGeometry(way.get());
+			feature->SetField("name", addrarea);
 			feature->SetField("way_id", static_cast<double>(way_id)); //TODO: closest_way_id is of type int64_t. is this ok?
 			feature->SetField("lastchange", lastchange.c_str());
 
@@ -54,4 +59,4 @@ private:
 
 
 
-#endif /* NEARESTROADSWRITER_HPP_ */
+#endif /* NEARESTAREASWRITER_HPP_ */

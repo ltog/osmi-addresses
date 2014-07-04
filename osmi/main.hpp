@@ -17,6 +17,7 @@ typedef std::set<osmium::unsigned_object_id_type> node_set;
 struct highway_lookup_type {
 	std::unique_ptr<CompressedWay> compr_way;
 	osmium::object_id_type         way_id;
+	bool                           area;
 	float                          lat, lon;
 	std::string                    lastchange;
 };

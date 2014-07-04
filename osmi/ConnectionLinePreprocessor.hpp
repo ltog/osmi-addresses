@@ -10,6 +10,7 @@
 
 #include "NearestPointsWriter.hpp"
 #include "NearestRoadsWriter.hpp"
+#include "NearestAreasWriter.hpp"
 #include "ConnectionLineWriter.hpp"
 #include "GeometryHelper.hpp"
 
@@ -21,6 +22,7 @@ public:
 	addrstreet(nullptr) {
 		mp_nearest_points_writer  = new NearestPointsWriter (data_source);
 		mp_nearest_roads_writer   = new NearestRoadsWriter  (data_source);
+		mp_nearest_areas_writer   = new NearestAreasWriter  (data_source);
 		mp_connection_line_writer = new ConnectionLineWriter(data_source);
 	}
 
@@ -28,6 +30,7 @@ public:
 		// those need to be explicitly to be deleted to perform the commit operations in their deconstructor
 		delete mp_nearest_points_writer;
 		delete mp_nearest_roads_writer;
+		delete mp_nearest_areas_writer;
 		delete mp_connection_line_writer;
 	}
 
@@ -71,8 +74,9 @@ private:
 		osmium::unsigned_object_id_type closest_way_id = 0; // wouldn't need an initialization, but gcc warns otherwise
 		int                             ind_closest_node;
 		std::string						lastchange;
+		bool area;
 
-		if(get_closest_way(ogr_point, closest_way, closest_way_id, lastchange)) {
+		if(get_closest_way(ogr_point, closest_way, area, closest_way_id, lastchange)) {
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get(), closest_point.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
@@ -80,7 +84,12 @@ private:
 
 			// TODO: could this be parallelized?
 			mp_nearest_points_writer->write_point(closest_point, closest_way_id);
-			mp_nearest_roads_writer->write_road(closest_way, closest_way_id, addrstreet, lastchange);
+			if (area) {
+				mp_nearest_areas_writer->write_area(closest_way, closest_way_id, addrstreet, lastchange);
+			} else {
+				mp_nearest_roads_writer->write_road(closest_way, closest_way_id, addrstreet, lastchange);
+			}
+
 			mp_connection_line_writer->write_line(ogr_point, closest_point, objectid, the_object_type);
 
 			road_id = "1"; // TODO: need to write the actual road_id
@@ -91,6 +100,7 @@ private:
 	bool get_closest_way(
 			const OGRPoint& ogr_point,
 			std::unique_ptr<OGRLineString>&  closest_way,
+			bool& is_area,
 			osmium::unsigned_object_id_type& closest_way_id,
 			std::string&                     lastchange) {
 
@@ -112,6 +122,7 @@ private:
 					closest_way.reset(static_cast<OGRLineString*>(linestring.clone()));
 					closest_way_id = it->second.way_id;
 					lastchange     = it->second.lastchange;
+               is_area = it->second.area;
 					min_dist = dist;
 					assigned = true;
 				}
@@ -221,6 +232,7 @@ private:
 	osmium::geom::OGRFactory m_factory {};
 	NearestPointsWriter*  mp_nearest_points_writer;
 	NearestRoadsWriter*   mp_nearest_roads_writer;
+	NearestAreasWriter*   mp_nearest_areas_writer;
 	ConnectionLineWriter* mp_connection_line_writer;
 	GeometryHelper m_geometry_helper;
 

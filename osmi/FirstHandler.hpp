@@ -52,6 +52,13 @@ public:
 					mylookup.way_id    = way.id();
 					mylookup.lat       = m_geometry_helper.get_lat_estimate(way);
 					mylookup.lon       = m_geometry_helper.get_lon_estimate(way);
+					const char* area = way.tags().get_value_by_key("area");
+					if (area && ( (!strcmp(area, "yes")) || (!strcmp(area, "true")) ) )
+					{
+						mylookup.area = true;
+					} else {
+						mylookup.area = false;
+					}
 					mylookup.compr_way = std::unique_ptr<CompressedWay>(new CompressedWay(m_factory.create_linestring(way)));
 
 					m_name2highways.insert(name2highways_element_type(std::string(name), std::move(mylookup)));

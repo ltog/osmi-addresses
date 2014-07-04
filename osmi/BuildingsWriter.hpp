@@ -45,5 +45,4 @@ public:
 	}
 };
 
-
 #endif /* BUILDINGSWRITER_HPP_ */

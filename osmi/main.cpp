@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 	std::cout << std::endl;
 	mem_helper.print_max();
 
-	std::cout << std::endl << "software finished properly" << std::endl << std::endl;
+	std::cout << "\nsoftware finished properly\n" << std::endl;
 	return 0;
 }
 
