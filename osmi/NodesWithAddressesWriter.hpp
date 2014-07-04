@@ -42,6 +42,8 @@ public:
 		const char* fulladdr   = node.tags().get_value_by_key("addr:full");
 		const char* place      = node.tags().get_value_by_key("addr:place");
 
+		
+		
 		if (addrstreet || houseno || postcode || city || country || fulladdr || place) {
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
@@ -117,7 +119,8 @@ public:
 
 	void process_interpolated_node(
 			OGRPoint& point,
-			const unsigned int houseno,
+			//const unsigned int houseno,
+			const std::string& houseno,
 			const std::string& street,
 			const std::string& postcode,
 			const std::string& city,
@@ -128,7 +131,8 @@ public:
 	) {
 		OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 		feature->SetGeometry(static_cast<OGRGeometry*>(&point));
-		feature->SetField("houseno" , static_cast<int>(houseno));
+		//feature->SetField("houseno" , static_cast<int>(houseno));
+		if (houseno.c_str())   { feature->SetField("houseno",   houseno.c_str());   }
 		feature->SetField("is_ip", IS_INTERPOLATION);
 		if (street.c_str())   { feature->SetField("street",   street.c_str());   }
 		if (postcode.c_str()) { feature->SetField("postcode", postcode.c_str()); }
