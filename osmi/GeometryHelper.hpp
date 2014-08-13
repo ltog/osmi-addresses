@@ -36,7 +36,7 @@ public:
 		int ret = polygon.Centroid(centroid.get());
 		if (ret != OGRERR_NONE) {
 			std::cerr << "Couldn't calculate centroid of way = " << way.id() << ".\n";
-			osmium::geom::geometry_error e(std::string("Couldn't calculate centroid of way = ") + std::to_string(way.id()) + std::string(".\n"));
+			osmium::geometry_error e(std::string("Couldn't calculate centroid of way = ") + std::to_string(way.id()) + std::string(".\n"));
 			throw e;
 			return nullptr;
 		} else {
@@ -107,7 +107,7 @@ private:
 	OGRCoordinateTransformation* m_wgs2mercator;
 	OGRCoordinateTransformation* m_mercator2wgs;
 
-	osmium::geom::OGRFactory m_factory;
+	osmium::geom::OGRFactory<> m_factory;
 };
 
 #endif /* GEOMETRYHELPER_HPP_ */

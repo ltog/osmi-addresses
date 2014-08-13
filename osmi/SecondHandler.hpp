@@ -14,7 +14,7 @@
 
 class SecondHandler: public osmium::handler::Handler{
 
-	osmium::geom::OGRFactory m_factory {};
+	osmium::geom::OGRFactory<> m_factory {};
 	OGRDataSource* m_data_source;
 
 public:
@@ -118,7 +118,7 @@ public:
 				connection_line_preprocessor->process_way(way, road_id);
 				nodes_with_addresses_writer->process_way(way, road_id);
 			}
-		} catch (osmium::geom::geometry_error&) {
+		} catch (osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
 		}
 	}
