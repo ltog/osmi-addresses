@@ -4,7 +4,7 @@
 #include "GeometryHelper.hpp"
 
 class FirstHandler : public osmium::handler::Handler {
-	osmium::geom::OGRFactory m_factory {};
+	osmium::geom::OGRFactory<> m_factory {};
 
 public:
 	FirstHandler(
@@ -64,7 +64,7 @@ public:
 					m_name2highways.insert(name2highways_element_type(std::string(name), std::move(mylookup)));
 				}
 			}
-		} catch (osmium::geom::geometry_error&) {
+		} catch (osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
 		}
 	}

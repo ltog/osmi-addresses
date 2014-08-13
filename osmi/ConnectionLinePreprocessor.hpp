@@ -213,7 +213,7 @@ private:
 	}
 
 
-	bool has_entry_in_name2highways(const osmium::Object& object) {
+	bool has_entry_in_name2highways(const osmium::OSMObject& object) {
 		return has_entry_in_name2highways(std::string(object.tags().get_value_by_key("addr:street")));
 	}
 
@@ -229,7 +229,7 @@ private:
 
 	name2highways_type& mp_name2highways;
 	const char* addrstreet;
-	osmium::geom::OGRFactory m_factory {};
+	osmium::geom::OGRFactory<> m_factory {};
 	NearestPointsWriter*  mp_nearest_points_writer;
 	NearestRoadsWriter*   mp_nearest_roads_writer;
 	NearestAreasWriter*   mp_nearest_areas_writer;

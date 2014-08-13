@@ -29,7 +29,7 @@ public:
 	virtual void feed_relation(const osmium::Relation&) = 0;
 
 protected:
-	osmium::geom::OGRFactory m_factory {};
+	osmium::geom::OGRFactory<> m_factory {};
 	std::string m_layer_name;
 	bool m_use_transaction;
 	OGRLayer* m_layer;
@@ -66,7 +66,7 @@ protected:
 		maybe_commit_transaction();
 	}
 
-	void catch_geometry_error(const osmium::geom::geometry_error& e, const osmium::Way& way) {
+	void catch_geometry_error(const osmium::geometry_error& e, const osmium::Way& way) {
 		std::cerr << "Ignoring illegal geometry for way with id = " << way.id() << " e.what() = " << e.what() << std::endl;
 	}
 
