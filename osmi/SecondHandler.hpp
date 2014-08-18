@@ -49,18 +49,29 @@ public:
 		OGRSpatialReference sparef;
 		sparef.SetWellKnownGeogCS("WGS84");
 
+		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(m_data_source));
+		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(m_data_source, mp_name2highways));
+		entrances_writer             = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter(m_data_source));
+
+		interpolation_writer         = std::unique_ptr<InterpolationWriter>     (new InterpolationWriter     (m_data_source, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
+		buildings_writer             = std::unique_ptr<BuildingsWriter>         (new BuildingsWriter         (m_data_source));
+		ways_with_addresses_writer   = std::unique_ptr<WaysWithAddressesWriter> (new WaysWithAddressesWriter (m_data_source));
+		ways_with_postal_code_writer = std::unique_ptr<WaysWithPostalCodeWriter>(new WaysWithPostalCodeWriter(m_data_source));
 	}
 
 
 	~SecondHandler(){
+		// call destructors to commit sqlite transactions
+		entrances_writer.reset();
+		interpolation_writer.reset();
+		buildings_writer.reset();
+		ways_with_addresses_writer.reset();
+		ways_with_postal_code_writer.reset();
+		nodes_with_addresses_writer.reset();
+		connection_line_preprocessor.reset();
+
 		OGRDataSource::DestroyDataSource(m_data_source);
 		OGRCleanupAll();
-	}
-
-	void before_nodes() {
-		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(m_data_source));
-		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(m_data_source, mp_name2highways));
-		entrances_writer             = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter(m_data_source));
 	}
 
 	void node(const osmium::Node& node) {
@@ -90,22 +101,6 @@ public:
 	}
 
 
-	void after_nodes() {
-		// call destructors to commit sqlite transactions
-		entrances_writer.reset();
-
-		std::cout << "node processing in SecondHandler finished" << std::endl;
-	}
-
-
-	void before_ways() {
-		interpolation_writer         = std::unique_ptr<InterpolationWriter>     (new InterpolationWriter     (m_data_source, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
-		buildings_writer             = std::unique_ptr<BuildingsWriter>         (new BuildingsWriter         (m_data_source));
-		ways_with_addresses_writer   = std::unique_ptr<WaysWithAddressesWriter> (new WaysWithAddressesWriter (m_data_source));
-		ways_with_postal_code_writer = std::unique_ptr<WaysWithPostalCodeWriter>(new WaysWithPostalCodeWriter(m_data_source));
-	}
-
-
 	void way(const osmium::Way& way) {
 		try {
 			if (m_geometry_helper.is_way_with_nonzero_length(way)) {
@@ -122,19 +117,6 @@ public:
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
 		}
 	}
-
-	void after_ways() {
-		// call destructors to commit sqlite transactions
-		interpolation_writer.reset();
-		buildings_writer.reset();
-		ways_with_addresses_writer.reset();
-		ways_with_postal_code_writer.reset();
-		nodes_with_addresses_writer.reset();
-		connection_line_preprocessor.reset();
-
-		std::cout << "way processing in SecondHandler finished" << std::endl;
-	}
-
 
 
 private:

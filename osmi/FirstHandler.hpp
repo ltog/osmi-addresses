@@ -19,11 +19,6 @@ public:
 
 	}
 
-	void after_nodes() {
-		std::cout << "node processing in FirstHandler finished" << std::endl;
-	}
-
-
 	void way(const osmium::Way& way) {
 
 		try {
@@ -67,10 +62,6 @@ public:
 		} catch (osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
 		}
-	}
-
-	void after_ways() {
-		std::cout << "way processing in FirstHandler finished" << std::endl;
 	}
 
 private:
