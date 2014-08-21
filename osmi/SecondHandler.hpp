@@ -25,8 +25,6 @@ public:
 	: mp_addr_interpolation_node_set(addr_interpolation_node_set),
 	  mp_name2highways(name2highways)
 	{
-		node_map_type m_addr_interpolation_node_map;
-
 		OGRRegisterAll();
 
 		const std::string driver_name = std::string("SQLite");
@@ -115,6 +113,8 @@ public:
 			}
 		} catch (osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
+		} catch (osmium::invalid_location&) {
+			std::cerr << "Ignoring dangling reference in way " << way.id() << std::endl;
 		}
 	}
 
