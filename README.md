@@ -13,7 +13,7 @@ A file can be processed like this:
 
     ./osmi planet-latest.osm.pbf
 
-By default a file called out.sqlite is written. If a second parameter is given, the name of the output file can be changed:
+By default a file called `out.sqlite` is written. If a second parameter is given, the name of the output file can be changed:
 
     ./osmi planet-latest.osm.pbf my-output-file.sqlite
 
