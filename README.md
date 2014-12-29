@@ -32,6 +32,10 @@ The software was tested on Ubuntu but probably runs under other Unix variants (i
 
 You will need a C++11 compiler and libosmium to compile the software. libosmium itself comes with a list of prerequisites, which you can find at https://github.com/osmcode/libosmium#prerequisites.
 
+On Ubuntu/Debian, you should be able to get all dependencies with:
+
+    sudo apt-get install libboost-program-options-dev libboost-dev libgdal1-dev libsparsehash-dev libbz2-dev libosmpbf-dev libexpat1-dev libgeos++-dev
+
 Compile using GCC:
 
     make
