@@ -34,7 +34,7 @@ You will need a C++11 compiler and libosmium to compile the software. libosmium 
 
 On Ubuntu/Debian, you should be able to get all dependencies with:
 
-    sudo apt-get install libboost-program-options-dev libboost-dev libgdal1-dev libsparsehash-dev libbz2-dev libosmpbf-dev libexpat1-dev libgeos++-dev sqlite3
+    sudo apt-get install libboost-program-options-dev libboost-dev libgdal1-dev libsparsehash-dev libbz2-dev libosmpbf-dev libexpat1-dev libgeos++-dev sqlite3 spatialite-bin
 
 Compile using GCC:
 
