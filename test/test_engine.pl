@@ -2,6 +2,7 @@
 use warnings;
 use strict;
 use Term::ANSIColor qw(:constants);
+$Term::ANSIColor::AUTORESET = 1; # doesn't seem to work
 
 my $file     = $ARGV[0];
 my $name     = $ARGV[1];
@@ -50,12 +51,12 @@ if ($op eq '=') {
 
 sub print_result {
 	if ($result eq $expected) {
-		print BOLD, GREEN, "PASS: ", RESET, "$name\n";
+		print BOLD, GREEN, "PASS: ", RESET, BRIGHT_BLACK, "$name\n", RESET;
 	} else {
-		print BOLD, RED, "FAIL: ", RESET, "$name: Expected '$expected', but result was '$result'\n";
+		print BOLD, RED, "FAIL: ", RESET, BOLD, "$name: Expected '$expected', but result was '$result'\n", RESET;
 	}
 }
 
 sub report_unknown_operator {
-	print BOLD, RED, "FAIL: ", RESET, "$name: unknown operator\n";
+	print BOLD, RED, "FAIL: ", RESET, "$name: unknown operator\n", RESET;
 }
