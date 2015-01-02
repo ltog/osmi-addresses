@@ -36,7 +36,7 @@ fi
 ./test_engine.pl $1 "No elements outside of bbox of osmi_addresses_buildings" "osmi_addresses_buildings;8.783;8.793;47.25;47.2544" "outofbbox" "0"
 ./test_engine.pl $1 "No elements outside of bbox of osmi_addresses_entrances" "osmi_addresses_entrances;8.783;8.793;47.25;47.2544" "outofbbox" "0"
 
-./test_engine.pl $1 "Number of 'endpoint has wrong format' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"range too large\";" "=" "1"
+./test_engine.pl $1 "Number of 'endpoint has wrong format' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"endpoint has wrong format\";" "=" "5"
 ./test_engine.pl $1 "Number of 'different tags on endpoints' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"different tags on endpoints\";" "=" "6"
 ./test_engine.pl $1 "Number of 'needless interpolation' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"needless interpolation\";" "=" "3"
 ./test_engine.pl $1 "Number of 'interpolation even but number odd' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"interpolation even but number odd\";" "=" "1"
