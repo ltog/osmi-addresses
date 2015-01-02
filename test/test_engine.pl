@@ -2,7 +2,6 @@
 use warnings;
 use strict;
 use Term::ANSIColor qw(:constants);
-use feature qw/switch/;
 
 my $file     = $ARGV[0];
 my $name     = $ARGV[1];
