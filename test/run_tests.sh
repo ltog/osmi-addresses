@@ -21,7 +21,7 @@ fi
 
 ./test_engine.pl $1 "Total number of entries in osmi_addresses_ways_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_ways_with_addresses" "=" "29"
 
-./test_engine.pl $1 "Total number of entries in osmi_addresses_buildings" "SELECT COUNT(*) FROM osmi_addresses_buildings" "=" "34"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_buildings" "SELECT COUNT(*) FROM osmi_addresses_buildings" "=" "0"
 
 ./test_engine.pl $1 "Total number of entries in osmi_addresses_entrances" "SELECT COUNT(*) FROM osmi_addresses_entrances" "=" "6"
 
