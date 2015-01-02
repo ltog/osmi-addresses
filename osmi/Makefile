@@ -1,5 +1,5 @@
-CXXFLAGS += -O3
-CXXFLAGS += -g
+CXXFLAGS += -O3 # optimize heavily
+#CXXFLAGS += -g  # include debug information
 CXXFLAGS += -std=c++11 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 
 OS:=$(shell uname -s)
