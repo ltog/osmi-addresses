@@ -8,16 +8,16 @@ fi
 # template:
 #./test_engine.pl $1 "" "" "=" ""
 
-./test_engine.pl $1 "Total number of entries in osmi_addresses_connection_line" "SELECT COUNT(*) FROM osmi_addresses_connection_line" "=" "80"
-./test_engine.pl $1 "Total number of entries in osmi_addresses_nearest_points"  "SELECT COUNT(*) FROM osmi_addresses_nearest_points"  "=" "80"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_connection_line" "SELECT COUNT(*) FROM osmi_addresses_connection_line" "=" "82"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_nearest_points"  "SELECT COUNT(*) FROM osmi_addresses_nearest_points"  "=" "82"
 ./test_engine.pl $1 "Total number of entries in osmi_addresses_nearest_roads"   "SELECT COUNT(*) FROM osmi_addresses_nearest_roads"   "=" "5"
 
 ./test_engine.pl $1 "Total number of entries in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation" "=" "24"
 
-./test_engine.pl $1 "Total number of entries in osmi_addresses_nodes_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses" "=" "94"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_nodes_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses" "=" "96"
 ./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with is_ip=false" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE is_ip=0" "=" "80"
-./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with is_ip=true" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE is_ip=1" "=" "14"
-./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with road_id not null" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE road_id IS NOT NULL" "=" "80"
+./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with is_ip=true" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE is_ip=1" "=" "16"
+./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with road_id not null" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE road_id IS NOT NULL" "=" "82"
 
 ./test_engine.pl $1 "Total number of entries in osmi_addresses_ways_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_ways_with_addresses" "=" "29"
 
@@ -42,7 +42,7 @@ fi
 ./test_engine.pl $1 "Number of 'interpolation even but number odd' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"interpolation even but number odd\";" "=" "1"
 ./test_engine.pl $1 "Number of 'interpolation odd but number even' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"interpolation odd but number even\";" "=" "1"
 ./test_engine.pl $1 "Number of 'range too large' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"range too large\";" "=" "1"
-./test_engine.pl $1 "Number of 'unknown interpolation type' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"unknown interpolation type\";" "=" "5"
+./test_engine.pl $1 "Number of 'unknown interpolation type' errors in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation WHERE error=\"unknown interpolation type\";" "=" "2"
 
 ./test_engine.pl $1 "Correct location of Karlsruher Strasse 8" "osmi_addresses_nodes_with_addresses;8.784524590652961;8.784524590652963;47.25353605657822;47.25353605657824" "inbbox" "1"
 
