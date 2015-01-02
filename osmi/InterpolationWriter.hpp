@@ -66,7 +66,7 @@ public:
 				unsigned int last;
 				std::string first_number;
 				std::string last_number;
-				bool correct_alphanumeric = false;
+				bool is_alphanumeric_correct = false;
 
 				if (first_node_housenumber != "") {
 					feature->SetField("firstno", first_node_housenumber.c_str());
@@ -82,48 +82,60 @@ public:
 					last = 0;
 				}
 
-				if (!strcmp(interpolation, "alphabetic"))
-				{
-					if(!isalpha(first_node_housenumber[first_node_housenumber.length()-2]) && !isalpha(last_node_housenumber[last_node_housenumber.length()-2])){
-						if (isalpha(first_node_housenumber[first_node_housenumber.length()-1]) && isalpha(last_node_housenumber[last_node_housenumber.length()-1])) {
-							std::string firstnumber (first_node_housenumber.begin(), first_node_housenumber.end() - 1);
-							std::string lastnumber (last_node_housenumber.begin(), last_node_housenumber.end() - 1);
-							first_number = firstnumber;
-							last_number = lastnumber;
-							if (firstnumber == lastnumber) {
-								first = first_node_housenumber[first_node_housenumber.length() - 1];
-								last = last_node_housenumber[last_node_housenumber.length() - 1];
-								correct_alphanumeric = true;
-							} else {
-								correct_alphanumeric = false;
-								feature->SetField("error", "is alphanumeric but housenumber is not the same");
-							}
+				if (!strcmp(interpolation, "alphabetic") &&
+						!isalpha(first_node_housenumber[first_node_housenumber.length()-2]) &&
+						!isalpha(last_node_housenumber[last_node_housenumber.length()-2])){
+
+					if (isalpha(first_node_housenumber[first_node_housenumber.length()-1]) && isalpha(last_node_housenumber[last_node_housenumber.length()-1])) {
+						std::string firstnumber (first_node_housenumber.begin(), first_node_housenumber.end() - 1);
+						std::string lastnumber (last_node_housenumber.begin(), last_node_housenumber.end() - 1);
+						first_number = firstnumber;
+						last_number = lastnumber;
+						if (firstnumber == lastnumber) {
+							first = first_node_housenumber[first_node_housenumber.length() - 1];
+							last = last_node_housenumber[last_node_housenumber.length() - 1];
+							is_alphanumeric_correct = true;
 						} else {
-							correct_alphanumeric = false;
-							feature->SetField("error", "is not alphanumeric");
+							is_alphanumeric_correct = false;
+							feature->SetField("error", "is alphanumeric but housenumber is not the same");
 						}
+					} else {
+						is_alphanumeric_correct = false;
+						feature->SetField("error", "is not alphanumeric");
 					}
 				}
 
 
-				if (!(!strcmp(interpolation,"all") || !strcmp(interpolation,"even") || !strcmp(interpolation,"odd") || !strcmp(interpolation,"alphabetic"))) { // TODO: add support for 'alphabetic'
+				if (!(
+						!strcmp(interpolation, "all")  ||
+						!strcmp(interpolation, "even") ||
+						!strcmp(interpolation, "odd")  ||
+						!strcmp(interpolation, "alphabetic"))) {
+
 					feature->SetField("error", "unknown interpolation type");
+
 				} else if (
 						(first == 0 ||
-						last  == 0 ||
-						first_node_housenumber.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
-						 last_node_housenumber.length() != floor(log10(last) )+1    //
-					) && correct_alphanumeric != true) {
+						 last  == 0 ||
+						 first_node_housenumber.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
+						  last_node_housenumber.length() != floor(log10(last) )+1    //
+						)
+						&& is_alphanumeric_correct == false) {
 					feature->SetField("error", "endpoint has wrong format");
-				} else 	if (abs(first-last) > 1000) {
+
+				} else if (abs(first-last) > 1000) {
 					feature->SetField("error", "range too large");
+
 				} else if (((!strcmp(interpolation,"even") || !strcmp(interpolation,"odd")) && abs(first-last)==2) ||
 							(!strcmp(interpolation,"all")                                   && abs(first-last)==1) ) {
 					feature->SetField("error", "needless interpolation");
+
 				} else if (!strcmp(interpolation,"even") && ( first%2==1 || last%2==1 )) {
 					feature->SetField("error", "interpolation even but number odd");
+
 				} else if (!strcmp(interpolation,"odd") && ( first%2==0 || last%2==0 )) {
 					feature->SetField("error", "interpolation odd but number even");
+
 				} else if (
 					(first_taglist.get_value_by_key(std::string("addr:street"))   != last_taglist.get_value_by_key(std::string("addr:street")))   ||
 					(first_taglist.get_value_by_key(std::string("addr:postcode")) != last_taglist.get_value_by_key(std::string("addr:postcode"))) ||
@@ -133,11 +145,12 @@ public:
 					(first_taglist.get_value_by_key(std::string("addr:place"))    != last_taglist.get_value_by_key(std::string("addr:place"))) ) {
 
 					feature->SetField("error", "different tags on endpoints");
+
 				} else if ( // no interpolation error
 						(!strcmp(interpolation, "all")) ||
 						(!strcmp(interpolation, "odd")) ||
 						(!strcmp(interpolation, "even")) ||
-						(correct_alphanumeric == 1)) {
+						(is_alphanumeric_correct == 1)) {
 					double length = ogr_linestring.get()->get_Length();
 					int increment;
 
