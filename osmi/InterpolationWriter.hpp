@@ -65,55 +65,56 @@ public:
 				AltTagList last_taglist  =
 						m_addr_interpolation_node_map->get(last_node_id);
 
-				std::string first_node_housenumber =
+				// the raw expression given in the first addr:housenumber= entry
+				std::string first_raw =
 						first_taglist.get_value_by_key(std::string("addr:housenumber"));
-				std::string last_node_housenumber  =
+
+				// the raw expression given in the last addr:housenumber= entry
+				std::string last_raw  =
 						last_taglist.get_value_by_key(std::string("addr:housenumber"));
 
 				unsigned int first;
 				unsigned int last;
-				std::string first_number;
-				std::string last_number;
-				bool is_alphanumeric_correct = false;
+				std::string first_numeric; // the numeric part of the first housenumber
+				std::string last_numeric;  // the numeric part of the last housenumber
 
-				if (first_node_housenumber != "") {
-					feature->SetField("firstno", first_node_housenumber.c_str());
-					first = atoi(first_node_housenumber.c_str());
+				bool is_alphabetic_ip_correct = false;
+
+				if (first_raw != "") {
+					feature->SetField("firstno", first_raw.c_str());
+					first = atoi(first_raw.c_str());
 				} else {
 					first = 0;
 				}
 
-				if (last_node_housenumber != "") {
-					feature->SetField("lastno",  last_node_housenumber.c_str());
-					last  = atoi(last_node_housenumber.c_str());
+				if (last_raw != "") {
+					feature->SetField("lastno",  last_raw.c_str());
+					last  = atoi(last_raw.c_str());
 				} else {
 					last = 0;
 				}
 
 				if (!strcmp(interpolation, "alphabetic") &&
-						!isalpha(first_node_housenumber[first_node_housenumber.length()-2]) &&
-						!isalpha(last_node_housenumber[last_node_housenumber.length()-2])){
+						!isalpha(first_raw[first_raw.length()-2]) &&
+						!isalpha(last_raw[last_raw.length()-2])){
 
-					if (isalpha(first_node_housenumber[first_node_housenumber.length()-1])
-							&& isalpha(last_node_housenumber[last_node_housenumber.length()-1])) {
+					if (isalpha(first_raw[first_raw.length()-1])
+							&& isalpha(last_raw[last_raw.length()-1])) {
 
-						std::string firstnumber (first_node_housenumber.begin(), first_node_housenumber.end() - 1);
-						std::string lastnumber (last_node_housenumber.begin(), last_node_housenumber.end() - 1);
+						first_numeric = std::string(first_raw.begin(), first_raw.end() - 1);
+						last_numeric  = std::string(last_raw.begin(),  last_raw.end()  - 1);
 
-						first_number = firstnumber;
-						last_number = lastnumber;
-
-						if (firstnumber == lastnumber) {
-							first = first_node_housenumber[first_node_housenumber.length() - 1];
-							last = last_node_housenumber[last_node_housenumber.length() - 1];
-							is_alphanumeric_correct = true;
+						if (first_numeric == last_numeric) {
+							first = first_raw[first_raw.length() - 1];
+							last = last_raw[last_raw.length() - 1];
+							is_alphabetic_ip_correct = true;
 						} else {
-							is_alphanumeric_correct = false;
-							feature->SetField("error", "is alphanumeric but housenumber is not the same");
+							is_alphabetic_ip_correct = false;
+							feature->SetField("error", "numeric part of housenumbers not identical");
 						}
 
 					} else {
-						is_alphanumeric_correct = false;
+						is_alphabetic_ip_correct = false;
 						feature->SetField("error", "is not alphanumeric");
 					}
 				}
@@ -130,10 +131,10 @@ public:
 				} else if (
 						(first == 0 ||
 						 last  == 0 ||
-						 first_node_housenumber.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
-						  last_node_housenumber.length() != floor(log10(last) )+1    //
+						 first_raw.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
+						  last_raw.length() != floor(log10(last) )+1    //
 						)
-						&& is_alphanumeric_correct == false) {
+						&& is_alphabetic_ip_correct == false) {
 					feature->SetField("error", "endpoint has wrong format");
 
 				} else if (abs(first-last) > 1000) {
@@ -163,7 +164,7 @@ public:
 						(!strcmp(interpolation, "all")) ||
 						(!strcmp(interpolation, "odd")) ||
 						(!strcmp(interpolation, "even")) ||
-						(is_alphanumeric_correct == 1)) {
+						(is_alphabetic_ip_correct == true)) {
 					double length = ogr_linestring.get()->get_Length();
 					int increment;
 
@@ -203,7 +204,7 @@ public:
 							nrstr = std::to_string(nr);
 						} else { // is alphabetic
 							// std::string strend = printf("%d", nr);
-							nrstr = first_number + static_cast<char>(nr);
+							nrstr = first_numeric + static_cast<char>(nr);
 						}
 
 						m_clpp.process_interpolated_node( // osmi_addresses_connection_line 
