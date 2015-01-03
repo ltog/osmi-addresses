@@ -122,7 +122,7 @@ private:
 					closest_way.reset(static_cast<OGRLineString*>(linestring.clone()));
 					closest_way_id = it->second.way_id;
 					lastchange     = it->second.lastchange;
-               is_area = it->second.area;
+					is_area = it->second.area;
 					min_dist = dist;
 					assigned = true;
 				}
