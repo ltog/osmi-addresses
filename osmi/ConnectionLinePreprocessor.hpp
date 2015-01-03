@@ -3,10 +3,8 @@
 
 #include <math.h> 
 
-#define DUMMY_ID 0
-#define MAXDIST 0.06
-#define PI 3.14159265358979323846
-#define DEG2RAD(DEG) ((DEG)*((PI)/(180.0)))
+constexpr osmium::object_id_type DUMMY_ID = 0;
+constexpr double MAXDIST = 0.06;
 
 #include "NearestPointsWriter.hpp"
 #include "NearestRoadsWriter.hpp"
@@ -100,21 +98,25 @@ private:
 	bool get_closest_way(
 			const OGRPoint& ogr_point,
 			std::unique_ptr<OGRLineString>&  closest_way,
-			bool& is_area,
+			bool&                            is_area,
 			osmium::unsigned_object_id_type& closest_way_id,
 			std::string&                     lastchange) {
 
 		double min_dist = std::numeric_limits<double>::max();
 		double dist;
 		bool assigned = false;
-		float corrected = MAXDIST / cos(DEG2RAD(ogr_point.getY()));
 
 		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair;
 		name2highw_it_pair = mp_name2highways.equal_range(std::string(addrstreet));
 
 		for (name2highways_type::iterator it = name2highw_it_pair.first; it!=name2highw_it_pair.second; ++it) {
-			if (fabs(static_cast<float>(it->second.lat - ogr_point.getY())) < MAXDIST &&
-				fabs(static_cast<float>(it->second.lon - ogr_point.getX())) < corrected ) {
+			if (m_geometry_helper.is_point_near_bbox(
+					it->second.bbox_n,
+					it->second.bbox_e,
+					it->second.bbox_s,
+					it->second.bbox_w,
+					ogr_point,
+					MAXDIST)) {
 
 				OGRLineString linestring = *(static_cast<OGRLineString*>(it->second.compr_way.get()->uncompress().get()->clone()));
 				dist = linestring.Distance(&ogr_point);

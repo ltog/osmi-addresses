@@ -18,10 +18,17 @@ struct highway_lookup_type {
 	std::unique_ptr<CompressedWay> compr_way;
 	osmium::object_id_type         way_id;
 	bool                           area;
-	float                          lat, lon;
+	int16_t                        bbox_n, bbox_e, bbox_s, bbox_w;
 	std::string                    lastchange;
 };
 #pragma pack(pop)
+
+struct double_bbox {
+	double north; // max lat
+	double east;  // max lon
+	double south; // min lat
+	double west;  // min lon
+};
 
 enum class object_type : int {
 	node_object,
@@ -30,9 +37,10 @@ enum class object_type : int {
 	interpolated_node_object
 };
 
+constexpr bool INCREMENT_WHEN_ROUNDING = true;
+constexpr bool DECREMENT_WHEN_ROUNDING = false;
+
 typedef std::pair<std::string, highway_lookup_type> name2highways_element_type;
 typedef std::multimap<const std::string, highway_lookup_type> name2highways_type;
-
-
 
 #endif /* MAIN_HPP_ */

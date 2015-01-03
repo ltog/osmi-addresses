@@ -45,9 +45,15 @@ public:
 					highway_lookup_type mylookup;
 
 					mylookup.way_id    = way.id();
-					mylookup.lat       = m_geometry_helper.get_lat_estimate(way);
-					mylookup.lon       = m_geometry_helper.get_lon_estimate(way);
+
+					double_bbox bbox = m_geometry_helper.get_bbox(way);
+					mylookup.bbox_n = m_geometry_helper.lat2int16(bbox.north, INCREMENT_WHEN_ROUNDING);
+					mylookup.bbox_e = m_geometry_helper.lon2int16(bbox.east,  INCREMENT_WHEN_ROUNDING);
+					mylookup.bbox_s = m_geometry_helper.lat2int16(bbox.south, DECREMENT_WHEN_ROUNDING);
+					mylookup.bbox_w = m_geometry_helper.lon2int16(bbox.west,  DECREMENT_WHEN_ROUNDING);
+
 					const char* area = way.tags().get_value_by_key("area");
+
 					if (area && ( (!strcmp(area, "yes")) || (!strcmp(area, "true")) ) )
 					{
 						mylookup.area = true;
