@@ -4,6 +4,10 @@
 #include "NodesWithAddressesWriter.hpp"
 #include "ConnectionLinePreprocessor.hpp"
 
+/**
+ * This class is responsible for handling address interpolations
+ * (see http://wiki.openstreetmap.org/wiki/Addresses#Using_interpolation)
+ */
 class InterpolationWriter : public Writer {
 
 	node_map_type* m_addr_interpolation_node_map;
@@ -56,11 +60,15 @@ public:
 				feature->SetField("lastid",   static_cast<double>(last_node_id)); //TODO: node.id() is of type int64_t. is cast do double ok?
 				feature->SetField("lastchange", way.timestamp().to_iso().c_str());
 
-				AltTagList first_taglist = m_addr_interpolation_node_map->get(first_node_id);
-				AltTagList last_taglist  = m_addr_interpolation_node_map->get(last_node_id);
+				AltTagList first_taglist =
+						m_addr_interpolation_node_map->get(first_node_id);
+				AltTagList last_taglist  =
+						m_addr_interpolation_node_map->get(last_node_id);
 
-				std::string first_node_housenumber = first_taglist.get_value_by_key(std::string("addr:housenumber"));
-				std::string last_node_housenumber  = last_taglist.get_value_by_key(std::string("addr:housenumber"));
+				std::string first_node_housenumber =
+						first_taglist.get_value_by_key(std::string("addr:housenumber"));
+				std::string last_node_housenumber  =
+						last_taglist.get_value_by_key(std::string("addr:housenumber"));
 
 				unsigned int first;
 				unsigned int last;
@@ -86,11 +94,15 @@ public:
 						!isalpha(first_node_housenumber[first_node_housenumber.length()-2]) &&
 						!isalpha(last_node_housenumber[last_node_housenumber.length()-2])){
 
-					if (isalpha(first_node_housenumber[first_node_housenumber.length()-1]) && isalpha(last_node_housenumber[last_node_housenumber.length()-1])) {
+					if (isalpha(first_node_housenumber[first_node_housenumber.length()-1])
+							&& isalpha(last_node_housenumber[last_node_housenumber.length()-1])) {
+
 						std::string firstnumber (first_node_housenumber.begin(), first_node_housenumber.end() - 1);
 						std::string lastnumber (last_node_housenumber.begin(), last_node_housenumber.end() - 1);
+
 						first_number = firstnumber;
 						last_number = lastnumber;
+
 						if (firstnumber == lastnumber) {
 							first = first_node_housenumber[first_node_housenumber.length() - 1];
 							last = last_node_housenumber[last_node_housenumber.length() - 1];
@@ -99,6 +111,7 @@ public:
 							is_alphanumeric_correct = false;
 							feature->SetField("error", "is alphanumeric but housenumber is not the same");
 						}
+
 					} else {
 						is_alphanumeric_correct = false;
 						feature->SetField("error", "is not alphanumeric");
