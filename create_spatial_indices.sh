@@ -24,6 +24,6 @@ for table in $t1 $t2 $t3 $t4 $t5 $t6 $t7 $t8 $t9
 do
 	# starting from version 4.2.0 we can call spatialite with the option '-silent' which reduces output
 	# see e.g. https://stackoverflow.com/questions/23579001/how-do-i-make-the-spatialite-banner-go-away-under-django-manage-py
-	spatialite $1 "$prefix BEGIN; SELECT CreateSpatialIndex('$table', 'GEOMETRY'); COMMIT;"
+	spatialite $1 "$prefix BEGIN; SELECT CreateSpatialIndex('$table', 'GEOMETRY'); COMMIT;" > /dev/null
 done
 
