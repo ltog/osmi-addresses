@@ -95,11 +95,13 @@ public:
 				}
 
 				if (!strcmp(interpolation, "alphabetic") &&
+						// second last characters are numbers?
 						!isalpha(first_raw[first_raw.length()-2]) &&
 						!isalpha(last_raw[last_raw.length()-2])){
 
-					if (isalpha(first_raw[first_raw.length()-1])
-							&& isalpha(last_raw[last_raw.length()-1])) {
+					// last characters are letters?
+					if (isalpha(first_raw[first_raw.length()-1]) &&
+							isalpha(last_raw[last_raw.length()-1])) {
 
 						first_numeric = std::string(first_raw.begin(), first_raw.end() - 1);
 						last_numeric  = std::string(last_raw.begin(),  last_raw.end()  - 1);
@@ -110,15 +112,14 @@ public:
 							is_alphabetic_ip_correct = true;
 						} else {
 							is_alphabetic_ip_correct = false;
-							feature->SetField("error", "numeric part of housenumbers not identical");
+							feature->SetField("error", "numeric parts of housenumbers not identical");
 						}
 
 					} else {
 						is_alphabetic_ip_correct = false;
-						feature->SetField("error", "is not alphanumeric");
+						feature->SetField("error", "no alphabetic part in addr:housenumber");
 					}
 				}
-
 
 				if (!(
 						!strcmp(interpolation, "all")  ||
@@ -129,12 +130,13 @@ public:
 					feature->SetField("error", "unknown interpolation type");
 
 				} else if (
+						strcmp(interpolation, "alphabetic") && // don't overwrite more precise error messages set before
 						(first == 0 ||
 						 last  == 0 ||
 						 first_raw.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
 						  last_raw.length() != floor(log10(last) )+1    //
-						)
-						&& is_alphabetic_ip_correct == false) {
+						)) {
+
 					feature->SetField("error", "endpoint has wrong format");
 
 				} else if (abs(first-last) > 1000) {
