@@ -5,6 +5,11 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 cd $DIR
 
+# compile osmi
+cd ../osmi
+CXX=clang++ make
+cd $DIR
+
 # generate 'pos-osmi-testzone.osm'
 ./makeidpositive.sh osmi-testzone.osm
 
