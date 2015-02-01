@@ -13,7 +13,7 @@ tmpfile2=/tmp/${0}_deleteme2.tmp
 if [ $# -ne 2 ]; then
 	echo "Usage: $0 file1.sqlite file2.sqlite"
 	echo "Description: $description"
-	exit
+	exit 1
 fi
 
 # define a function to call a difftool (implemented this way so 'diff' can be used when 'colordiff' ist not installed)
@@ -35,7 +35,7 @@ then
 	difference=$(echo -e "${tables1}\n${tables2}" | sort | uniq -u) # store the table names that occurred only once
 	echo "ERROR: Tables are not the same. Look out for table(s):"
 	echo "$difference"
-	exit 1
+	exit 2
 fi
 
 # compare the contents of the tables
