@@ -68,6 +68,9 @@ while read -r table; do
 	schema_old=$(echo $schema_without_geometry | sed -e "s/\(${table}\)/\1${old_suffix}/")
 	schema_new=$(echo $schema_without_geometry | sed -e "s/\(${table}\)/\1${new_suffix}/")
 
+	# get srid
+	srid=$(spatialite $1 "SELECT srid FROM geometry_columns WHERE f_table_name='$table';" | tail)
+
 	echo DEBUG: $schema_old
 	echo DEBUG: $schema_new
 	echo DEBUG: $geometry_type,
@@ -77,8 +80,8 @@ while read -r table; do
 	spatialite $3 "$schema_new"
 
 	# add geometry column
-	spatialite $3 "SELECT AddGeometryColumn('${table}${old_suffix}', 'geometry', 4326, '$geometry_type');"
-	spatialite $3 "SELECT AddGeometryColumn('${table}${new_suffix}', 'geometry', 4326, '$geometry_type');"
+	spatialite $3 "SELECT AddGeometryColumn('${table}${old_suffix}', 'geometry', $srid, '$geometry_type');"
+	spatialite $3 "SELECT AddGeometryColumn('${table}${new_suffix}', 'geometry', $srid, '$geometry_type');"
 
 	# calculate differences and write them to db3
 	spatialite $dummydb "$attachdbs INSERT INTO db3.'${table}${old_suffix}' SELECT * from db1.'${table}' WHERE NOT EXISTS (SELECT * FROM db2.'${table}' WHERE EQUALS(db1.'${table}'.geometry, db2.'${table}'.geometry));"
