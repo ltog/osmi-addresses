@@ -4,7 +4,10 @@
 # Website: https://github.com/ltog/osmi-addresses
 
 description="This tool reads two spatialite files and creates a third containing the difference (deleted and newly added rows) of the tables of those two files."
+
 dummydb='dummydbdeleteme'
+old_suffix='_deleted'
+new_suffix='_added'
 
 # make sure exactly 3 arguments are given
 if [ $# -ne 3 ]; then
@@ -46,38 +49,42 @@ attachdbs="ATTACH DATABASE '$1' AS db1; ATTACH DATABASE '$2' AS db2; ATTACH DATA
 
 # for each table write the differences to a new database
 while read -r table; do
-	echo "Processing table $table"
+	echo "Processing table '$table' ..."
 
 	# create new geometry tables in db3
 	# variant 1: manually call AddGeometryColumn: http://stackoverflow.com/a/23366622 https://www.gaia-gis.it/spatialite-2.3.0/spatialite-sql-2.3.0.html#p16
-	# variant 2: clone table
+	# variant 2: clone table (use RecoverGeometryColumn (?))
 
 	# get schema
 	schema=$(spatialite $1 ".schema $table" | grep 'CREATE TABLE' | grep "$table")
 
-	# get geometry type
-	geometry= #TODO
+	# get geometry type (extract whats written after "GEOMETRY"
+	geometry_type=$(echo $schema | sed -e 's/.*\"GEOMETRY\" \([A-Za-z]*\)[,)].*/\1/')
 
-	# TODO: remove geometry column from schema (sqlite/spatialite can't rename/remove columns)
-	schema=
+	# remove the "GEOMETRY" column from the 'CREATE TABLE ...' expression
+	schema_without_geometry=$(echo $schema | sed -e 's/, \"GEOMETRY\" [A-Za-z]*//')
 
-	# create new tables
-	spatialite $3 "$schema"
-	spatialite $3 "$schema"
+	# adjust table names in 'CREATE TABLE ...' expressions
+	schema_old=$(echo $schema_without_geometry | sed -e "s/\(${table}\)/\1${old_suffix}/")
+	schema_new=$(echo $schema_without_geometry | sed -e "s/\(${table}\)/\1${new_suffix}/")
 
-	#CREATE TABLE 'blub_deleted' (ogc_fid INTEGER PRIMARY KEY);
-	#CREATE TABLE 'blub_added' (ogc_fid INTEGER PRIMARY KEY);
-	# TODO: how to copy all columns except geometry? add all and delete geometry column again?
+	echo DEBUG: $schema_old
+	echo DEBUG: $schema_new
+	echo DEBUG: $geometry_type,
+
+	# create new tables in new file
+	spatialite $3 "$schema_old"
+	spatialite $3 "$schema_new"
 
 	# add geometry column
-	spatialite $3 "AddGeometryColumn('${table}_deleted', 'geometry', '4326', '$geometry');"
-	spatialite $3 "AddGeometryColumn('${table}_added',   'geometry', '4326', '$geometry');"
+	spatialite $3 "SELECT AddGeometryColumn('${table}${old_suffix}', 'geometry', 4326, '$geometry_type');"
+	spatialite $3 "SELECT AddGeometryColumn('${table}${new_suffix}', 'geometry', 4326, '$geometry_type');"
 
-	#TODO: calculate differences and write them to db3
-	spatialite $dummydb "$attachdbs INSERT INTO db3.'${table}_deleted' SELECT * from db1.'${table}' WHERE NOT EXISTS (SELECT * FROM db2.'${table}' WHERE EQUALS(db1.'${table}'.geometry, db2.'${table}'.geometry));"
-	spatialite $dummydb "$attachdbs INSERT INTO db3.'${table}_added'   SELECT * from db2.'${table}' WHERE NOT EXISTS (SELECT * FROM db1.'${table}' WHERE EQUALS(db1.'${table}'.geometry, db2.'${table}'.geometry));
-	
+	# calculate differences and write them to db3
+	spatialite $dummydb "$attachdbs INSERT INTO db3.'${table}${old_suffix}' SELECT * from db1.'${table}' WHERE NOT EXISTS (SELECT * FROM db2.'${table}' WHERE EQUALS(db1.'${table}'.geometry, db2.'${table}'.geometry));"
+	spatialite $dummydb "$attachdbs INSERT INTO db3.'${table}${new_suffix}' SELECT * from db2.'${table}' WHERE NOT EXISTS (SELECT * FROM db1.'${table}' WHERE EQUALS(db1.'${table}'.geometry, db2.'${table}'.geometry));"
+
 done <<< "$tables1"
 
 # delete dummy db
-rm dummydbdeleteme
+rm $dummydb
