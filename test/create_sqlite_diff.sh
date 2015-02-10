@@ -66,21 +66,23 @@ while read -r table; do
 	echo "  removing identical rows in copies of databases..."
 
 	# create temporary tables for ids to be deleted
-	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db1.doomed;" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db2.doomed;" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs CREATE TABLE db1.doomed (id INTEGER);" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs CREATE TABLE db2.doomed (id INTEGER);" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db1.${table}_doomed;" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db2.${table}_doomed;" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs CREATE TABLE db1.${table}_doomed (id INTEGER);" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs CREATE TABLE db2.${table}_doomed (id INTEGER);" | grep -ve '^$'
 
 	# load ids of rows to be deleted
-	spatialite $dummydb "$attach2dbs INSERT INTO db1.'doomed' (id) SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs INSERT INTO db2.'doomed' (id) SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' (id) SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' (id) SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
 
 	# delete rows
-	spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.doomed)" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DELETE FROM db2.'$table' WHERE ogc_fid IN (SELECT id FROM db2.doomed)" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs DELETE FROM db2.'$table' WHERE ogc_fid IN (SELECT id FROM db2.${table}_doomed)" | grep -ve '^$'
 
 	# delete temporary tables
-	spatialite $dummydb "$attach2dbs DROP TABLE db1.'doomed'" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs DROP TABLE db1.'${table}_doomed'" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs DROP TABLE db2.'${table}_doomed'" | grep -ve '^$'
+
 	# PHASE 2
 
 	# get schema
