@@ -3,7 +3,7 @@
 # Author:  Lukas Toggenburger
 # Website: https://github.com/ltog/osmi-addresses
 
-# Note on the output of spatialite: spatialite tries to be smart and sniffs the kind of output destination. If the output destination is a terminal, it will output some verbose information each time you run it. This is the reason why most (probably all) calls to spatialite have a pipe after them.
+# Note on the output of spatialite: spatialite tries to be smart and sniffs the kind of output destination. If the output destination is a terminal, it will output some verbose information each time you run it. This is the reason why most (probably all) calls to spatialite in this software have a pipe after them.
 
 description="This tool reads two spatialite files and creates a third containing the difference (deleted and newly added rows) of the tables of those two files."
 
@@ -65,6 +65,9 @@ while read -r table; do
 	# PHASE 1: erase identical rows of copied databases
 	echo "  removing identical rows in copies of databases..."
 
+	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db1.${table}" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db2.${table}" | grep -ve '^$'
+
 	# create temporary tables for ids to be deleted
 	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db1.${table}_doomed;" | grep -ve '^$'
 	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db2.${table}_doomed;" | grep -ve '^$'
@@ -72,8 +75,16 @@ while read -r table; do
 	spatialite $dummydb "$attach2dbs CREATE TABLE db2.${table}_doomed (id INTEGER);" | grep -ve '^$'
 
 	# load ids of rows to be deleted
-	spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' (id) SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' (id) SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+
+	# delete rows
+	spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs DELETE FROM db2.'$table' WHERE ogc_fid IN (SELECT id FROM db2.${table}_doomed)" | grep -ve '^$'
+
+	# TODO: replace +1 with -x ... +x as long as we can delete matches
+	spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid+1=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid+1=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
 
 	# delete rows
 	spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
@@ -82,6 +93,9 @@ while read -r table; do
 	# delete temporary tables
 	spatialite $dummydb "$attach2dbs DROP TABLE db1.'${table}_doomed'" | grep -ve '^$'
 	spatialite $dummydb "$attach2dbs DROP TABLE db2.'${table}_doomed'" | grep -ve '^$'
+
+	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db1.${table}" | grep -ve '^$'
+	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db2.${table}" | grep -ve '^$'
 
 	# PHASE 2
 
