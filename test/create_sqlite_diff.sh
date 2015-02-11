@@ -74,21 +74,37 @@ while read -r table; do
 	spatialite $dummydb "$attach2dbs CREATE TABLE db1.${table}_doomed (id INTEGER);" | grep -ve '^$'
 	spatialite $dummydb "$attach2dbs CREATE TABLE db2.${table}_doomed (id INTEGER);" | grep -ve '^$'
 
-	# load ids of rows to be deleted
-	spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+	shift=0
 
-	# delete rows
-	spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DELETE FROM db2.'$table' WHERE ogc_fid IN (SELECT id FROM db2.${table}_doomed)" | grep -ve '^$'
+	# do-while loop, see http://stackoverflow.com/a/16489942
+	while : ; do
 
-	# TODO: replace +1 with -x ... +x as long as we can delete matches
-	spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid+1=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid+1=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+		echo "  checking shift=${shift}..."
 
-	# delete rows
-	spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DELETE FROM db2.'$table' WHERE ogc_fid IN (SELECT id FROM db2.${table}_doomed)" | grep -ve '^$'
+		# TODO: check also for negative shifts
+		# load ids of rows to be deleted
+		spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid+$shift=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+		spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid+$shift=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
+
+		doomed_counter=$(spatialite $p1 "SELECT COUNT(*) FROM ${table}_doomed LIMIT 1")
+
+		echo doomed_counter=$doomed_counter
+
+		[[ $doomed_counter > 0 ]] || break # note the condition to _stay_ in the loop
+
+		echo "  stying in the loop for another round..."
+
+		# delete duplicated rows
+		spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
+		spatialite $dummydb "$attach2dbs DELETE FROM db2.'$table' WHERE ogc_fid IN (SELECT id FROM db2.${table}_doomed)" | grep -ve '^$'
+
+		# delete _doomed entries
+		spatialite $dummydb "$attach2dbs DELETE FROM db1.${table}_doomed" | grep -ve '^$'
+		spatialite $dummydb "$attach2dbs DELETE FROM db2.${table}_doomed" | grep -ve '^$'
+
+		# increment shift
+		shift=$((shift+1))
+	done
 
 	# delete temporary tables
 	spatialite $dummydb "$attach2dbs DROP TABLE db1.'${table}_doomed'" | grep -ve '^$'
