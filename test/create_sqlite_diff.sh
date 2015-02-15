@@ -92,7 +92,7 @@ while read -r table; do
 
 		[[ $doomed_counter > 0 ]] || break # note the condition to _stay_ in the loop
 
-		echo "  stying in the loop for another round..."
+		echo "  staying in the loop for another round..."
 
 		# delete duplicated rows
 		spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
