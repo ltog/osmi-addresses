@@ -7,13 +7,18 @@
 
 description="This tool reads two spatialite files and creates a third containing the difference (deleted and newly added rows) of the tables of those two files."
 
-geometry_column='geometry' # name of the column where geometries are stored
-dummydb='dummydbdeleteme'
-old_suffix='_deleted'
-new_suffix='_added'
-tmpdir='/tmp/'
-p1=${tmpdir}db1 # path for temporary file for db1
-p2=${tmpdir}db2 # path for temporary file for db2
+parallel_options="--noswap"
+
+export geometry_column='geometry' # name of the column where geometries are stored
+export old_suffix='_deleted'
+export new_suffix='_added'
+export tmpdir="/tmp/${RANDOM}${RANDOM}/"
+export originaldb1=$1 # path to original db1
+export originaldb2=$2 # path to original db2
+export outputdb=$3           # path to output db
+export tmpdbprefix=${tmpdir}deleteme_
+export tables1 # table names from original db1
+export tables2 # table names from original db2
 
 # make sure exactly 3 arguments are given
 if [ $# -ne 3 ]; then
@@ -38,111 +43,261 @@ if [ -e $3 ]; then
 	exit 3
 fi
 
-# make note of the tables names of the two files (can't use ".tables" since its output has two columns)
-tables1=$(sqlite3 $1 '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
-tables2=$(sqlite3 $2 '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
-
-# make sure the table names are the same
-if [ "$tables1" != "$tables2" ]
-then
-	difference=$(echo -e "${tables1}\n${tables2}" | sort | uniq -u) # store the table names that occurred only once
-	echo "ERROR: Tables are not the same. Look out for table(s):"
-	echo "$difference"
-	exit 4
-fi
-
-# create copies of the database files
-cp -f $1 $p1
-cp -f $2 $p2
-
-attach2dbs="ATTACH DATABASE '$p1' AS db1; ATTACH DATABASE '$p2' AS db2;"
-attach3dbs="ATTACH DATABASE '$p1' AS db1; ATTACH DATABASE '$p2' AS db2; ATTACH DATABASE '$3' AS db3;"
-
-checkshift() {
-	local shift=$1
-	echo "  checking shift=${shift}..."
-
-	# load ids of rows to be deleted
-	spatialite $dummydb "$attach2dbs INSERT INTO db1.'${table}_doomed' SELECT db1.${table}.ogc_fid FROM db1.$table INNER JOIN db2.$table ON db1.${table}.ogc_fid+($shift)=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs INSERT INTO db2.'${table}_doomed' SELECT db2.${table}.ogc_fid FROM db2.$table INNER JOIN db1.$table ON db1.${table}.ogc_fid+($shift)=db2.${table}.ogc_fid WHERE Equals(db1.${table}.${geometry_column},db2.${table}.${geometry_column})" | grep -ve '^$'
-
-	local doomed_counter=$(spatialite $p1 "SELECT COUNT(*) FROM ${table}_doomed")
-	echo "  doomed_counter=$doomed_counter"
-
-	# delete duplicated rows
-	spatialite $dummydb "$attach2dbs DELETE FROM db1.'$table' WHERE ogc_fid IN (SELECT id FROM db1.${table}_doomed)" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DELETE FROM db2.'$table' WHERE ogc_fid IN (SELECT id FROM db2.${table}_doomed)" | grep -ve '^$'
-
-	# delete _doomed entries
-	spatialite $dummydb "$attach2dbs DELETE FROM db1.${table}_doomed" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DELETE FROM db2.${table}_doomed" | grep -ve '^$'
+handle_signals() {
+	echo "Signal handling function was called..."
+	cleanup
+	exit 1
 }
 
-# for each table write the differences to a new database
-while read -r table; do
+trap handle_signals SIGINT SIGTERM
+
+read_table_names() {
+	# make note of the tables names of the two files (can't use ".tables" since its output has two columns)
+	tables1=$(spatialite $originaldb1 '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
+	tables2=$(spatialite $originaldb2 '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
+}
+
+ensure_table_names_identical() {
+	# make sure the table names are the same
+	if [ "$tables1" != "$tables2" ]
+	then
+		difference=$(echo -e "${tables1}\n${tables2}" | sort | uniq -u) # store the table names that occurred only once
+		echo "ERROR: Tables are not the same. Look out for table(s):"
+		echo "$difference"
+		exit 4
+	fi
+}
+
+ensure_schemas_identical() {
+	#TODO: check for identical schemas
+	# exit 5
+	true
+}
+
+# clone the schema of a geometry table
+clone_geometry_table_schema() {
+		# assign variable names
+		local srctable=$1
+		local dsttable=$2
+		local srcdb=$3
+		local dstdb=$4
+
+		# get schema
+		schema=$(spatialite $srcdb ".schema $srctable" | grep 'CREATE TABLE' | grep "$srctable")
+
+		# get geometry type (extract what is written after "GEOMETRY"
+		geometry_type=$(echo "$schema" | sed -e 's/.*\"GEOMETRY\" \([A-Za-z]*\)[,)].*/\1/i')
+
+		# adjust table names in 'CREATE TABLE ...' expressions by appending suffixes
+		schema_adjusted=$(echo "$schema" | sed -e "s/${srctable}/${dsttable}/g")
+
+		# create new tables in new file from adjusted schema
+		spatialite $dstdb "$schema_adjusted" | grep -ve '^$'
+
+		# read srid from the input file
+		srid=$(spatialite $srcdb "SELECT srid FROM geometry_columns WHERE f_table_name='$srctable';" | grep -ve '^$')
+
+		spatialite $dstdb "SELECT RecoverGeometryColumn('$dsttable', '$geometry_column', $srid, '$geometry_type');" | grep -ve '^$' | grep -v '^1$'
+}
+
+create_tmp_dbs_schemas() {
+	mkdir -p $tmpdir
+
+	while read -r table; do
+		clone_geometry_table_schema $table ${table}${old_suffix} $originaldb1 ${tmpdbprefix}$table
+		clone_geometry_table_schema $table ${table}${new_suffix} $originaldb2 ${tmpdbprefix}$table
+	done <<< "$tables1"
+}
+
+create_output_db_schemas() {
+	while read -r table; do
+		clone_geometry_table_schema ${table}${old_suffix} ${table}${old_suffix} ${tmpdbprefix}$table $outputdb
+		clone_geometry_table_schema ${table}${new_suffix} ${table}${new_suffix} ${tmpdbprefix}$table $outputdb
+	done <<< "$tables1"
+}
+
+copy_table_content() {
+	local srctable=$1
+	local dsttable=$2
+	local srcdb=$3
+	local dstdb=$4
+
+	spatialite $dstdb "ATTACH DATABASE '$srcdb' as input; INSERT INTO main.'$dsttable' SELECT * FROM input.'$srctable'" | grep -ve '^$'
+}
+
+fill_tmp_dbs() {
+	while read -r table; do
+		# fill oldtable
+		copy_table_content $table ${table}${old_suffix} $originaldb1 ${tmpdbprefix}${table}
+
+		# fill newtable
+		copy_table_content $table ${table}${new_suffix} $originaldb2 ${tmpdbprefix}${table}
+	done <<< "$tables1"
+}
+
+# check for different shifts and delete entries with identical geometries
+check_shift() {
+	local shift=$1
+	local tmpdb=$2
+	local oldtable=$3
+	local newtable=$4
+
+	echo shift=$shift
+
+	# load ids of rows to be deleted
+	spatialite $tmpdb "INSERT INTO '${oldtable}_doomed' SELECT ${oldtable}.ogc_fid FROM $oldtable INNER JOIN $newtable ON ${oldtable}.ogc_fid+($shift)=${newtable}.ogc_fid WHERE Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
+	spatialite $tmpdb "INSERT INTO '${newtable}_doomed' SELECT ${newtable}.ogc_fid FROM $newtable INNER JOIN $oldtable ON ${oldtable}.ogc_fid+($shift)=${newtable}.ogc_fid WHERE Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
+
+	local doomed_counter_old=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}_doomed")
+	local doomed_counter_new=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}_doomed")
+	echo "  doomed_counter_old=$doomed_counter_old"
+	echo "  doomed_counter_new=$doomed_counter_new"
+
+	# delete duplicated rows
+	spatialite $tmpdb "DELETE FROM '$oldtable' WHERE ogc_fid IN (SELECT id FROM ${oldtable}_doomed)" | grep -ve '^$'
+	spatialite $tmpdb "DELETE FROM '$newtable' WHERE ogc_fid IN (SELECT id FROM ${newtable}_doomed)" | grep -ve '^$'
+
+	# delete _doomed entries
+	spatialite $tmpdb "DELETE FROM ${oldtable}_doomed" | grep -ve '^$'
+	spatialite $tmpdb "DELETE FROM ${newtable}_doomed" | grep -ve '^$'
+}
+export -f check_shift
+
+# open the temporary db file for the table given in the first argument
+kill_duplicates() {
+	local table=$1
+	local tmpdb=${tmpdbprefix}$table
+	local oldtable=${table}${old_suffix}
+	local newtable=${table}${new_suffix}
+
 	echo "Processing table '$table' ..."
 
-	# PHASE 1: erase identical rows of copied databases
 	echo "  removing identical rows in copies of databases..."
 
-	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db1.${table}" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db2.${table}" | grep -ve '^$'
+	echo count in $oldtable before check_shift =
+	spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}" | grep -ve '^$'
+	echo count in $newtable before check_shift =
+	spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}" | grep -ve '^$'
 
 	# create temporary tables for ids to be deleted
-	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db1.${table}_doomed;" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DROP TABLE IF EXISTS db2.${table}_doomed;" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs CREATE TABLE db1.${table}_doomed (id INTEGER);" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs CREATE TABLE db2.${table}_doomed (id INTEGER);" | grep -ve '^$'
+	spatialite $tmpdb "DROP TABLE IF EXISTS ${oldtable}_doomed;" | grep -ve '^$'
+	spatialite $tmpdb "DROP TABLE IF EXISTS ${newtable}_doomed;" | grep -ve '^$'
+	spatialite $tmpdb "CREATE TABLE ${oldtable}_doomed (id INTEGER);" | grep -ve '^$'
+	spatialite $tmpdb "CREATE TABLE ${newtable}_doomed (id INTEGER);" | grep -ve '^$'
 
-	# check for different shifts and delete entries with identical geometries
-
-	for shift in 0 {1..10} {-1..-10}; do
-		checkshift $shift
+	for shift in 0 {1..10} {-1..-10} {11..100} {-11..-100}; do
+		check_shift $shift $tmpdb $oldtable $newtable
+		local oldtable_count=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}")
+		local newtable_count=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}")
+		if [[ "$oldtable_count" == "0" || "$newtable_count" == "0" ]]; then
+			break
+		fi
 	done
 
+	echo count in $oldtable after check_shift =
+	spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}" | grep -ve '^$'
+	echo count in $newtable after check_shift =
+	spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}" | grep -ve '^$'
+
+	# delete all duplicate geometries, independant of their ogc_fid (This is a last resort to find remaining duplicates. It is computationally expensive therefore the code above should find as many hits as possible.)
+
+	spatialite $tmpdb "INSERT INTO '${oldtable}_doomed' SELECT ${oldtable}.ogc_fid FROM $oldtable INNER JOIN $newtable ON Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
+	spatialite $tmpdb "INSERT INTO '${newtable}_doomed' SELECT ${newtable}.ogc_fid FROM $newtable INNER JOIN $oldtable ON Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
+
+	local doomed_counter_old_in_kd=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}_doomed")
+	local doomed_counter_new_in_kd=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}_doomed")
+	echo "  doomed_counter_old_in_kd=$doomed_counter_old_in_kd"
+	echo "  doomed_counter_new_in_kd=$doomed_counter_new_in_kd"
+
+	# delete duplicated rows
+	spatialite $tmpdb "DELETE FROM '$oldtable' WHERE ogc_fid IN (SELECT id FROM ${oldtable}_doomed)" | grep -ve '^$'
+	spatialite $tmpdb "DELETE FROM '$newtable' WHERE ogc_fid IN (SELECT id FROM ${newtable}_doomed)" | grep -ve '^$'
+
+	# delete _doomed entries
+	spatialite $tmpdb "DELETE FROM ${oldtable}_doomed" | grep -ve '^$'
+	spatialite $tmpdb "DELETE FROM ${newtable}_doomed" | grep -ve '^$'
+
+	echo count in $oldtable after where exists =
+	spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}" | grep -ve '^$'
+	echo count in $newtable after where exists =
+	spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}" | grep -ve '^$'
+
 	# delete temporary tables
-	spatialite $dummydb "$attach2dbs DROP TABLE db1.'${table}_doomed'" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs DROP TABLE db2.'${table}_doomed'" | grep -ve '^$'
+	spatialite $tmpdb "DROP TABLE '${oldtable}_doomed'" | grep -ve '^$'
+	spatialite $tmpdb "DROP TABLE '${newtable}_doomed'" | grep -ve '^$'
+}
+export -f kill_duplicates
 
-	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db1.${table}" | grep -ve '^$'
-	spatialite $dummydb "$attach2dbs SELECT COUNT(*) FROM db2.${table}" | grep -ve '^$'
+merge_tmp_dbs() {
+	while read -r table; do
+		local oldtable=${table}${old_suffix}
+		local newtable=${table}${new_suffix}
 
-	# PHASE 2
+		spatialite $outputdb "ATTACH DATABASE '${tmpdbprefix}$table' as input; INSERT INTO main.'$oldtable' SELECT * FROM input.'$oldtable'" | grep -ve '^$'
 
-	# get schema
-	schema=$(spatialite $p1 ".schema $table" | grep 'CREATE TABLE' | grep "$table")
+		spatialite $outputdb "ATTACH DATABASE '${tmpdbprefix}$table' as input; INSERT INTO main.'$newtable' SELECT * FROM input.'$newtable'" | grep -ve '^$'
+	done <<< "$tables1"
+}
 
-	# get geometry type (extract whats written after "GEOMETRY"
-	geometry_type=$(echo $schema | sed -e 's/.*\"GEOMETRY\" \([A-Za-z]*\)[,)].*/\1/')
+cleanup() {
+	# delete temporary dbs
+	while read -r table; do
+		rm -rf ${tmpdbprefix}$table
+	done <<< "$tables1"
+}
 
-	# remove the "GEOMETRY" column from the 'CREATE TABLE ...' expression
-	schema_without_geometry=$(echo $schema | sed -e 's/, \"GEOMETRY\" [A-Za-z]*//')
+drop_empty_tables() {
+	while read -r table; do
+		local oldtable=${table}${old_suffix}
+		local newtable=${table}${new_suffix}
 
-	# adjust table names in 'CREATE TABLE ...' expressions
-	schema_old=$(echo $schema_without_geometry | sed -e "s/\(${table}\)/\1${old_suffix}/")
-	schema_new=$(echo $schema_without_geometry | sed -e "s/\(${table}\)/\1${new_suffix}/")
+		count_old=$(spatialite $outputdb "SELECT COUNT(*) FROM '$oldtable'" | grep -ve '^$')
+		echo count_old = $count_old
+		if [[ "$count_old" == "0" ]]; then
+			echo dropping old table $oldtable
+			spatialite $outputdb "SELECT DiscardGeometryColumn('$oldtable', '$geometry_column');" | grep -ve '^$'
+			spatialite $outputdb "DROP TABLE '$oldtable'" | grep -ve '^$'
+		fi
 
-	# get srid
-	srid=$(spatialite $p1 "SELECT srid FROM geometry_columns WHERE f_table_name='$table';" | tail)
+		count_new=$(spatialite $outputdb "SELECT COUNT(*) FROM '$newtable'" | grep -ve '^$')
+		echo count_new = $count_new
+		if [[ "$count_new" == "0" ]]; then
+			echo dropping new table $newtable
+			spatialite $outputdb "SELECT DiscardGeometryColumn('$newtable', '$geometry_column');" | grep -ve '^$'
+			spatialite $outputdb "DROP TABLE '$newtable'" | grep -ve '^$'
+		fi
+	done <<< "$tables1"
+}
 
-	# create new tables in new file
-	spatialite $3 "$schema_old" | grep -ve '^$'
-	spatialite $3 "$schema_new" | grep -ve '^$'
+# main program starts here ----------------
 
-	# add geometry column
-	spatialite $3 "SELECT AddGeometryColumn('${table}${old_suffix}', '$geometry_column', $srid, '$geometry_type');" | grep -ve '1'
-	spatialite $3 "SELECT AddGeometryColumn('${table}${new_suffix}', '$geometry_column', $srid, '$geometry_type');" | grep -ve '1'
+echo "Reading table names..."
+read_table_names # write table names to variables tables1 and tables2
 
-	# calculate differences and write them to db3
-	echo "  searching for deleted geometries..."
-	spatialite $dummydb "$attach3dbs INSERT INTO db3.'${table}${old_suffix}' SELECT * from db1.'${table}' WHERE NOT EXISTS (SELECT * FROM db2.'${table}' WHERE EQUALS(db1.'${table}'.$geometry_column, db2.'${table}'.$geometry_column));" | grep -ve '^$'
+echo "Ensuring table names are identical..."
+ensure_table_names_identical
 
-	echo "  searching for newly added geometries..."
-	spatialite $dummydb "$attach3dbs INSERT INTO db3.'${table}${new_suffix}' SELECT * from db2.'${table}' WHERE NOT EXISTS (SELECT * FROM db1.'${table}' WHERE EQUALS(db1.'${table}'.$geometry_column, db2.'${table}'.$geometry_column));" | grep -ve '^$'
+ensure_schemas_identical
 
-done <<< "$tables1"
+echo "Creating temporary database schemas..."
+create_tmp_dbs_schemas
 
-# delete dummy db
-rm $dummydb
-rm $p1
-rm $p2
+echo "Copying content into temporary databases..." # TODO: parallelisieren
+fill_tmp_dbs
+
+echo "Removing duplicate geometries..."
+parallel $parallel_options kill_duplicates ::: $tables1
+
+echo "Creating output database schemas..."
+create_output_db_schemas
+
+echo "Merging temporary database files..."
+merge_tmp_dbs
+
+echo "Dropping empty tables..."
+drop_empty_tables
+
+echo "Cleaning up..."
+cleanup
+
+echo "Finished."
