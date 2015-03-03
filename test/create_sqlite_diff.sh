@@ -124,15 +124,11 @@ copy_table_content() {
 
 	spatialite $dstdb "ATTACH DATABASE '$srcdb' as input; INSERT INTO main.'$dsttable' SELECT * FROM input.'$srctable'" | grep -ve '^$'
 }
+export -f copy_table_content
 
 fill_tmp_dbs() {
-	while read -r table; do
-		# fill oldtable
-		copy_table_content $table ${table}${old_suffix} $originaldb1 ${tmpdbprefix}${table}
-
-		# fill newtable
-		copy_table_content $table ${table}${new_suffix} $originaldb2 ${tmpdbprefix}${table}
-	done <<< "$tables1"
+	parallel $parallel_options -v copy_table_content {1} {1}${old_suffix} $originaldb1 ${tmpdbprefix}{1} ::: $tables1
+	parallel $parallel_options -v copy_table_content {1} {1}${new_suffix} $originaldb2 ${tmpdbprefix}{1} ::: $tables1
 }
 
 # check for different shifts and delete entries with identical geometries
