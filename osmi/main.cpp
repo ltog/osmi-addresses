@@ -13,11 +13,13 @@
 #include <unordered_set>
 #include <string>
 
+#define OSMIUM_WITH_SPARSEHASH
+
 // usually you only need one or two of these
 #include <osmium/index/map/dummy.hpp>
-#include <osmium/index/map/sparse_table.hpp>
-#include <osmium/index/map/stl_map.hpp>
-#include <osmium/index/map/mmap_vector_anon.hpp>
+#include <osmium/index/map/sparse_mem_table.hpp>
+#include <osmium/index/map/sparse_mem_map.hpp>
+#include <osmium/index/map/sparse_mmap_array.hpp>
 
 #include <osmium/handler/node_locations_for_ways.hpp>
 #include <osmium/visitor.hpp>
