@@ -270,7 +270,8 @@ read_table_names # write table names to variables tables1 and tables2
 echo "Ensuring table names are identical..."
 ensure_table_names_identical
 
-ensure_schemas_identical
+#echo "Ensuring schemas are identical..."
+#ensure_schemas_identical
 
 echo "Creating temporary database schemas..."
 create_tmp_dbs_schemas
