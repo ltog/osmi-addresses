@@ -92,7 +92,7 @@ clone_geometry_table_schema() {
 		schema_adjusted=$(echo "$schema" | sed -e "s/${srctable}/${dsttable}/g")
 
 		# create new tables in new file from adjusted schema
-		spatialite $dstdb "$schema_adjusted" | grep -ve '^$'
+		spatialite $dstdb "$schema_adjusted" 2>&1 | grep -ve '^$' | fgrep -v -e 'the SPATIAL_REF_SYS table already contains some row(s)'
 
 		# read srid from the input file
 		srid=$(spatialite $srcdb "SELECT srid FROM geometry_columns WHERE f_table_name='$srctable';" | grep -ve '^$')
@@ -106,6 +106,7 @@ create_tmp_dbs_schemas() {
 	while read -r table; do
 		clone_geometry_table_schema $table ${table}${old_suffix} $originaldb1 ${tmpdbprefix}$table
 		clone_geometry_table_schema $table ${table}${new_suffix} $originaldb2 ${tmpdbprefix}$table
+
 	done <<< "$tables1"
 }
 
@@ -127,8 +128,8 @@ copy_table_content() {
 export -f copy_table_content
 
 fill_tmp_dbs() {
-	parallel $parallel_options -v copy_table_content {1} {1}${old_suffix} $originaldb1 ${tmpdbprefix}{1} ::: $tables1
-	parallel $parallel_options -v copy_table_content {1} {1}${new_suffix} $originaldb2 ${tmpdbprefix}{1} ::: $tables1
+	parallel $parallel_options copy_table_content {1} {1}${old_suffix} $originaldb1 ${tmpdbprefix}{1} ::: $tables1
+	parallel $parallel_options copy_table_content {1} {1}${new_suffix} $originaldb2 ${tmpdbprefix}{1} ::: $tables1
 }
 
 # check for different shifts and delete entries with identical geometries
@@ -138,16 +139,9 @@ check_shift() {
 	local oldtable=$3
 	local newtable=$4
 
-	echo shift=$shift
-
 	# load ids of rows to be deleted
 	spatialite $tmpdb "INSERT INTO '${oldtable}_doomed' SELECT ${oldtable}.ogc_fid FROM $oldtable INNER JOIN $newtable ON ${oldtable}.ogc_fid+($shift)=${newtable}.ogc_fid WHERE Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
 	spatialite $tmpdb "INSERT INTO '${newtable}_doomed' SELECT ${newtable}.ogc_fid FROM $newtable INNER JOIN $oldtable ON ${oldtable}.ogc_fid+($shift)=${newtable}.ogc_fid WHERE Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
-
-	local doomed_counter_old=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}_doomed")
-	local doomed_counter_new=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}_doomed")
-	echo "  doomed_counter_old=$doomed_counter_old"
-	echo "  doomed_counter_new=$doomed_counter_new"
 
 	# delete duplicated rows
 	spatialite $tmpdb "DELETE FROM '$oldtable' WHERE ogc_fid IN (SELECT id FROM ${oldtable}_doomed)" | grep -ve '^$'
@@ -166,15 +160,6 @@ kill_duplicates() {
 	local oldtable=${table}${old_suffix}
 	local newtable=${table}${new_suffix}
 
-	echo "Processing table '$table' ..."
-
-	echo "  removing identical rows in copies of databases..."
-
-	echo count in $oldtable before check_shift =
-	spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}" | grep -ve '^$'
-	echo count in $newtable before check_shift =
-	spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}" | grep -ve '^$'
-
 	# create temporary tables for ids to be deleted
 	spatialite $tmpdb "DROP TABLE IF EXISTS ${oldtable}_doomed;" | grep -ve '^$'
 	spatialite $tmpdb "DROP TABLE IF EXISTS ${newtable}_doomed;" | grep -ve '^$'
@@ -190,20 +175,10 @@ kill_duplicates() {
 		fi
 	done
 
-	echo count in $oldtable after check_shift =
-	spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}" | grep -ve '^$'
-	echo count in $newtable after check_shift =
-	spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}" | grep -ve '^$'
-
 	# delete all duplicate geometries, independant of their ogc_fid (This is a last resort to find remaining duplicates. It is computationally expensive therefore the code above should find as many hits as possible.)
 
 	spatialite $tmpdb "INSERT INTO '${oldtable}_doomed' SELECT ${oldtable}.ogc_fid FROM $oldtable INNER JOIN $newtable ON Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
 	spatialite $tmpdb "INSERT INTO '${newtable}_doomed' SELECT ${newtable}.ogc_fid FROM $newtable INNER JOIN $oldtable ON Equals(${oldtable}.${geometry_column},${newtable}.${geometry_column})" | grep -ve '^$'
-
-	local doomed_counter_old_in_kd=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}_doomed")
-	local doomed_counter_new_in_kd=$(spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}_doomed")
-	echo "  doomed_counter_old_in_kd=$doomed_counter_old_in_kd"
-	echo "  doomed_counter_new_in_kd=$doomed_counter_new_in_kd"
 
 	# delete duplicated rows
 	spatialite $tmpdb "DELETE FROM '$oldtable' WHERE ogc_fid IN (SELECT id FROM ${oldtable}_doomed)" | grep -ve '^$'
@@ -212,11 +187,6 @@ kill_duplicates() {
 	# delete _doomed entries
 	spatialite $tmpdb "DELETE FROM ${oldtable}_doomed" | grep -ve '^$'
 	spatialite $tmpdb "DELETE FROM ${newtable}_doomed" | grep -ve '^$'
-
-	echo count in $oldtable after where exists =
-	spatialite $tmpdb "SELECT COUNT(*) FROM ${oldtable}" | grep -ve '^$'
-	echo count in $newtable after where exists =
-	spatialite $tmpdb "SELECT COUNT(*) FROM ${newtable}" | grep -ve '^$'
 
 	# delete temporary tables
 	spatialite $tmpdb "DROP TABLE '${oldtable}_doomed'" | grep -ve '^$'
@@ -245,18 +215,14 @@ drop_empty_tables() {
 		local newtable=${table}${new_suffix}
 
 		count_old=$(spatialite $outputdb "SELECT COUNT(*) FROM '$oldtable'" | grep -ve '^$')
-		echo count_old = $count_old
 		if [[ "$count_old" == "0" ]]; then
-			echo dropping old table $oldtable
-			spatialite $outputdb "SELECT DiscardGeometryColumn('$oldtable', '$geometry_column');" | grep -ve '^$'
+			spatialite $outputdb "SELECT DiscardGeometryColumn('$oldtable', '$geometry_column');" | grep -ve '^$' | fgrep -ve '1'
 			spatialite $outputdb "DROP TABLE '$oldtable'" | grep -ve '^$'
 		fi
 
 		count_new=$(spatialite $outputdb "SELECT COUNT(*) FROM '$newtable'" | grep -ve '^$')
-		echo count_new = $count_new
 		if [[ "$count_new" == "0" ]]; then
-			echo dropping new table $newtable
-			spatialite $outputdb "SELECT DiscardGeometryColumn('$newtable', '$geometry_column');" | grep -ve '^$'
+			spatialite $outputdb "SELECT DiscardGeometryColumn('$newtable', '$geometry_column');" | grep -ve '^$' | fgrep -ve '1'
 			spatialite $outputdb "DROP TABLE '$newtable'" | grep -ve '^$'
 		fi
 	done <<< "$tables1"
