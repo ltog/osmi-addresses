@@ -236,10 +236,7 @@ merge_tmp_dbs() {
 }
 
 cleanup() {
-	# delete temporary dbs
-	while read -r table; do
-		rm -rf ${tmpdbprefix}$table
-	done <<< "$tables1"
+	rm -rf $tmpdir
 }
 
 drop_empty_tables() {
