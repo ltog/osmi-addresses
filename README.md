@@ -30,7 +30,7 @@ The software was tested on Ubuntu but probably runs under other Unix variants (i
 
 ## Compilation
 
-You will need a C++11 compiler and libosmium to compile the software. libosmium itself comes with a list of prerequisites, which you can find at https://github.com/osmcode/libosmium#prerequisites.
+You will need a 64-bit system, a C++11 compiler and libosmium to compile the software. libosmium itself comes with a list of prerequisites, which you can find at https://github.com/osmcode/libosmium#prerequisites.
 
 On Ubuntu/Debian, you should be able to get all dependencies with:
 

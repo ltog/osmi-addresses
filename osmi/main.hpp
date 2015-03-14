@@ -4,12 +4,12 @@
 #include "CompressedWay.hpp"
 
 typedef osmium::index::map::Dummy<osmium::unsigned_object_id_type, osmium::Location> index_neg_type;
-typedef osmium::index::map::SparseTable  <osmium::unsigned_object_id_type,   osmium::Location> index_pos_type;
+typedef osmium::index::map::SparseMemTable<osmium::unsigned_object_id_type, osmium::Location> index_pos_type;
 
 typedef osmium::handler::NodeLocationsForWays<index_pos_type, index_neg_type> location_handler_type;
 
 class AltTagList;
-typedef osmium::index::map::SparseTable<osmium::unsigned_object_id_type, AltTagList> node_map_type;
+typedef osmium::index::map::SparseMemTable<osmium::unsigned_object_id_type, AltTagList> node_map_type;
 
 typedef std::set<osmium::unsigned_object_id_type> node_set;
 
