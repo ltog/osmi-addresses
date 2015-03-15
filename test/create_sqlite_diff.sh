@@ -44,7 +44,7 @@ if [ -e $3 ]; then
 fi
 
 handle_signals() {
-	echo "Signal handling function was called..."
+	echo "Signal handling function was called. Going to clean up..."
 	cleanup
 	exit 1
 }
