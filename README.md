@@ -48,6 +48,12 @@ The compiled executable osmi is a standalone application and needs no installati
 
 If you have never used clang before, you should give it a try. It compiles (at least this software) slightly faster and gives better understandable error messages if you mess things up.
 
+## Eclipse setup (incomplete)
+
+### Define the preprocessor symbol `OSMIUM_WITH_SPARSEHASH`
+
+Project properties -> C/C++ General -> Paths and Symbols -> Tab: Symbols -> Languages C++ -> Add... -> Name: `OSMIUM_WITH_SPARSEHASH`, Value: 1, [X] Add to all configurations
+
 ## License
 
 This software is available under the Boost Software License 1.0, see http://www.boost.org/LICENSE_1_0.txt.
