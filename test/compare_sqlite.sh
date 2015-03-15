@@ -6,8 +6,8 @@
 description="This tool compares the contents of two sqlite/spatialite files and prints their difference."
 
 # set names of temporary files
-tmpfile1=/tmp/${0}_deleteme1.tmp
-tmpfile2=/tmp/${0}_deleteme2.tmp
+export tmpfile1=/tmp/${0}_deleteme1.tmp
+export tmpfile2=/tmp/${0}_deleteme2.tmp
 
 # make sure exactly two arguments are given
 if [ $# -ne 2 ]; then
@@ -24,6 +24,19 @@ difftool() {
 		diff "$@"
 	fi
 }
+
+# delete the temporary files
+cleanup() {
+	rm $tmpfile1 $tmpfile2
+}
+
+handle_signals() {
+	echo "Signal handling function was called. Going to clean up..."
+	cleanup
+	exit 1
+}
+
+trap handle_signals SIGINT SIGTERM
 
 # make note of the tables names of the two files (can't use ".tables" since its output has two columns)
 tables1=$(sqlite3 $1 '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
@@ -55,7 +68,5 @@ while read -r table; do
 
 done <<< "$tables1"
 
-# delete the temporary files
-rm $tmpfile1 $tmpfile2
-
+cleanup
 
