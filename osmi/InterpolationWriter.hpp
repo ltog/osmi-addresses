@@ -139,11 +139,11 @@ public:
 
 					feature->SetField("error", "endpoint has wrong format");
 
-				} else if (abs(first-last) > 1000) {
+				} else if (abs_diff(first,last) > 1000) {
 					feature->SetField("error", "range too large");
 
-				} else if (((!strcmp(interpolation,"even") || !strcmp(interpolation,"odd")) && abs(first-last)==2) ||
-							(!strcmp(interpolation,"all")                                   && abs(first-last)==1) ) {
+				} else if (((!strcmp(interpolation,"even") || !strcmp(interpolation,"odd")) && abs_diff(first,last)==2) ||
+							(!strcmp(interpolation,"all")                                   && abs_diff(first,last)==1) ) {
 					feature->SetField("error", "needless interpolation");
 
 				} else if (!strcmp(interpolation,"even") && ( first%2==1 || last%2==1 )) {
@@ -249,6 +249,9 @@ private:
 	NodesWithAddressesWriter& m_nwa_writer; //osmi_addresses_nodes_with_addresses
 	ConnectionLinePreprocessor& m_clpp; //osmi_addresses_connection_line 
 
+	inline unsigned int abs_diff(unsigned int arg1, unsigned int arg2) {
+		return (arg1 > arg2 ? arg1-arg2 : arg2-arg1);
+	}
 };
 
 #endif /* INTERPOLATIONWRITER_HPP_ */
