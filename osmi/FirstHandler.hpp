@@ -37,32 +37,34 @@ public:
 				// -------------------------------------------------------------------
 
 				const char* highway = way.tags().get_value_by_key("highway");
-				const char* name    = way.tags().get_value_by_key("name");
-				if (highway && name){
 
-					// FIXME - if the geometry of this way is weird OR the way is very long,
-					// it should be split up for more accurate results later.
-					highway_lookup_type mylookup;
+				if (highway){
+					std::set<std::string> streetnames = get_streetnames(way.tags());
 
-					mylookup.way_id    = way.id();
+					// TODO: reuse mylookup struct
+					for (std::string streetname : streetnames) {
+						highway_lookup_type mylookup;
 
-					double_bbox bbox = m_geometry_helper.get_bbox(way);
-					mylookup.bbox_n = m_geometry_helper.lat2int16(bbox.north, INCREMENT_WHEN_ROUNDING);
-					mylookup.bbox_e = m_geometry_helper.lon2int16(bbox.east,  INCREMENT_WHEN_ROUNDING);
-					mylookup.bbox_s = m_geometry_helper.lat2int16(bbox.south, DECREMENT_WHEN_ROUNDING);
-					mylookup.bbox_w = m_geometry_helper.lon2int16(bbox.west,  DECREMENT_WHEN_ROUNDING);
+						mylookup.way_id = way.id();
 
-					const char* area = way.tags().get_value_by_key("area");
+						double_bbox bbox = m_geometry_helper.get_bbox(way);
+						mylookup.bbox_n = m_geometry_helper.lat2int16(bbox.north, INCREMENT_WHEN_ROUNDING);
+						mylookup.bbox_e = m_geometry_helper.lon2int16(bbox.east,  INCREMENT_WHEN_ROUNDING);
+						mylookup.bbox_s = m_geometry_helper.lat2int16(bbox.south, DECREMENT_WHEN_ROUNDING);
+						mylookup.bbox_w = m_geometry_helper.lon2int16(bbox.west,  DECREMENT_WHEN_ROUNDING);
 
-					if (area && ( (!strcmp(area, "yes")) || (!strcmp(area, "true")) ) )
-					{
-						mylookup.area = true;
-					} else {
-						mylookup.area = false;
+						const char* area = way.tags().get_value_by_key("area");
+
+						if (area && ( (!strcmp(area, "yes")) || (!strcmp(area, "true")) ) )
+						{
+							mylookup.area = true;
+						} else {
+							mylookup.area = false;
+						}
+						mylookup.compr_way = std::unique_ptr<CompressedWay>(new CompressedWay(m_factory.create_linestring(way)));
+
+						m_name2highways.insert(name2highways_element_type(streetname, std::move(mylookup)));
 					}
-					mylookup.compr_way = std::unique_ptr<CompressedWay>(new CompressedWay(m_factory.create_linestring(way)));
-
-					m_name2highways.insert(name2highways_element_type(std::string(name), std::move(mylookup)));
 				}
 			}
 		} catch (osmium::geometry_error&) {
@@ -77,6 +79,18 @@ private:
 	node_set& m_addr_interpolation_node_set;
 	name2highways_type& m_name2highways;
 	GeometryHelper m_geometry_helper;
+
+	std::set<std::string> get_streetnames(const osmium::TagList& taglist) {
+		std::set<std::string> streetnames; // std::set checks for duplicates when inserting elements. See http://stackoverflow.com/a/3451045
+		std::vector<std::string> keys = {"name", "name:left", "name:right", "alt_name", "official_name", "name_1"};
+		for (std::string key : keys) {
+			const char* value = taglist.get_value_by_key(key.c_str());
+			if (value) {
+				streetnames.insert(value);
+			}
+		}
+		return streetnames;
+	}
 };
 
 
