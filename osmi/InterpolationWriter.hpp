@@ -249,7 +249,7 @@ private:
 	NodesWithAddressesWriter& m_nwa_writer; //osmi_addresses_nodes_with_addresses
 	ConnectionLinePreprocessor& m_clpp; //osmi_addresses_connection_line 
 
-	inline unsigned int abs_diff(unsigned int arg1, unsigned int arg2) {
+	inline unsigned int abs_diff(const unsigned int& arg1, const unsigned int& arg2) {
 		return (arg1 > arg2 ? arg1-arg2 : arg2-arg1);
 	}
 };
