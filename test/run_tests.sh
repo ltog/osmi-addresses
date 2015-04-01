@@ -8,18 +8,18 @@ fi
 # template:
 #./test_engine.pl $1 "" "" "=" ""
 
-./test_engine.pl $1 "Total number of entries in osmi_addresses_connection_line" "SELECT COUNT(*) FROM osmi_addresses_connection_line" "=" "86"
-./test_engine.pl $1 "Total number of entries in osmi_addresses_nearest_points"  "SELECT COUNT(*) FROM osmi_addresses_nearest_points"  "=" "86"
-./test_engine.pl $1 "Total number of entries in osmi_addresses_nearest_roads"   "SELECT COUNT(*) FROM osmi_addresses_nearest_roads"   "=" "5"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_connection_line" "SELECT COUNT(*) FROM osmi_addresses_connection_line" "=" "92"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_nearest_points"  "SELECT COUNT(*) FROM osmi_addresses_nearest_points"  "=" "92"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_nearest_roads"   "SELECT COUNT(*) FROM osmi_addresses_nearest_roads"   "=" "7"
 
 ./test_engine.pl $1 "Total number of entries in osmi_addresses_interpolation" "SELECT COUNT(*) FROM osmi_addresses_interpolation" "=" "26"
 
-./test_engine.pl $1 "Total number of entries in osmi_addresses_nodes_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses" "=" "100"
-./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with is_ip=false" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE is_ip=0" "=" "84"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_nodes_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses" "=" "106"
+./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with is_ip=false" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE is_ip=0" "=" "90"
 ./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with is_ip=true" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE is_ip=1" "=" "16"
-./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with road_id not null" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE road_id IS NOT NULL" "=" "86"
+./test_engine.pl $1 "Number of entries in osmi_addresses_nodes_with_addresses with road_id not null" "SELECT COUNT(*) FROM osmi_addresses_nodes_with_addresses WHERE road_id IS NOT NULL" "=" "92"
 
-./test_engine.pl $1 "Total number of entries in osmi_addresses_ways_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_ways_with_addresses" "=" "29"
+./test_engine.pl $1 "Total number of entries in osmi_addresses_ways_with_addresses" "SELECT COUNT(*) FROM osmi_addresses_ways_with_addresses" "=" "32"
 
 ./test_engine.pl $1 "Total number of entries in osmi_addresses_buildings" "SELECT COUNT(*) FROM osmi_addresses_buildings" "=" "0"
 
