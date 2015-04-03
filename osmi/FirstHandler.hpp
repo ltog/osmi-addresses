@@ -9,9 +9,11 @@ class FirstHandler : public osmium::handler::Handler {
 public:
 	FirstHandler(
 			node_set& addr_interpolation_node_set,
-			name2highways_type& name2highway)
+			name2highways_type& name2highway_area,
+			name2highways_type& name2highway_nonarea)
 		: m_addr_interpolation_node_set(addr_interpolation_node_set),
-		  m_name2highways(name2highway) {
+		  m_name2highways_area(name2highway_area),
+		  m_name2highways_nonarea(name2highway_nonarea){
 
 	}
 
@@ -55,15 +57,15 @@ public:
 
 						const char* area = way.tags().get_value_by_key("area");
 
-						if (area && ( (!strcmp(area, "yes")) || (!strcmp(area, "true")) ) )
-						{
-							mylookup.area = true;
-						} else {
-							mylookup.area = false;
-						}
 						mylookup.compr_way = std::unique_ptr<CompressedWay>(new CompressedWay(m_factory.create_linestring(way)));
 
-						m_name2highways.insert(name2highways_element_type(streetname, std::move(mylookup)));
+						if (area && ( (!strcmp(area, "yes")) || (!strcmp(area, "true")) ) )
+						{
+							m_name2highways_area.insert(name2highways_element_type(streetname, std::move(mylookup)));
+						} else {
+							m_name2highways_nonarea.insert(name2highways_element_type(streetname, std::move(mylookup)));
+						}
+
 					}
 				}
 			}
@@ -77,7 +79,8 @@ public:
 
 private:
 	node_set& m_addr_interpolation_node_set;
-	name2highways_type& m_name2highways;
+	name2highways_type& m_name2highways_area;
+	name2highways_type& m_name2highways_nonarea;
 	GeometryHelper m_geometry_helper;
 
 	std::set<std::string> get_streetnames(const osmium::TagList& taglist) {

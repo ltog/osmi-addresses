@@ -21,9 +21,11 @@ public:
 	SecondHandler(
 			const std::string& filename,
 			node_set& addr_interpolation_node_set,
-			name2highways_type& name2highways)
+			name2highways_type& name2highways_area,
+			name2highways_type& name2highways_nonarea)
 	: mp_addr_interpolation_node_set(addr_interpolation_node_set),
-	  mp_name2highways(name2highways)
+	  mp_name2highways_area(name2highways_area),
+	  mp_name2highways_nonarea(name2highways_nonarea)
 	{
 		OGRRegisterAll();
 
@@ -48,7 +50,7 @@ public:
 		sparef.SetWellKnownGeogCS("WGS84");
 
 		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(m_data_source));
-		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(m_data_source, mp_name2highways));
+		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(m_data_source, mp_name2highways_area, mp_name2highways_nonarea));
 		entrances_writer             = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter(m_data_source));
 
 		interpolation_writer         = std::unique_ptr<InterpolationWriter>     (new InterpolationWriter     (m_data_source, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
@@ -121,7 +123,8 @@ public:
 
 private:
 	node_set& mp_addr_interpolation_node_set;
-	name2highways_type& mp_name2highways;
+	name2highways_type& mp_name2highways_area;
+	name2highways_type& mp_name2highways_nonarea;
 	node_map_type m_addr_interpolation_node_map;
 	GeometryHelper m_geometry_helper;
 

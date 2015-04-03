@@ -15,8 +15,9 @@ constexpr double MAXDIST = 0.06;
 class ConnectionLinePreprocessor {
 
 public:
-	ConnectionLinePreprocessor(OGRDataSource* data_source, name2highways_type& name2highways):
-	mp_name2highways(name2highways),
+	ConnectionLinePreprocessor(OGRDataSource* data_source, name2highways_type& name2highways_area, name2highways_type& name2highways_nonarea):
+	mp_name2highways_area(name2highways_area),
+	mp_name2highways_nonarea(name2highways_nonarea),
 	addrstreet(nullptr) {
 		mp_nearest_points_writer  = new NearestPointsWriter (data_source);
 		mp_nearest_roads_writer   = new NearestRoadsWriter  (data_source);
@@ -102,12 +103,36 @@ private:
 			osmium::unsigned_object_id_type& closest_way_id,
 			std::string&                     lastchange) {
 
-		double min_dist = std::numeric_limits<double>::max();
-		double dist;
+		double best_dist = std::numeric_limits<double>::max();
 		bool assigned = false;
 
-		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair;
-		name2highw_it_pair = mp_name2highways.equal_range(std::string(addrstreet));
+		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_area;
+		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_nonarea;
+		name2highw_it_pair_area    = mp_name2highways_area.equal_range(std::string(addrstreet));
+		name2highw_it_pair_nonarea = mp_name2highways_nonarea.equal_range(std::string(addrstreet));
+
+		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_area)) {
+			is_area  = true;
+			assigned = true;
+		}
+		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_nonarea)) {
+			is_area  = false;
+			assigned = true;
+		}
+
+		return assigned;
+	}
+
+	bool get_closest_way_from_argument(
+			const OGRPoint& ogr_point,
+			double& best_dist,
+			std::unique_ptr<OGRLineString>&  closest_way,
+			osmium::unsigned_object_id_type& closest_way_id,
+			std::string&                     lastchange,
+			const std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair) {
+
+		double cur_dist;
+		bool assigned = false;
 
 		for (name2highways_type::iterator it = name2highw_it_pair.first; it!=name2highw_it_pair.second; ++it) {
 			if (m_geometry_helper.is_point_near_bbox(
@@ -119,13 +144,12 @@ private:
 					MAXDIST)) {
 
 				OGRLineString linestring = *(static_cast<OGRLineString*>(it->second.compr_way.get()->uncompress().get()->clone()));
-				dist = linestring.Distance(&ogr_point);
-				if (dist < min_dist) {
+				cur_dist = linestring.Distance(&ogr_point);
+				if (cur_dist < best_dist) {
 					closest_way.reset(static_cast<OGRLineString*>(linestring.clone()));
 					closest_way_id = it->second.way_id;
 					lastchange     = it->second.lastchange;
-					is_area = it->second.area;
-					min_dist = dist;
+					best_dist = cur_dist;
 					assigned = true;
 				}
 			}
@@ -199,7 +223,7 @@ private:
 
 		double r;
 
-		r = ((p.getX()-a.getX()) * (b.getX()-a.getX()) + (p.getY()-a.getY()) * (b.getY()-a.getY())) / (pow(b.getX()-a.getX(), 2)+pow(b.getY()-a.getY(),2));
+		r = ((p.getX()-a.getX()) * (b.getX()-a.getX()) + (p.getY()-a.getY()) * (b.getY()-a.getY())) / (pow(b.getX()-a.getX(),2)+pow(b.getY()-a.getY(),2));
 
 		if (r<0) {
 			ret = a;
@@ -221,7 +245,8 @@ private:
 
 
 	bool has_entry_in_name2highways(const std::string& addrstreet) {
-		if (mp_name2highways.find(std::string(addrstreet)) != mp_name2highways.end()) {
+		if (mp_name2highways_nonarea.find(std::string(addrstreet)) != mp_name2highways_nonarea.end() ||
+				(mp_name2highways_area.find(std::string(addrstreet)) != mp_name2highways_area.end())) {
 			return true;
 		} else {
 			return false;
@@ -229,7 +254,8 @@ private:
 	}
 
 
-	name2highways_type& mp_name2highways;
+	name2highways_type& mp_name2highways_area;
+	name2highways_type& mp_name2highways_nonarea;
 	const char* addrstreet;
 	osmium::geom::OGRFactory<> m_factory {};
 	NearestPointsWriter*  mp_nearest_points_writer;
