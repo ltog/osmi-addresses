@@ -1,3 +1,13 @@
+# links created for running mapserver locally
+entrance-deprecated.png
+entrance-emergency.png
+entrance-exit.png
+entrance-main.png
+entrance-service.png
+entrance-yes.png
+fontset
+symbolset
+
 /Debug/
 test/out.sqlite
 test/pos-osmi-testzone.osm

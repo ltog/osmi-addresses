@@ -182,6 +182,59 @@ MAP
 
     #-------------------------------------------------------------------
     LAYER
+        Name nearest_areas
+        TYPE POLYGON
+        STATUS ON
+        CONNECTIONTYPE OGR
+        TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_nearest_areas.shp"
+        TILEITEM "LOCATION"
+        TEMPLATE "/srv/tools/views/addresses/nearest_areas-template.html"
+        TEMPLATE "/srv/tools/views/addresses/-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nearest_areas
+            OWS_TITLE "Nearest areas"
+            OWS_ABSTRACT "All areas which have nodes or buildings with addresses next to them."
+            OWS_KEYWORDLIST "datasrc=OSM,min=12,max=22,label=name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:3857"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 200000
+        MINSCALEDENOM 1
+        MAXSCALEDENOM 200000
+        MINSCALEDENOM 1
+        LABELITEM 'name'
+        CLASS
+            NAME "Nearest areas"
+            STYLE
+                WIDTH 2
+                COLOR 33 155 82
+                OPACITY 25
+                ANTIALIAS true
+            END
+            STYLE
+                OUTLINECOLOR 33 155 82
+                WIDTH 2
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 10
+                COLOR 33 155 82
+                ANTIALIAS true
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+                ENCODING "utf-8"
+                ANGLE AUTO
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
         NAME nearest_roads
         TYPE LINE
         STATUS ON
@@ -395,7 +448,6 @@ MAP
 	#CONNECTION "/srv/tools/sqlite/europe-neu.sqlite"
 	TILEINDEX "/srv/tools/sqlite/tileindex_osmi_addresses_ways_with_addresses.shp"
         TILEITEM "LOCATION"
-	#DATA "osmi_addresses_ways_with_addresses"
         TEMPLATE "/srv/tools/views/addresses/buildings_with_addresses-template.html"
         DUMP true
         METADATA
@@ -506,7 +558,7 @@ MAP
         LABELMINSCALEDENOM 1
         LABELITEM "houseno"
         # Filter out interpolated nodes and centroid nodes of building polygons
-        FILTER ([is_ip]=0 AND [node_id] is not null)
+        FILTER ([is_ip]=0 AND [node_id] > 0)
         #FILTER ([is_ip]=0)
         CLASS
             NAME "Nodes with defined addresses"
@@ -525,6 +577,8 @@ MAP
             END
         END
     END
+
+    #-------------------------------------------------------------------
     LAYER
         NAME postal_code
         TYPE LINE
@@ -571,6 +625,105 @@ MAP
         END
     END
 
+    #-------------------------------------------------------------------
+    LAYER
+        NAME entrances_deprecated
+        TYPE POINT
+        STATUS ON
+        CONNECTIONTYPE OGR
+        TILEINDEX ...
+        TILEITEM ...
+        #TEMPLATE ...
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME entrances
+            OWS_TITLE "Entrances"
+            OWS_ABSTRACT "Nodes tagged as entrances using the deprecated tagging scheme building=entrance."
+            OWS_KEYWORDLIST "datasrc=OSM,min=18,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        CLASS
+            NAME "Deprecated entrances (building=entrance)"
+	    EXPRESSION ("[entrance]" = '')
+            STYLE
+                SYMBOL "entrance-deprecated"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+    END
+
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME entrances
+        TYPE POINT
+        STATUS ON
+        CONNECTIONTYPE OGR
+        TILEINDEX ...
+        TILEITEM ...
+        #TEMPLATE ...
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME entrances
+            OWS_TITLE "Entrances"
+            OWS_ABSTRACT "Nodes tagged as entrances with entrance=..."
+            OWS_KEYWORDLIST "datasrc=OSM,min=18,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        CLASS
+            NAME "Entrances (entrance=emergency)"
+	    EXPRESSION ("[entrance]" = 'emergency')
+            STYLE
+                SYMBOL "entrance-emergency"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=exit)"
+	    EXPRESSION ("[entrance]" = 'exit')
+            STYLE
+                SYMBOL "entrance-exit"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=main)"
+	    EXPRESSION ("[entrance]" = 'main')
+            STYLE
+                SYMBOL "entrance-main"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=service)"
+	    EXPRESSION ("[entrance]" = 'service')
+            STYLE
+                SYMBOL "entrance-service"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=yes)"
+	    EXPRESSION ("[entrance]" = 'yes')
+            STYLE
+                SYMBOL "entrance-yes"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+    END
+    
     #-------------------------------------------------------------------
     LAYER
         NAME interpolation_errors
@@ -709,7 +862,7 @@ MAP
             END
         END
     END
-
+    
     #-------------------------------------------------------------------
 
     LAYER
