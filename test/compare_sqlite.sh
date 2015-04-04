@@ -19,9 +19,9 @@ fi
 # define a function to call a difftool (implemented this way so 'diff' can be used when 'colordiff' ist not installed)
 difftool() {
 	if hash colordiff 2>/dev/null; then # from http://stackoverflow.com/a/677212
-		colordiff "$@"
+		colordiff -y --suppress-common-lines "$@"
 	else
-		diff "$@"
+		diff -y --suppress-common-lines "$@"
 	fi
 }
 
