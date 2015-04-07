@@ -188,6 +188,6 @@ main() {
 
 # Execute the program if it was not included from another file.  This makes it
 # possible to include without executing, and thus test.
-if [ "$(basename "$0")" = "pmp" ] || [ "$(basename "$0")" = "bash" -a "$_" = "$0" ]; then
+if [ "$(basename -s .sh "$0")" = "pmp" ] || [ "$(basename "$0")" = "bash" -a "$_" = "$0" ]; then
     main "$@"
 fi
