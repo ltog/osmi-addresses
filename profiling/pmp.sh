@@ -3,7 +3,7 @@
 
 # ########################################################################
 # This script aggregates GDB stack traces for a selected program.  By default it
-# does mysqld.
+# does osmi.
 #
 # Author: Baron Schwartz, based on a script by Domas Mituzas at
 # poormansprofiler.org
@@ -23,7 +23,7 @@ Usage: $0 [OPTIONS] [FILE]
    $0 does two things: 1) get a GDB backtrace 2) aggregate it.
    If you specify a FILE, then step 1) is not performed.
 Options:
-   -b BINARY      Which binary to trace (default mysqld)
+   -b BINARY      Which binary to trace (default osmi)
    -i ITERATIONS  How many traces to gather and aggregate (default 1)
    -k KEEPFILE    Keep the raw traces in this file after aggregation
    -l NUMBER      Aggregate only first NUMBER functions; 0=infinity (default 0)
@@ -159,7 +159,7 @@ main() {
    export OPT_i="${OPT_i:-1}";
    export OPT_k="${OPT_k:-}";
    export OPT_l="${OPT_l:-0}";
-   export OPT_b="${OPT_b:-mysqld}";
+   export OPT_b="${OPT_b:-osmi}";
    export OPT_p="${OPT_p:-}";
    export OPT_s="${OPT_s:-0}";
 
