@@ -7,6 +7,10 @@
 #
 # Author: Baron Schwartz, based on a script by Domas Mituzas at
 # poormansprofiler.org
+#
+# License: http://opensource.org/licenses/BSD-3-Clause according to https://code.google.com/p/aspersa/
+#
+# Further changes by Lukas Toggenburger
 # ########################################################################
 
 # Print a usage message and exit.
