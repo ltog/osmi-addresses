@@ -174,7 +174,7 @@ main() {
             OPT_p=$(ps -eaf | grep "${OPT_b}" | grep -v grep | awk '{print $2}' | head -n1);
          fi
       fi
-      date;
+
       for x in $(seq 1 $OPT_i); do
          gdb -ex "set pagination 0" -ex "thread apply all bt" -batch -p $OPT_p >> "${OPT_k:-/tmp/aspersa}"
          date +'TS %N.%s %F %T' >> "${OPT_k:-/tmp/aspersa}"
