@@ -24,7 +24,7 @@ Usage: $0 [OPTIONS] [FILE]
    If you specify a FILE, then step 1) is not performed.
 Options:
    -b BINARY      Which binary to trace (default osmi)
-   -i ITERATIONS  How many traces to gather and aggregate (default 1)
+   -i ITERATIONS  How many traces to gather and aggregate (default 1) (0 for continuos operation)
    -k KEEPFILE    Keep the raw traces in this file after aggregation
    -l NUMBER      Aggregate only first NUMBER functions; 0=infinity (default 0)
    -p PID         Process ID of the process to trace; overrides -b
@@ -119,6 +119,12 @@ EOF
    rm -f /tmp/aspersa
 }
 
+get_stacktrace() {
+   gdb -ex "set pagination 0" -ex "thread apply all bt" -batch -p $OPT_p >> "${OPT_k:-/tmp/aspersa}"
+   date +'TS %N.%s %F %T' >> "${OPT_k:-/tmp/aspersa}"
+   sleep $OPT_s
+}
+
 # The main program to run.
 main() {
    rm -f /tmp/aspersa
@@ -176,11 +182,15 @@ main() {
          fi
       fi
 
-      for x in $(seq 1 $OPT_i); do
-         gdb -ex "set pagination 0" -ex "thread apply all bt" -batch -p $OPT_p >> "${OPT_k:-/tmp/aspersa}"
-         date +'TS %N.%s %F %T' >> "${OPT_k:-/tmp/aspersa}"
-         sleep $OPT_s
-      done
+      if [ ${OPT_i} -eq 0 ]; then 
+         while ps -p ${OPT_p} > /dev/null; do # slight risk of a race condition if another process spawns with the same PID
+	    get_stacktrace
+	 done
+      else
+         for x in $(seq 1 $OPT_i); do
+            get_stacktrace
+         done
+      fi
    fi
 
    if [ $# -eq 0 ]; then
