@@ -163,8 +163,9 @@ main() {
    export OPT_p="${OPT_p:-}";
    export OPT_s="${OPT_s:-1}";
 
-   if [ -z "${1}" ]; then
-      # There's no file to analyze, so we'll make one.
+   if [ -z "${1}" ]; then # There's no file to analyze, so we'll make one.
+
+      # Determine PID
       if [ -z "${OPT_p}" ]; then
          OPT_p=$(pidof -s "${OPT_b}" 2>/dev/null);
          if [ -z "${OPT_p}" ]; then
