@@ -28,7 +28,7 @@ Options:
    -k KEEPFILE    Keep the raw traces in this file after aggregation
    -l NUMBER      Aggregate only first NUMBER functions; 0=infinity (default 0)
    -p PID         Process ID of the process to trace; overrides -b
-   -s SLEEPTIME   Number of seconds to sleep between iterations (default 0)
+   -s SLEEPTIME   Number of seconds to sleep between iterations (default 1)
 	USAGE
    exit 1
 }
@@ -161,7 +161,7 @@ main() {
    export OPT_l="${OPT_l:-0}";
    export OPT_b="${OPT_b:-osmi}";
    export OPT_p="${OPT_p:-}";
-   export OPT_s="${OPT_s:-0}";
+   export OPT_s="${OPT_s:-1}";
 
    if [ -z "${1}" ]; then
       # There's no file to analyze, so we'll make one.
