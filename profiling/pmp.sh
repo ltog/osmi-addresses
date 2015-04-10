@@ -126,7 +126,9 @@ EOF
 }
 
 get_stacktrace() {
-   gdb -ex "set pagination 0" -ex "thread apply all bt" -batch -p $OPT_p >> "${OPT_k:-/tmp/aspersa}"
+   gdb -ex "set pagination 0" -ex "thread apply all bt" -batch -p $OPT_p >> "${OPT_k:-/tmp/aspersa}" 2> /dev/null
+   # 2> /dev/null is to prevent error messages like 'malloc.c: No such file or directory.'
+
    date +'TS %N.%s %F %T' >> "${OPT_k:-/tmp/aspersa}"
    sleep $OPT_s
 }
