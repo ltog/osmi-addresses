@@ -13,6 +13,12 @@
 # Further changes by Lukas Toggenburger
 # ########################################################################
 
+cleanup() {
+	rm -f /tmp/aspersa.awk
+}
+
+trap cleanup SIGINT SIGTERM EXIT
+
 # Print a usage message and exit.
 usage() {
    if [ "${OPT_ERR}" ]; then
