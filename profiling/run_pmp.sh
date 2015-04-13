@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -ne 1 ]; then
-	echo "Usage: $0 INFILE"
+	echo "Usage: $0 OSM_INFILE"
 	exit 1
 fi
 
