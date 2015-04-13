@@ -149,7 +149,7 @@ private:
 				OGRLineString linestring = *(static_cast<OGRLineString*>(it->second.compr_way.get()->uncompress().get()->clone()));
 
 				cur_dist = linestring.Distance(&ogr_point);
-				// note: distance calculation involves nodes, but not projections on the linestring-segments
+				// note: distance calculation involves nodes, but not the points between the nodes on the line segments
 
 				if (cur_dist < best_dist) {
 					closest_way.reset(static_cast<OGRLineString*>(linestring.clone()));
