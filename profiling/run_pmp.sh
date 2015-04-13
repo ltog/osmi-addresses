@@ -29,7 +29,7 @@ sudo true # ask for sudo password so the next two commands may start immediately
 
 ../osmi/osmi $infile $tmpoutfile & sudo ./pmp.sh -i 0 -k $stfile -s 0.1 > /dev/null
 
-cp $stfile $processed_stfile
+tac $stfile | awk -f cleanup-osmi-trace.awk - | tac > $processed_stfile
 
 ./pmp.sh $processed_stfile
 
