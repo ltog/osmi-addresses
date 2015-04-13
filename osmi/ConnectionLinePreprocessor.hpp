@@ -96,6 +96,7 @@ private:
 	}
 
 
+	/* look up the closest way with the given name in the name2highway structs for ways and areas */
 	bool get_closest_way(
 			const OGRPoint& ogr_point,
 			std::unique_ptr<OGRLineString>&  closest_way,
@@ -123,6 +124,8 @@ private:
 		return assigned;
 	}
 
+	/* look up the closest way in the given name2highway struct that is closer than best_dist
+	 * return true if found */
 	bool get_closest_way_from_argument(
 			const OGRPoint& ogr_point,
 			double& best_dist,
@@ -161,6 +164,7 @@ private:
 		return assigned;
 	}
 
+	/* get the node of closest_way that is most close ogr_point */
 	void get_closest_node(
 			const OGRPoint&                       ogr_point,
 			const std::unique_ptr<OGRLineString>& closest_way,
@@ -186,6 +190,7 @@ private:
 		closest_way->getPoint(ind_closest_node, closest_node.get());
 	}
 
+	/* given the linestring closest_way, return the point on it that is closest to ogr_point */
 	void get_closest_point_from_node_neighbourhood(
 			const OGRPoint&                       ogr_point,
 			const std::unique_ptr<OGRLineString>& closest_way,
@@ -218,6 +223,7 @@ private:
 
 	// based on: http://postgis.refractions.net/documentation/postgis-doxygen/da/de7/liblwgeom_8h_84b0e41df157ca1201ccae4da3e3ef7d.html#84b0e41df157ca1201ccae4da3e3ef7d
 	// see also: http://femto.cs.illinois.edu/faqs/cga-faq.html#S1.02
+	/* given a single line segment from a to b, return the point on it that is closest to p */
 	void get_closest_point_from_segment(
 			OGRPoint& a,
 			OGRPoint& b,
