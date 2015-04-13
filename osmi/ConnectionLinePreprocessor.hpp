@@ -187,7 +187,7 @@ private:
 	}
 
 	void get_closest_point_from_node_neighbourhood(
-			OGRPoint&                             ogr_point,
+			const OGRPoint&                       ogr_point,
 			const std::unique_ptr<OGRLineString>& closest_way,
 			const int&                            ind_closest_node,
 			std::unique_ptr<OGRPoint>&            closest_point) {
@@ -221,7 +221,7 @@ private:
 	void get_closest_point_from_segment(
 			OGRPoint& a,
 			OGRPoint& b,
-			OGRPoint& p,
+			const OGRPoint& p,
 			OGRPoint& ret) {
 
 		double r;
