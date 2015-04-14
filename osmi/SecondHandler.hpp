@@ -19,7 +19,7 @@ class SecondHandler: public osmium::handler::Handler{
 
 public:
 	SecondHandler(
-			const std::string& filename,
+			const std::string& dirname,
 			node_set& addr_interpolation_node_set,
 			name2highways_type& name2highways_area,
 			name2highways_type& name2highways_nonarea)
@@ -39,14 +39,14 @@ public:
 		CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "FALSE");
 		CPLSetConfigOption("OGR_SQLITE_CACHE", "1024"); // size in MB; see http://gdal.org/ogr/drv_sqlite.html
 		const char* options[] = { "SPATIALITE=TRUE", nullptr };
-		m_data_source = driver->CreateDataSource(filename.c_str(), const_cast<char**>(options));
+		m_data_source = driver->CreateDataSource(dirname.c_str(), const_cast<char**>(options));
 		if (!m_data_source) {
-			std::cerr << "Creation of output file '" << filename << "' failed." << std::endl;
+			std::cerr << "Creation of output file '" << dirname << "' failed." << std::endl;
 			exit(1);
 		}
 
-		OGRSpatialReference sparef;
-		sparef.SetWellKnownGeogCS("WGS84");
+		OGRSpatialReference spatialref;
+		spatialref.SetWellKnownGeogCS("WGS84");
 
 		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(m_data_source));
 		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(m_data_source, mp_name2highways_area, mp_name2highways_nonarea));
