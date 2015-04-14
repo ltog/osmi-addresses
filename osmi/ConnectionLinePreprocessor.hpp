@@ -124,7 +124,7 @@ private:
 		return assigned;
 	}
 
-	/* look up the closest way in the given name2highway struct that is closer than best_dist
+	/* look up the closest way in the given name2highway struct that is closer than best_dist using bbox
 	 * return true if found */
 	bool get_closest_way_from_argument(
 			const OGRPoint& ogr_point,
