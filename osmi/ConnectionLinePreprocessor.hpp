@@ -73,9 +73,9 @@ private:
 		osmium::unsigned_object_id_type closest_way_id = 0; // wouldn't need an initialization, but gcc warns otherwise
 		int                             ind_closest_node;
 		std::string						lastchange;
-		bool area;
+		bool is_area;
 
-		if(get_closest_way(ogr_point, closest_way, area, closest_way_id, lastchange)) {
+		if(get_closest_way(ogr_point, closest_way, is_area, closest_way_id, lastchange)) {
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get(), closest_point.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
@@ -83,7 +83,7 @@ private:
 
 			// TODO: could this be parallelized?
 			mp_nearest_points_writer->write_point(closest_point, closest_way_id);
-			if (area) {
+			if (is_area) {
 				mp_nearest_areas_writer->write_area(closest_way, closest_way_id, addrstreet, lastchange);
 			} else {
 				mp_nearest_roads_writer->write_road(closest_way, closest_way_id, addrstreet, lastchange);
