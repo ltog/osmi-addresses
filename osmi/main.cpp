@@ -38,6 +38,8 @@
 
 int main(int argc, char* argv[]) {
 
+	OGRRegisterAll();
+
 	if (argc < 2 || argc > 3) {
 		std::cerr << "Usage: " << argv[0] << " INFILE [OUTFILE]" << std::endl;
 		exit(1);

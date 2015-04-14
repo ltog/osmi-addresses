@@ -27,7 +27,6 @@ public:
 	  mp_name2highways_area(name2highways_area),
 	  mp_name2highways_nonarea(name2highways_nonarea)
 	{
-		OGRRegisterAll();
 
 		const std::string driver_name = std::string("SQLite");
 		OGRSFDriver* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
