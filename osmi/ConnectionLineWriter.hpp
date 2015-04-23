@@ -5,8 +5,8 @@ class ConnectionLineWriter : public Writer {
 
 public:
 
-	ConnectionLineWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_connection_line", USE_TRANSACTIONS, wkbLineString) {
+	ConnectionLineWriter(const std::string& dir_name) :
+		Writer(dir_name, "osmi_addresses_connection_line", USE_TRANSACTIONS, wkbLineString) {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"node_id", OFTString, NO_WIDTH});

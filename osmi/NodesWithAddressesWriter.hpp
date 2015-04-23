@@ -9,8 +9,8 @@
 class NodesWithAddressesWriter : public Writer {
 
 public:
-	NodesWithAddressesWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_nodes_with_addresses", USE_TRANSACTIONS, wkbPoint) {
+	NodesWithAddressesWriter(const std::string& dir_name) :
+		Writer(dir_name, "osmi_addresses_nodes_with_addresses", USE_TRANSACTIONS, wkbPoint) {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"node_id",    OFTString,  NO_WIDTH});

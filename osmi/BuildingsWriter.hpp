@@ -5,8 +5,8 @@ class BuildingsWriter : public Writer {
 
 public:
 
-	BuildingsWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_buildings", USE_TRANSACTIONS, wkbPolygon) {
+	BuildingsWriter(const std::string& dir_name) :
+		Writer(dir_name, "osmi_addresses_buildings", USE_TRANSACTIONS, wkbPolygon) {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"way_id",     OFTString, NO_WIDTH});

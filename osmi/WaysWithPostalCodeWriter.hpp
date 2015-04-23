@@ -5,8 +5,8 @@ class WaysWithPostalCodeWriter : public Writer {
 
 public:
 
-	WaysWithPostalCodeWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_ways_with_postal_code", USE_TRANSACTIONS, wkbLineString) {
+	WaysWithPostalCodeWriter(const std::string& dir_name) :
+		Writer(dir_name, "osmi_addresses_ways_with_postal_code", USE_TRANSACTIONS, wkbLineString) {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"way_id",     OFTString,  NO_WIDTH});

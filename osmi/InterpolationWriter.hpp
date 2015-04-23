@@ -15,11 +15,11 @@ class InterpolationWriter : public Writer {
 public:
 
 	InterpolationWriter(
-			OGRDataSource* data_source,
+			const std::string& dir_name,
 			node_map_type* node_map_type_p,
 			NodesWithAddressesWriter& nwa_writer,
 			ConnectionLinePreprocessor& clpp) :
-		Writer(data_source, "osmi_addresses_interpolation", USE_TRANSACTIONS, wkbLineString),
+		Writer(dir_name, "osmi_addresses_interpolation", USE_TRANSACTIONS, wkbLineString),
 		m_addr_interpolation_node_map(node_map_type_p),
 		m_nwa_writer(nwa_writer),
 		m_clpp(clpp){

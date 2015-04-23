@@ -1,3 +1,5 @@
+#include <sys/stat.h>
+
 #ifndef WRITER_HPP_
 #define WRITER_HPP_
 
@@ -9,17 +11,28 @@
 class Writer {
 
 public:
-	Writer(OGRDataSource* data_source, const std::string layer_name, const bool use_transaction, const OGRwkbGeometryType& geom_type)
+	Writer(const std::string& dirname, const std::string& layer_name, const bool& use_transaction, const OGRwkbGeometryType& geom_type)
 	:m_use_transaction(use_transaction),
 	 m_layer(nullptr) {
 
-		this->create_layer(data_source, layer_name, geom_type);
+		m_data_source = get_data_source(dirname, layer_name);
+
+		if (!m_data_source) {
+			std::cerr << "Creation of data source for layer '" << layer_name << "' failed." << std::endl;
+			exit(1);
+		}
+
+		OGRSpatialReference spatialref;
+		spatialref.SetWellKnownGeogCS("WGS84");
+
+		this->create_layer(m_data_source, layer_name, geom_type);
 	}
 
 	virtual ~Writer() {
 		if (m_use_transaction) {
 			m_layer->CommitTransaction();
 		}
+		OGRDataSource::DestroyDataSource(m_data_source);
 	};
 
 	virtual void feed_node(const osmium::Node&) = 0;
@@ -71,7 +84,11 @@ protected:
 	}
 
 private:
+	OGRDataSource* m_data_source;
+
 	unsigned int num_features = 0;
+
+	static bool is_output_dir_written;
 
 	void create_layer(OGRDataSource* data_source, const std::string& layer_name, const OGRwkbGeometryType& geom_type) {
 		OGRSpatialReference sparef;
@@ -94,6 +111,60 @@ private:
 			num_features = 0;
 		}
 	}
+
+	OGRDataSource* get_data_source(const std::string& dir_name, const std::string& layer_name) {
+		const std::string driver_name = std::string("SQLite");
+		OGRSFDriver* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
+		if (!driver) {
+			std::cerr << driver_name << " driver not available." << std::endl;
+			exit(1);
+		}
+
+		CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "OFF");
+		CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "FALSE");
+		CPLSetConfigOption("OGR_SQLITE_CACHE", "1024"); // size in MB; see http://gdal.org/ogr/drv_sqlite.html
+		const char* options[] = { "SPATIALITE=TRUE", nullptr };
+
+		std::string full_dir = get_current_dir() + "/" + dir_name;
+
+		maybe_create_dir(full_dir);
+
+		std::string path = full_dir + "/" + layer_name + ".sqlite";
+
+		return driver->CreateDataSource(path.c_str(), const_cast<char**>(options));
+	}
+
+	std::string get_current_dir() {
+		// http://stackoverflow.com/a/145309
+		// http://stackoverflow.com/a/13047398
+		char* current_path = getcwd(NULL, 0);
+		if (current_path == NULL){
+			std::cerr << "ERROR: Could not get current directory. errno=" << errno << std::endl;
+			exit(1);
+		}
+
+		std::string current_path_string(current_path);
+
+		free(current_path);
+
+		return current_path_string;
+	}
+
+	void maybe_create_dir(const std::string& dir) {
+		if (!is_output_dir_written) {
+			is_output_dir_written = true;
+			create_dir(dir);
+		}
+	}
+
+	void create_dir(const std::string& dir) {
+		if (mkdir(dir.c_str(), S_IRWXU |  S_IRGRP |  S_IXGRP |  S_IROTH |  S_IXOTH)) { // 755
+			std::cerr << "Could not create directory " << dir << ". errno=" << errno << std::endl;
+			exit(1);
+		}
+	}
 };
+
+bool Writer::is_output_dir_written = false;
 
 #endif /* WRITER_HPP_ */

@@ -6,8 +6,8 @@ class EntrancesWriter : public Writer {
 
 public:
 
-	EntrancesWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_entrances", USE_TRANSACTIONS, wkbPoint) {
+	EntrancesWriter(const std::string& dir_name) :
+		Writer(dir_name, "osmi_addresses_entrances", USE_TRANSACTIONS, wkbPoint) {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"node_id",    OFTString,  NO_WIDTH});

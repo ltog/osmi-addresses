@@ -15,14 +15,14 @@ constexpr double MAXDIST = 0.06;
 class ConnectionLinePreprocessor {
 
 public:
-	ConnectionLinePreprocessor(OGRDataSource* data_source, name2highways_type& name2highways_area, name2highways_type& name2highways_nonarea):
+	ConnectionLinePreprocessor(const std::string& dir_name, name2highways_type& name2highways_area, name2highways_type& name2highways_nonarea):
 	mp_name2highways_area(name2highways_area),
 	mp_name2highways_nonarea(name2highways_nonarea),
 	addrstreet(nullptr) {
-		mp_nearest_points_writer  = new NearestPointsWriter (data_source);
-		mp_nearest_roads_writer   = new NearestRoadsWriter  (data_source);
-		mp_nearest_areas_writer   = new NearestAreasWriter  (data_source);
-		mp_connection_line_writer = new ConnectionLineWriter(data_source);
+		mp_nearest_points_writer  = new NearestPointsWriter (dir_name);
+		mp_nearest_roads_writer   = new NearestRoadsWriter  (dir_name);
+		mp_nearest_areas_writer   = new NearestAreasWriter  (dir_name);
+		mp_connection_line_writer = new ConnectionLineWriter(dir_name);
 	}
 
 	~ConnectionLinePreprocessor() {

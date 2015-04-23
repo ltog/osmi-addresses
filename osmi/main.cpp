@@ -89,6 +89,7 @@ int main(int argc, char* argv[]) {
 	reader2.close();
 
 	google::protobuf::ShutdownProtobufLibrary();
+	OGRCleanupAll();
 
 	std::cout << std::endl;
 	mem_helper.print_max();
