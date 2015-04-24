@@ -16,7 +16,7 @@ if [ ! -d "$1" ]; then
 	exit 1
 fi
 
-create_spatial_indices() {
+create_indices() {
 	local tables=$(spatialite $1 ".schema" | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/")
 	
 	# can't call .schema after usage of $spatialite_pragmas for some unknown reason...
@@ -28,6 +28,6 @@ create_spatial_indices() {
 		spatialite $1 "$spatialite_pragmas BEGIN; SELECT CreateSpatialIndex('$table', 'GEOMETRY'); COMMIT;" > /dev/null
 	done <<< "$tables"
 }
-export -f create_spatial_indices
+export -f create_indices
 
-parallel $parallel_options create_spatial_indices ::: $(realpath $1/*.sqlite)
+parallel $parallel_options create_indices ::: $(realpath $1/*.sqlite)
