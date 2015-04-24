@@ -11,7 +11,10 @@ if [ $# -ne 1 ]; then
 	exit 1
 fi
 
-#TODO: check if $1 is a directory
+if [ ! -d "$1" ]; then
+	echo "ERROR: $1 is not a directory."
+	exit 1
+fi
 
 create_spatial_indices() {
 	local tables=$(spatialite $1 ".schema" | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/")
