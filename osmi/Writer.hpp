@@ -125,13 +125,17 @@ private:
 		CPLSetConfigOption("OGR_SQLITE_CACHE", "1024"); // size in MB; see http://gdal.org/ogr/drv_sqlite.html
 		const char* options[] = { "SPATIALITE=TRUE", nullptr };
 
-		std::string full_dir = get_current_dir() + "/" + dir_name;
+		std::string full_dir;
+		if (is_absolute_path(dir_name)) {
+			full_dir = dir_name; // TODO: normalize
+		} else {
+			full_dir = get_current_dir() + "/" + dir_name; //TODO: normalize
+		}
 
 		maybe_create_dir(full_dir);
 
-		std::string path = full_dir + "/" + layer_name + ".sqlite";
-
-		return driver->CreateDataSource(path.c_str(), const_cast<char**>(options));
+		std::string layer_path = full_dir + "/" + layer_name + ".sqlite";
+		return driver->CreateDataSource(layer_path.c_str(), const_cast<char**>(options));
 	}
 
 	std::string get_current_dir() {
@@ -161,6 +165,14 @@ private:
 		if (mkdir(dir.c_str(), S_IRWXU |  S_IRGRP |  S_IXGRP |  S_IROTH |  S_IXOTH)) { // 755
 			std::cerr << "Could not create directory " << dir << ". errno=" << errno << std::endl;
 			exit(1);
+		}
+	}
+
+	bool is_absolute_path(const std::string& path) {
+		if (path.substr(0, 1) == "/") {
+			return true;
+		} else {
+			return false;
 		}
 	}
 };
