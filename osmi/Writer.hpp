@@ -1,4 +1,5 @@
 #include <sys/stat.h>
+#include <boost/filesystem.hpp>
 
 #ifndef WRITER_HPP_
 #define WRITER_HPP_
@@ -7,6 +8,9 @@
 
 #define USE_TRANSACTIONS true
 #define DONT_USE_TRANSACTIONS false
+
+namespace bfs = boost::filesystem;
+using namespace bfs;
 
 class Writer {
 
@@ -125,46 +129,22 @@ private:
 		CPLSetConfigOption("OGR_SQLITE_CACHE", "1024"); // size in MB; see http://gdal.org/ogr/drv_sqlite.html
 		const char* options[] = { "SPATIALITE=TRUE", nullptr };
 
-		std::string full_dir;
+		bfs::path full_dir;
 		if (is_absolute_path(dir_name)) {
-			full_dir = dir_name; // TODO: normalize
+			full_dir = bfs::path(dir_name);
 		} else {
-			full_dir = get_current_dir() + "/" + dir_name; //TODO: normalize
+			full_dir = bfs::current_path() / bfs::path(dir_name);
 		}
 
 		maybe_create_dir(full_dir);
-
-		std::string layer_path = full_dir + "/" + layer_name + ".sqlite";
+		bfs::path layer_path = full_dir / bfs::path(layer_name + ".sqlite");
 		return driver->CreateDataSource(layer_path.c_str(), const_cast<char**>(options));
 	}
 
-	std::string get_current_dir() {
-		// http://stackoverflow.com/a/145309
-		// http://stackoverflow.com/a/13047398
-		char* current_path = getcwd(NULL, 0);
-		if (current_path == NULL){
-			std::cerr << "ERROR: Could not get current directory. errno=" << errno << std::endl;
-			exit(1);
-		}
-
-		std::string current_path_string(current_path);
-
-		free(current_path);
-
-		return current_path_string;
-	}
-
-	void maybe_create_dir(const std::string& dir) {
+	void maybe_create_dir(const bfs::path& dir) { // TODO: not thread-safe
 		if (!is_output_dir_written) {
 			is_output_dir_written = true;
-			create_dir(dir);
-		}
-	}
-
-	void create_dir(const std::string& dir) {
-		if (mkdir(dir.c_str(), S_IRWXU |  S_IRGRP |  S_IXGRP |  S_IROTH |  S_IXOTH)) { // 755
-			std::cerr << "Could not create directory " << dir << ". errno=" << errno << std::endl;
-			exit(1);
+			bfs::create_directories(dir);
 		}
 	}
 

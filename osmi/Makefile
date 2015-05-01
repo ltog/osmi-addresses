@@ -32,6 +32,9 @@ LIB_GEOS  := $(shell geos-config --libs)
 LIB_SHAPE  := -lshp $(LIB_GEOS)
 LIB_PRGOPT := -lboost_program_options
 
+LIB_BOOST_FS  := -lboost_filesystem
+LIB_BOOST_SYS := -lboost_system
+
 # this links libboost_program_options statically, because for some reason
 # it always wants the exact version which might not be available on a
 # different host
@@ -39,13 +42,12 @@ LIB_PRGOPT := -lboost_program_options
 
 PROGRAMS := osmi
 
-
 .PHONY: all clean
 
 all: $(PROGRAMS)
 
 osmi: main.cpp Makefile *.hpp $(other_compiler_file)
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_GEOS) $(LIB_OGR) $(LIB_PRGOPT) ; touch $(this_compiler_file)
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_GEOS) $(LIB_OGR) $(LIB_PRGOPT) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) ; touch $(this_compiler_file)
 
 last_use_of_clang.tmp:
 	touch last_use_of_clang.tmp
