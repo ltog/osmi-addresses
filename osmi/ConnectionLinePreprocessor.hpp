@@ -146,13 +146,13 @@ private:
 					ogr_point,
 					MAXDIST)) {
 
-				OGRLineString linestring = *(static_cast<OGRLineString*>(it->second.compr_way.get()->uncompress().get()->clone()));
+				std::unique_ptr<OGRLineString> linestring = it->second.compr_way.get()->uncompress();
 
-				cur_dist = linestring.Distance(&ogr_point);
+				cur_dist = linestring->Distance(&ogr_point);
 				// note: distance calculation involves nodes, but not the points between the nodes on the line segments
 
 				if (cur_dist < best_dist) {
-					closest_way.reset(static_cast<OGRLineString*>(linestring.clone()));
+					closest_way.reset(linestring.release());
 					closest_way_id = it->second.way_id;
 					lastchange     = it->second.lastchange;
 					best_dist = cur_dist;
