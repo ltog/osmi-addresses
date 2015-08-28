@@ -56,8 +56,12 @@ public:
 		}
 	}
 
-	bool operator==(const AltTagList /* other */) const {
+	bool operator==(const AltTagList& /* other */) const {
 		return false; //TODO: define a meaningful equivalence operator; the operator==() is exclusively used in sparse_table.hpp in class SparseTable (in function get()); so for the moment this works.
+	}
+
+	bool operator!=(const AltTagList& /* other */) const {
+		return true;  //TODO: define a meaningful equivalence operator; the operator==() is exclusively used in sparse_table.hpp in class SparseTable (in function get()); so for the moment this works.
 	}
 
 private:

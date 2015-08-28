@@ -9,8 +9,8 @@
 class NodesWithAddressesWriter : public Writer {
 
 public:
-	NodesWithAddressesWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_nodes_with_addresses", USE_TRANSACTIONS, wkbPoint) {
+	NodesWithAddressesWriter(const std::string& dir_name) :
+		Writer(dir_name, "osmi_addresses_nodes_with_addresses", USE_TRANSACTIONS, wkbPoint) {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"node_id",    OFTString,  NO_WIDTH});
@@ -90,7 +90,7 @@ public:
 					OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 					feature->SetGeometry(centroid.get());
 					feature->SetField("way_id", static_cast<double>(way.id())); //TODO: node.id() is of type int64_t. is this ok?
-					feature->SetField("is_ip", false);
+					feature->SetField("is_ip", IS_NOT_INTERPOLATION);
 					feature->SetField("lastchange", way.timestamp().to_iso().c_str());
 					if (street)   { feature->SetField("street"  , street);   }
 					if (houseno)  { feature->SetField("houseno" , houseno);  }

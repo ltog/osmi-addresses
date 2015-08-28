@@ -5,8 +5,8 @@ class NearestRoadsWriter : public Writer {
 
 public:
 
-	NearestRoadsWriter(OGRDataSource* data_source) :
-		Writer(data_source, "osmi_addresses_nearest_roads", USE_TRANSACTIONS, wkbLineString)  {
+	NearestRoadsWriter(const std::string& dir_name) :
+		Writer(dir_name, "osmi_addresses_nearest_roads", USE_TRANSACTIONS, wkbLineString)  {
 
 		std::vector<field_config> field_configurations;
 		field_configurations.push_back({"way_id",     OFTString, NO_WIDTH});

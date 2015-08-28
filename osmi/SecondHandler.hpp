@@ -14,47 +14,24 @@
 
 class SecondHandler: public osmium::handler::Handler{
 
-	osmium::geom::OGRFactory<> m_factory {};
-	OGRDataSource* m_data_source;
-
 public:
 	SecondHandler(
-			const std::string& filename,
+			const std::string& dir_name,
 			node_set& addr_interpolation_node_set,
-			name2highways_type& name2highways)
+			name2highways_type& name2highways_area,
+			name2highways_type& name2highways_nonarea)
 	: mp_addr_interpolation_node_set(addr_interpolation_node_set),
-	  mp_name2highways(name2highways)
+	  mp_name2highways_area(name2highways_area),
+	  mp_name2highways_nonarea(name2highways_nonarea)
 	{
-		OGRRegisterAll();
+		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(dir_name));
+		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(dir_name, mp_name2highways_area, mp_name2highways_nonarea));
+		entrances_writer             = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter(dir_name));
 
-		const std::string driver_name = std::string("SQLite");
-		OGRSFDriver* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
-		if (!driver) {
-			std::cerr << driver_name << " driver not available." << std::endl;
-			exit(1);
-		}
-
-		CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "OFF");
-		CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "FALSE");
-		CPLSetConfigOption("OGR_SQLITE_CACHE", "1024"); // size in MB; see http://gdal.org/ogr/drv_sqlite.html
-		const char* options[] = { "SPATIALITE=TRUE", nullptr };
-		m_data_source = driver->CreateDataSource(filename.c_str(), const_cast<char**>(options));
-		if (!m_data_source) {
-			std::cerr << "Creation of output file '" << filename << "' failed." << std::endl;
-			exit(1);
-		}
-
-		OGRSpatialReference sparef;
-		sparef.SetWellKnownGeogCS("WGS84");
-
-		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(m_data_source));
-		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(m_data_source, mp_name2highways));
-		entrances_writer             = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter(m_data_source));
-
-		interpolation_writer         = std::unique_ptr<InterpolationWriter>     (new InterpolationWriter     (m_data_source, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
-		buildings_writer             = std::unique_ptr<BuildingsWriter>         (new BuildingsWriter         (m_data_source));
-		ways_with_addresses_writer   = std::unique_ptr<WaysWithAddressesWriter> (new WaysWithAddressesWriter (m_data_source));
-		ways_with_postal_code_writer = std::unique_ptr<WaysWithPostalCodeWriter>(new WaysWithPostalCodeWriter(m_data_source));
+		interpolation_writer         = std::unique_ptr<InterpolationWriter>     (new InterpolationWriter     (dir_name, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
+		buildings_writer             = std::unique_ptr<BuildingsWriter>         (new BuildingsWriter         (dir_name));
+		ways_with_addresses_writer   = std::unique_ptr<WaysWithAddressesWriter> (new WaysWithAddressesWriter (dir_name));
+		ways_with_postal_code_writer = std::unique_ptr<WaysWithPostalCodeWriter>(new WaysWithPostalCodeWriter(dir_name));
 	}
 
 
@@ -67,9 +44,6 @@ public:
 		ways_with_postal_code_writer.reset();
 		nodes_with_addresses_writer.reset();
 		connection_line_preprocessor.reset();
-
-		OGRDataSource::DestroyDataSource(m_data_source);
-		OGRCleanupAll();
 	}
 
 	void node(const osmium::Node& node) {
@@ -121,7 +95,8 @@ public:
 
 private:
 	node_set& mp_addr_interpolation_node_set;
-	name2highways_type& mp_name2highways;
+	name2highways_type& mp_name2highways_area;
+	name2highways_type& mp_name2highways_nonarea;
 	node_map_type m_addr_interpolation_node_map;
 	GeometryHelper m_geometry_helper;
 

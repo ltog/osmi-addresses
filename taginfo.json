@@ -1,0 +1,38 @@
+{
+	"data_format": 1,
+	"data_url": "https://raw.githubusercontent.com/ltog/osmi-addresses/master/taginfo.json",
+	"data_updated": "20150305T220000Z",
+	"project": {
+		"name": "OSM Inspector - Addresses view",
+		"description": "Visualizes OSM (postal) address data. Intended as an error detection tool for mappers.",
+		"project_url": "http://tools.geofabrik.de/osmi/?view=addresses",
+		"doc_url": "https://github.com/ltog/osmi-addresses",
+		"contact_name": "Lukas Toggenburger",
+		"contact_email": "lukas.toggenburger X htwchur.ch"
+	},
+        "tags": [
+		{ "key": "addr:city", "object_types": [ "node", "area" ] },
+		{ "key": "addr:country", "object_types": [ "node", "area" ] },
+		{ "key": "addr:full", "object_types": [ "node", "area" ] },
+		{ "key": "addr:housenumber", "object_types": [ "node", "area" ] },
+		{ "key": "addr:interpolation", "value": "all", "object_types": [ "way" ] },
+		{ "key": "addr:interpolation", "value": "alphabetic", "object_types": [ "way" ] },
+		{ "key": "addr:interpolation", "value": "even", "object_types": [ "way" ] },
+		{ "key": "addr:interpolation", "value": "odd", "object_types": [ "way" ] },
+		{ "key": "addr:place", "object_types": [ "node", "area" ] },
+		{ "key": "addr:postcode", "object_types": [ "node", "area" ] },
+		{ "key": "addr:street", "object_types": [ "node", "area" ] },
+		{ "key": "area", "value": "yes", "object_types": [ "area" ] },
+		{ "key": "area", "value": "true", "object_types": [ "area" ] },
+		{ "key": "building", "object_types": [ "area" ] },
+		{ "key": "building", "value": "entrance", "description": "Deprecated tagging style", "object_types": [ "node" ] },
+		{ "key": "entrance", "value": "emergency", "object_types": [ "node" ] },
+		{ "key": "entrance", "value": "exit", "object_types": [ "node" ] },
+		{ "key": "entrance", "value": "main", "object_types": [ "node" ] },
+		{ "key": "entrance", "value": "service", "object_types": [ "node" ] },
+		{ "key": "entrance", "value": "yes", "object_types": [ "node" ] },
+		{ "key": "highway", "object_types": [ "way", "area" ] },
+		{ "key": "name", "object_types": [ "way", "area" ] },
+		{ "key": "postal_code", "object_types": [ "way", "area" ] },
+	]
+}

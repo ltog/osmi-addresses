@@ -3,10 +3,8 @@
 
 #include <math.h> 
 
-#define DUMMY_ID 0
-#define MAXDIST 0.06
-#define PI 3.14159265358979323846
-#define DEG2RAD(DEG) ((DEG)*((PI)/(180.0)))
+constexpr osmium::object_id_type DUMMY_ID = 0;
+constexpr double MAXDIST = 0.06;
 
 #include "NearestPointsWriter.hpp"
 #include "NearestRoadsWriter.hpp"
@@ -17,13 +15,14 @@
 class ConnectionLinePreprocessor {
 
 public:
-	ConnectionLinePreprocessor(OGRDataSource* data_source, name2highways_type& name2highways):
-	mp_name2highways(name2highways),
+	ConnectionLinePreprocessor(const std::string& dir_name, name2highways_type& name2highways_area, name2highways_type& name2highways_nonarea):
+	mp_name2highways_area(name2highways_area),
+	mp_name2highways_nonarea(name2highways_nonarea),
 	addrstreet(nullptr) {
-		mp_nearest_points_writer  = new NearestPointsWriter (data_source);
-		mp_nearest_roads_writer   = new NearestRoadsWriter  (data_source);
-		mp_nearest_areas_writer   = new NearestAreasWriter  (data_source);
-		mp_connection_line_writer = new ConnectionLineWriter(data_source);
+		mp_nearest_points_writer  = new NearestPointsWriter (dir_name);
+		mp_nearest_roads_writer   = new NearestRoadsWriter  (dir_name);
+		mp_nearest_areas_writer   = new NearestAreasWriter  (dir_name);
+		mp_connection_line_writer = new ConnectionLineWriter(dir_name);
 	}
 
 	~ConnectionLinePreprocessor() {
@@ -74,9 +73,9 @@ private:
 		osmium::unsigned_object_id_type closest_way_id = 0; // wouldn't need an initialization, but gcc warns otherwise
 		int                             ind_closest_node;
 		std::string						lastchange;
-		bool area;
+		bool is_area;
 
-		if(get_closest_way(ogr_point, closest_way, area, closest_way_id, lastchange)) {
+		if(get_closest_way(ogr_point, closest_way, is_area, closest_way_id, lastchange)) {
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get(), closest_point.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
@@ -84,7 +83,7 @@ private:
 
 			// TODO: could this be parallelized?
 			mp_nearest_points_writer->write_point(closest_point, closest_way_id);
-			if (area) {
+			if (is_area) {
 				mp_nearest_areas_writer->write_area(closest_way, closest_way_id, addrstreet, lastchange);
 			} else {
 				mp_nearest_roads_writer->write_road(closest_way, closest_way_id, addrstreet, lastchange);
@@ -97,33 +96,66 @@ private:
 	}
 
 
+	/* look up the closest way with the given name in the name2highway structs for ways and areas */
 	bool get_closest_way(
 			const OGRPoint& ogr_point,
 			std::unique_ptr<OGRLineString>&  closest_way,
-			bool& is_area,
+			bool&                            is_area,
 			osmium::unsigned_object_id_type& closest_way_id,
 			std::string&                     lastchange) {
 
-		double min_dist = std::numeric_limits<double>::max();
-		double dist;
+		double best_dist = std::numeric_limits<double>::max();
 		bool assigned = false;
-		float corrected = MAXDIST / cos(DEG2RAD(ogr_point.getY()));
 
-		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair;
-		name2highw_it_pair = mp_name2highways.equal_range(std::string(addrstreet));
+		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_area;
+		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_nonarea;
+		name2highw_it_pair_area    = mp_name2highways_area.equal_range(std::string(addrstreet));
+		name2highw_it_pair_nonarea = mp_name2highways_nonarea.equal_range(std::string(addrstreet));
+
+		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_area)) {
+			is_area  = true;
+			assigned = true;
+		}
+		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_nonarea)) {
+			is_area  = false;
+			assigned = true;
+		}
+
+		return assigned;
+	}
+
+	/* look up the closest way in the given name2highway struct that is closer than best_dist using bbox
+	 * return true if found */
+	bool get_closest_way_from_argument(
+			const OGRPoint& ogr_point,
+			double& best_dist,
+			std::unique_ptr<OGRLineString>&  closest_way,
+			osmium::unsigned_object_id_type& closest_way_id,
+			std::string&                     lastchange,
+			const std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair) {
+
+		double cur_dist;
+		bool assigned = false;
 
 		for (name2highways_type::iterator it = name2highw_it_pair.first; it!=name2highw_it_pair.second; ++it) {
-			if (fabs(static_cast<float>(it->second.lat - ogr_point.getY())) < MAXDIST &&
-				fabs(static_cast<float>(it->second.lon - ogr_point.getX())) < corrected ) {
+			if (m_geometry_helper.is_point_near_bbox(
+					it->second.bbox_n,
+					it->second.bbox_e,
+					it->second.bbox_s,
+					it->second.bbox_w,
+					ogr_point,
+					MAXDIST)) {
 
-				OGRLineString linestring = *(static_cast<OGRLineString*>(it->second.compr_way.get()->uncompress().get()->clone()));
-				dist = linestring.Distance(&ogr_point);
-				if (dist < min_dist) {
-					closest_way.reset(static_cast<OGRLineString*>(linestring.clone()));
+				std::unique_ptr<OGRLineString> linestring = it->second.compr_way.get()->uncompress();
+
+				cur_dist = linestring->Distance(&ogr_point);
+				// note: distance calculation involves nodes, but not the points between the nodes on the line segments
+
+				if (cur_dist < best_dist) {
+					closest_way.reset(linestring.release());
 					closest_way_id = it->second.way_id;
 					lastchange     = it->second.lastchange;
-               is_area = it->second.area;
-					min_dist = dist;
+					best_dist = cur_dist;
 					assigned = true;
 				}
 			}
@@ -132,6 +164,7 @@ private:
 		return assigned;
 	}
 
+	/* get the node of closest_way that is most close ogr_point */
 	void get_closest_node(
 			const OGRPoint&                       ogr_point,
 			const std::unique_ptr<OGRLineString>& closest_way,
@@ -157,8 +190,9 @@ private:
 		closest_way->getPoint(ind_closest_node, closest_node.get());
 	}
 
+	/* given the linestring closest_way, return the point on it that is closest to ogr_point */
 	void get_closest_point_from_node_neighbourhood(
-			OGRPoint&                             ogr_point,
+			const OGRPoint&                       ogr_point,
 			const std::unique_ptr<OGRLineString>& closest_way,
 			const int&                            ind_closest_node,
 			std::unique_ptr<OGRPoint>&            closest_point) {
@@ -189,15 +223,16 @@ private:
 
 	// based on: http://postgis.refractions.net/documentation/postgis-doxygen/da/de7/liblwgeom_8h_84b0e41df157ca1201ccae4da3e3ef7d.html#84b0e41df157ca1201ccae4da3e3ef7d
 	// see also: http://femto.cs.illinois.edu/faqs/cga-faq.html#S1.02
+	/* given a single line segment from a to b, return the point on it that is closest to p */
 	void get_closest_point_from_segment(
 			OGRPoint& a,
 			OGRPoint& b,
-			OGRPoint& p,
+			const OGRPoint& p,
 			OGRPoint& ret) {
 
 		double r;
 
-		r = ((p.getX()-a.getX()) * (b.getX()-a.getX()) + (p.getY()-a.getY()) * (b.getY()-a.getY())) / (pow(b.getX()-a.getX(), 2)+pow(b.getY()-a.getY(),2));
+		r = ((p.getX()-a.getX()) * (b.getX()-a.getX()) + (p.getY()-a.getY()) * (b.getY()-a.getY())) / (pow(b.getX()-a.getX(),2)+pow(b.getY()-a.getY(),2));
 
 		if (r<0) {
 			ret = a;
@@ -219,7 +254,8 @@ private:
 
 
 	bool has_entry_in_name2highways(const std::string& addrstreet) {
-		if (mp_name2highways.find(std::string(addrstreet)) != mp_name2highways.end()) {
+		if (mp_name2highways_nonarea.find(std::string(addrstreet)) != mp_name2highways_nonarea.end() ||
+				(mp_name2highways_area.find(std::string(addrstreet)) != mp_name2highways_area.end())) {
 			return true;
 		} else {
 			return false;
@@ -227,7 +263,8 @@ private:
 	}
 
 
-	name2highways_type& mp_name2highways;
+	name2highways_type& mp_name2highways_area;
+	name2highways_type& mp_name2highways_nonarea;
 	const char* addrstreet;
 	osmium::geom::OGRFactory<> m_factory {};
 	NearestPointsWriter*  mp_nearest_points_writer;

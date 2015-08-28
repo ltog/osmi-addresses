@@ -1,3 +1,6 @@
+#include <sys/stat.h>
+#include <boost/filesystem.hpp>
+
 #ifndef WRITER_HPP_
 #define WRITER_HPP_
 
@@ -6,20 +9,34 @@
 #define USE_TRANSACTIONS true
 #define DONT_USE_TRANSACTIONS false
 
+namespace bfs = boost::filesystem;
+using namespace bfs;
+
 class Writer {
 
 public:
-	Writer(OGRDataSource* data_source, const std::string layer_name, const bool use_transaction, const OGRwkbGeometryType& geom_type)
+	Writer(const std::string& dirname, const std::string& layer_name, const bool& use_transaction, const OGRwkbGeometryType& geom_type)
 	:m_use_transaction(use_transaction),
 	 m_layer(nullptr) {
 
-		this->create_layer(data_source, layer_name, geom_type);
+		m_data_source = get_data_source(dirname, layer_name);
+
+		if (!m_data_source) {
+			std::cerr << "Creation of data source for layer '" << layer_name << "' failed." << std::endl;
+			exit(1);
+		}
+
+		OGRSpatialReference spatialref;
+		spatialref.SetWellKnownGeogCS("WGS84");
+
+		this->create_layer(m_data_source, layer_name, geom_type);
 	}
 
 	virtual ~Writer() {
 		if (m_use_transaction) {
 			m_layer->CommitTransaction();
 		}
+		OGRDataSource::DestroyDataSource(m_data_source);
 	};
 
 	virtual void feed_node(const osmium::Node&) = 0;
@@ -71,7 +88,11 @@ protected:
 	}
 
 private:
+	OGRDataSource* m_data_source;
+
 	unsigned int num_features = 0;
+
+	static bool is_output_dir_written;
 
 	void create_layer(OGRDataSource* data_source, const std::string& layer_name, const OGRwkbGeometryType& geom_type) {
 		OGRSpatialReference sparef;
@@ -94,6 +115,48 @@ private:
 			num_features = 0;
 		}
 	}
+
+	OGRDataSource* get_data_source(const std::string& dir_name, const std::string& layer_name) {
+		const std::string driver_name = std::string("SQLite");
+		OGRSFDriver* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
+		if (!driver) {
+			std::cerr << driver_name << " driver not available." << std::endl;
+			exit(1);
+		}
+
+		CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "OFF");
+		CPLSetConfigOption("OGR_SQLITE_SYNCHRONOUS", "FALSE");
+		CPLSetConfigOption("OGR_SQLITE_CACHE", "1024"); // size in MB; see http://gdal.org/ogr/drv_sqlite.html
+		const char* options[] = { "SPATIALITE=TRUE", nullptr };
+
+		bfs::path full_dir;
+		if (is_absolute_path(dir_name)) {
+			full_dir = bfs::path(dir_name);
+		} else {
+			full_dir = bfs::current_path() / bfs::path(dir_name);
+		}
+
+		maybe_create_dir(full_dir);
+		bfs::path layer_path = full_dir / bfs::path(layer_name + ".sqlite");
+		return driver->CreateDataSource(layer_path.c_str(), const_cast<char**>(options));
+	}
+
+	void maybe_create_dir(const bfs::path& dir) { // TODO: not thread-safe
+		if (!is_output_dir_written) {
+			is_output_dir_written = true;
+			bfs::create_directories(dir);
+		}
+	}
+
+	bool is_absolute_path(const std::string& path) {
+		if (path.substr(0, 1) == "/") {
+			return true;
+		} else {
+			return false;
+		}
+	}
 };
+
+bool Writer::is_output_dir_written = false;
 
 #endif /* WRITER_HPP_ */
