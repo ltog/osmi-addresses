@@ -88,7 +88,6 @@ int main(int argc, char* argv[]) {
 	osmium::apply(reader2, location_handler, second_handler);
 	reader2.close();
 
-	google::protobuf::ShutdownProtobufLibrary();
 	OGRCleanupAll();
 
 	std::cout << std::endl;
