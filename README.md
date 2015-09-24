@@ -30,11 +30,23 @@ The software was tested on Ubuntu but probably runs under other Unix variants (i
 
 ## Compilation
 
-You will need a 64-bit system, a C++11 compiler and libosmium to compile the software. libosmium itself comes with a list of prerequisites, which you can find at https://github.com/osmcode/libosmium#prerequisites.
+### Dependencies
 
-On Ubuntu/Debian, you should be able to get all dependencies with:
+You will need a 64-bit system, a C++11 compiler and libosmium to compile the software. You can find libosmium at https://github.com/osmcode/libosmium .
+
+Jochen updates libosmium quite often, so I cloned libosmium and made a soft-link to it (after making sure that `/usr/local/include` did not exist before):
+
+    sudo ln -s /path/to/libosmium/include /usr/local/include
+
+By this I can easily pull in new versions of libosmium.
+
+libosmium itself comes with a list of prerequisites, which you can find at https://github.com/osmcode/libosmium#prerequisites.
+
+On Ubuntu/Debian, you should be able to get all of libosmium's and osmi-addresses's dependencies with:
 
     sudo apt-get install libboost-program-options-dev libboost-dev libboost-filesystem-dev libgdal1-dev libsparsehash-dev libbz2-dev libosmpbf-dev libexpat1-dev libgeos++-dev sqlite3 spatialite-bin colordiff
+
+### Compiling using make
 
 Compile using GCC:
 
