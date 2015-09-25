@@ -6,7 +6,7 @@ test/pos-osmi-testzone.osm
 # files of make process
 osmi/last_use_of_clang.tmp
 osmi/last_use_of_gcc.tmp
-osmi/osmi
+osmi/osmi_addresses
 
 # files of profiling directory
 profiling/pmp-stacktraces

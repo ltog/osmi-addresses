@@ -5,7 +5,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 cd $DIR
 
-# compile osmi
+# compile osmi_addresses
 cd ../osmi
 CXX=clang++ make
 cd $DIR
@@ -17,7 +17,7 @@ cd $DIR
 rm out.sqlite
 
 # read 'pos-osmi-testzone.osm' and generate file 'out.sqlite'
-../osmi/osmi pos-osmi-testzone.osm
+../osmi/osmi_addresses pos-osmi-testzone.osm
 
 # create spatial indices for 'out.sqlite'
 ../create_spatial_indices.sh out.sqlite

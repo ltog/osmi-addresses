@@ -40,17 +40,18 @@ LIB_BOOST_SYS := -lboost_system
 # different host
 #LIB_PRGOPT := -Wl,-Bstatic -lboost_program_options -Wl,-Bdynamic
 
-PROGRAMS := osmi
+PROGRAMS := osmi_addresses
 
 .PHONY: all clean
 
 all: $(PROGRAMS)
 
-osmi: main.cpp Makefile *.hpp $(other_compiler_file)
+osmi_addresses: main.cpp Makefile *.hpp $(other_compiler_file)
 	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_GEOS) $(LIB_OGR) $(LIB_PRGOPT) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) ; touch $(this_compiler_file)
 
 last_use_of_clang.tmp:
 	touch last_use_of_clang.tmp
+
 last_use_of_gcc.tmp:
 	touch last_use_of_gcc.tmp
 	
