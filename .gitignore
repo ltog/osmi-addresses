@@ -1,3 +1,16 @@
+# debugging and testing
+/Debug/
+test/out.sqlite
+test/pos-osmi-testzone.osm
+
+# files of make process
+osmi/last_use_of_clang.tmp
+osmi/last_use_of_gcc.tmp
+osmi/osmi
+
+# files of profiling directory
+profiling/pmp-stacktraces
+
 # links created for running mapserver locally
 entrance-deprecated.png
 entrance-emergency.png
@@ -8,9 +21,6 @@ entrance-yes.png
 fontset
 symbolset
 
-/Debug/
-test/out.sqlite
-test/pos-osmi-testzone.osm
-
 # vim swap files
 .*.sw?
+
