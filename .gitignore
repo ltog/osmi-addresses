@@ -1,6 +1,6 @@
 # debugging and testing
 /Debug/
-test/out.sqlite
+test/osmi_sqlite_out/
 test/pos-osmi-testzone.osm
 
 # files of make process

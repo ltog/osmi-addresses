@@ -4,15 +4,21 @@ use strict;
 use Term::ANSIColor qw(:constants);
 $Term::ANSIColor::AUTORESET = 1; # doesn't seem to work
 
-my $file     = $ARGV[0];
-my $name     = $ARGV[1];
-my $query    = $ARGV[2];
-my $op       = $ARGV[3];
-my $expected = $ARGV[4];
+my $directory = $ARGV[0];
+my $name      = $ARGV[1];
+my $query     = $ARGV[2];
+my $file      = $ARGV[3];
+my $op        = $ARGV[4];
+my $expected  = $ARGV[5];
 my $result;
 
+# replace ** with name of the file (which is also the name of the table)
+$name  =~ s/\Q**\E/$file/g;
+$query =~ s/\Q**\E/$file/g;
+
+# call code-branches for specific operators
 if ($op eq '=') {
-	$result = qx(sqlite3 $file '$query');
+	$result = qx(sqlite3 "$directory/$file.sqlite" '$query');
 	chomp $result;
 
 	&print_result;
@@ -40,7 +46,7 @@ if ($op eq '=') {
 	} else {
 		$assembled_query .= ")";
 	}
-	$result = qx(sqlite3 $file '$assembled_query');
+	$result = qx(sqlite3 "$directory/$file.sqlite" '$assembled_query');
 	chomp $result;
 
 	&print_result;
@@ -48,7 +54,7 @@ if ($op eq '=') {
 	&report_unknown_operator;
 }
 
-
+# print the test result
 sub print_result {
 	if ($result eq $expected) {
 		print BOLD, GREEN, "PASS: ", RESET, BRIGHT_BLACK, "$name\n", RESET;
@@ -57,6 +63,7 @@ sub print_result {
 	}
 }
 
+# report unknown test operators
 sub report_unknown_operator {
 	print BOLD, RED, "FAIL: ", RESET, "$name: unknown operator\n", RESET;
 }

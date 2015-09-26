@@ -13,14 +13,14 @@ cd $DIR
 # generate 'pos-osmi-testzone.osm'
 ./makeidpositive.sh osmi-testzone.osm
 
-# remove old file 'out.sqlite'
-rm out.sqlite
+# remove old directory 'osmi_sqlite_out/'
+rm -rf osmi_sqlite_out/
 
-# read 'pos-osmi-testzone.osm' and generate file 'out.sqlite'
+# read 'pos-osmi-testzone.osm' and generate directory 'osmi_sqlite_out/'
 ../osmi/osmi_addresses pos-osmi-testzone.osm
 
-# create spatial indices for 'out.sqlite'
-../create_spatial_indices.sh out.sqlite
+# create spatial indices for 'osmi_sqlite_out/'
+../create_spatial_indices.sh osmi_sqlite_out/
 
-# run tests on 'out.sqlite'
-./run_tests.sh out.sqlite
+# run tests on directory 'osmi_sqlite_out/'
+./run_tests.sh osmi_sqlite_out/
