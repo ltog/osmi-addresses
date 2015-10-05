@@ -3,15 +3,20 @@
 # Author:  Lukas Toggenburger
 # Website: https://github.com/ltog/osmi-addresses
 
-description="This tool compares the contents of two sqlite/spatialite files and prints their difference."
+description="This tool compares the contents of two sqlite/spatialite files or directories containing such files and prints their difference if any."
+
+parallel_options="--noswap"
+
+# read script input arguments
+path1="$1"
+path2="$2"
 
 # set names of temporary files
-export tmpfile1=/tmp/${0}_deleteme1.tmp
-export tmpfile2=/tmp/${0}_deleteme2.tmp
+export tmpdir="/tmp/$(basename ${0})-$(date +%s%N)/"
 
 # make sure exactly two arguments are given
 if [ $# -ne 2 ]; then
-	echo "Usage: $0 file1.sqlite file2.sqlite"
+	echo "Usage: $0 (file1.sqlite file2.sqlite | dir_with_sqlite_files1 dir_with_sqlite_files2)"
 	echo "Description: $description"
 	exit 1
 fi
@@ -24,49 +29,92 @@ difftool() {
 		diff -y --suppress-common-lines "$@"
 	fi
 }
+export -f difftool
 
 # delete the temporary files
 cleanup() {
-	rm $tmpfile1 $tmpfile2
+	rm -rf "$tmpdir"
 }
+export -f cleanup
 
 handle_signals() {
 	echo "Signal handling function was called. Going to clean up..."
 	cleanup
 	exit 1
 }
+export -f handle_signals
+
+# compare the contents of the tables
+print_diff_of_all_tables() {
+	local file1="$1"
+	local file2="$2"
+	local tmpfile1="$tmpdir/$(date +%s%N)-1"
+	local tmpfile2="$tmpdir/$(date +%s%N)-2"
+
+	# make note of the tables names of the two files (can't use ".tables" since its output has two columns)
+	local tables1=$(sqlite3 "$file1" '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
+	local tables2=$(sqlite3 "$file2" '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
+
+	# make sure the table names are the same
+	if [ "$tables1" != "$tables2" ]
+	then
+		difference=$(echo -e "${tables1}\n${tables2}" | sort | uniq -u) # store the table names that occurred only once
+		echo "ERROR: Tables in $file1 are not the same. Look out for table(s):"
+		echo "$difference"
+		exit 1
+	fi
+
+	while read -r table; do
+		echo "Checking table $table"
+
+		# read column info
+		sqlite3 "$file1" "PRAGMA table_info($table)" > "$tmpfile1"
+		sqlite3 "$file2" "PRAGMA table_info($table)" > "$tmpfile2"
+
+		# read rows
+		sqlite3 "$file1" "SELECT * FROM $table" >> "$tmpfile1"
+		sqlite3 "$file2" "SELECT * FROM $table" >> "$tmpfile2"
+
+		# print diff
+		difftool "$tmpfile1" "$tmpfile2"
+
+	done <<< "$tables1"
+
+	rm -rf "$tmpfile1"
+	rm -rf "$tmpfile2"
+}
+export -f print_diff_of_all_tables
 
 trap handle_signals SIGINT SIGTERM
 
-# make note of the tables names of the two files (can't use ".tables" since its output has two columns)
-tables1=$(sqlite3 $1 '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
-tables2=$(sqlite3 $2 '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
+if [[ -f "$path1" && -f "$path2" ]]; then # both args are files
 
-# make sure the table names are the same
-if [ "$tables1" != "$tables2" ]
-then
-	difference=$(echo -e "${tables1}\n${tables2}" | sort | uniq -u) # store the table names that occurred only once
-	echo "ERROR: Tables are not the same. Look out for table(s):"
-	echo "$difference"
-	exit 2
+	print_diff_of_all_tables "$path1" "$path2"
+
+elif [[ -d "$path1" && -d "$path2" ]]; then  # both args are directories
+
+	# check if filenames in both directories are identical
+	filenames1=$(find "$path1" -maxdepth 1 -type f -printf '%f\n')
+	filenames2=$(find "$path2" -maxdepth 1 -type f -printf '%f\n')
+	filenamesdiff=$(echo -e "${filenames1}\n${filenames2}" | sort | uniq -u) # combine file lists, remove double entries
+	if [[ ! -z "$filenamesdiff" ]]; then
+		echo "ERROR: The files in the given directories differ. Look out for file(s):"
+		echo "$filenamesdiff"
+		exit 1
+	fi
+
+	# aggregate list of files
+	# the previous lists cannot be recycled since they contain the filenames without the directory's name
+	files1=$(find "$path1" -maxdepth 1 -type f | sort)
+	files2=$(find "$path2" -maxdepth 1 -type f | sort)
+
+	mkdir -p "$tmpdir" # will be deleted by cleanup function
+	parallel $parallel_options --xapply print_diff_of_all_tables ::: "$files1" ::: "$files2"
+
+else
+	echo "ERROR: $path1 and $path2 are not of the same type (file/directory)"
+	exit 1
 fi
-
-# compare the contents of the tables
-while read -r table; do
-	echo "Checking table $table"
-
-	# read column info
-	sqlite3 $1 "PRAGMA table_info($table)" > $tmpfile1
-	sqlite3 $2 "PRAGMA table_info($table)" > $tmpfile2
-
-	# read rows
-	sqlite3 $1 "SELECT * FROM $table" >> $tmpfile1
-	sqlite3 $2 "SELECT * FROM $table" >> $tmpfile2
-
-	# print diff
-	difftool $tmpfile1 $tmpfile2
-
-done <<< "$tables1"
 
 cleanup
 
