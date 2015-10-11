@@ -201,8 +201,6 @@ process_files() {
 	#echo "Ensuring schemas are identical..."
 	#ensure_schemas_identical
 
-	# TODO: create temporary directory
-
 	echo "Creating temporary database schemas..."
 	#clone_geometry_table_schema srctable dsttable srcdb dstdb
 	clone_geometry_table_schema "$table" "$table_removed" "$infile1" "$tmpfile"
