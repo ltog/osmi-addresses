@@ -48,10 +48,10 @@ ensure_filenames_identical() { # copied from compare_sqlite.sh
 # clone the schema of a geometry table
 clone_geometry_table_schema() {
 	# assign variable names
-	local srctable=$1
-	local dsttable=$2
-	local srcdb=$3
-	local dstdb=$4
+	local srctable="$1"
+	local dsttable="$2"
+	local srcdb="$3"
+	local dstdb="$4"
 
 	# get schema
 	schema=$(spatialite "$srcdb" ".schema $srctable" | grep 'CREATE TABLE' | grep "$srctable")
