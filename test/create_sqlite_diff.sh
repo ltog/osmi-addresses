@@ -193,7 +193,7 @@ check_existencies() {
 process_files() {
 	local infile1="$1"
 	local infile2="$2"
-	local table=$(basename "$1" .sqlite) # we assume xy.sqlite files (in both directories) contain only one table named xy
+	local table=$(basename "$infile1" .sqlite) # we assume xy.sqlite files (in both directories) contain only one table named xy
 	local tmpfile="${tmpdir}/$table"
 	local table_removed="${table}${removed_suffix}"
 	local table_added="${table}${added_suffix}"
