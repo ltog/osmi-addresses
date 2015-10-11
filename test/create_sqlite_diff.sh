@@ -214,18 +214,6 @@ process_files() {
 	echo "Removing duplicate geometries..."
 	#kill_duplicates table tmpdb table_removed table_added
 	kill_duplicates "$table" "$tmpfile" "$table_removed" "$table_added"
-
-	echo "Creating output database schemas..."
-	clone_geometry_table_schema "$table_removed" "$table_removed" "$tmpfile" "$target_file"
-	clone_geometry_table_schema "$table_added"   "$table_added"   "$tmpfile" "$target_file"
-
-	echo "Merging temporary database files into output file..."
-	copy_table_content "$table_removed" "$table_removed" "$tmpfile" "$target_file"
-	copy_table_content "$table_added"   "$table_added"   "$tmpfile" "$target_file"
-
-	echo "Dropping empty tables..."
-	drop_table_if_empty "$table_removed" "$target_file"
-	drop_table_if_empty "$table_added"   "$target_file"
 }
 export -f process_files
 
@@ -250,6 +238,27 @@ files1=$(find "$source_dir1" -maxdepth 1 -type f | sort)
 files2=$(find "$source_dir2" -maxdepth 1 -type f | sort)
 
 parallel $parallel_options --xapply process_files ::: "$files1" ::: "$files2"
+
+# combine temporary files (do it serially to prevent concurrent access to $target_file)
+while read -r file1; do
+	table=$(basename "$file1" .sqlite) # we assume xy.sqlite files (in both directories) contain only one table named xy
+	tmpfile="${tmpdir}/$table"
+	table_removed="${table}${removed_suffix}"
+	table_added="${table}${added_suffix}"
+
+	echo "Creating output database schemas..."
+	clone_geometry_table_schema "$table_removed" "$table_removed" "$tmpfile" "$target_file"
+	clone_geometry_table_schema "$table_added"   "$table_added"   "$tmpfile" "$target_file"
+
+	echo "Merging temporary database files into output file..."
+	copy_table_content "$table_removed" "$table_removed" "$tmpfile" "$target_file"
+	copy_table_content "$table_added"   "$table_added"   "$tmpfile" "$target_file"
+
+	echo "Dropping empty tables..."
+	drop_table_if_empty "$table_removed" "$target_file"
+	drop_table_if_empty "$table_added"   "$target_file"
+done <<< "$files1"
+
 
 echo "Cleaning up..."
 cleanup
