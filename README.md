@@ -2,6 +2,7 @@
 
 This is the backend of the new OSM Inspector Address view. OSM Inspector is a quality assurance service for OpenStreetMap data by the german consulting company Geofabrik GmbH and can be found at http://tools.geofabrik.de/osmi. This software was written by Lukas Toggenburger as part of a project thesis for his master studies. It makes heavy use of libosmium (https://github.com/osmcode/libosmium) written by Jochen Topf.
 
+If you have any thoughts about the software, I'd like to hear them. You can reach me per e-mail: lukas.toggenburgerXXhtwchur.ch (replace XX with @)
 
 ## Usage
 
@@ -108,8 +109,18 @@ Change the file `addresses.map`:
 Request string:  
 `http://localhost/cgi-bin/mapserv?LAYERS=nearest_roads%2Cconnection_lines%2Cnearest_points%2Cinterpolation%2Cbuildings%2Cbuildings_with_addresses%2Cnodes_with_addresses_interpolated%2Cnodes_with_addresses_defined%2Cpostal_code%2Cinterpolation_errors%2Cno_addr_street%2Cstreet_not_found&FORMAT=image%2Fpng%3B%20mode%3D24bit&PROJECTION=EPSG%3A900913&DISPLAYPROJECTION=EPSG%3A4326&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=928402.87147211,5959885.5572013,938540.33234703,5962035.3486215&WIDTH=1061&HEIGHT=225&map=X` where X is the full path to the cloned .map file
 
-## Author
+## Debugging
 
-Lukas Toggenburger ( firstname.lastname@htwchur.ch )
+You can compile the software with debug information by activating the corresponding line at the top of `osmi/Makefile` (basically adding `-g` to the compile options).
 
+Start gdb:
 
+    gdb [-ex run] --args osmi_addresses myfile.osm.pbf
+
+Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gdb)`):
+
+    run
+
+Quit gdb with:
+
+    quit
