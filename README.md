@@ -123,6 +123,10 @@ Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gd
 
     run
 
+Show the stack:
+
+    bt
+
 Quit gdb with:
 
     quit
