@@ -1,12 +1,12 @@
 # OSM Inspector Address view
 
-This is the backend of the new OSM Inspector Address view. OSM Inspector is a quality assurance service for OpenStreetMap data by the german consulting company Geofabrik GmbH and can be found at http://tools.geofabrik.de/osmi. This software was written by Lukas Toggenburger as part of a project thesis for his master studies. It makes heavy use of libosmium (https://github.com/osmcode/libosmium) written by Jochen Topf.
+This is the backend of the new OSM Inspector Address view. OSM Inspector is a quality assurance service for OpenStreetMap data by the german consulting company Geofabrik GmbH and can be found at http://tools.geofabrik.de/osmi/?view=addresses. This software was written by Lukas Toggenburger as part of a project thesis for his master studies. It makes heavy use of libosmium (https://github.com/osmcode/libosmium) written by Jochen Topf.
 
 If you have any thoughts about the software, I'd like to hear them. You can reach me per e-mail: lukas.toggenburgerXXhtwchur.ch (replace XX with @)
 
 ## Usage
 
-Casual users interested in seeing address data may find the hosted version at http://tools.geofabrik.de/osmi much more useful than running this software. A WxS is also available there, see http://wiki.openstreetmap.org/wiki/OSM_Inspector/WxS on how to use it.
+Casual users interested in seeing address data may find the hosted version at http://tools.geofabrik.de/osmi/?view=addresses much more useful than running this software. A WxS is also available there, see http://wiki.openstreetmap.org/wiki/OSM_Inspector/WxS on how to use it.
 
 If you are indeed interested in the backend, e.g. to see usage of libosmium in a bigger project, you have come to the right place. This software will take OSM data (XML or PBF; planet file or parts of it) data as input and produce SpatiaLite files (one for each layer) as output. The output format is easily changeable due to GDAL/OGR being utilized to hold and write data.
 
@@ -32,7 +32,7 @@ The software was tested on Ubuntu but probably runs under other Unix variants (i
 
 You should find at least two branches in the Git repository:
 
-- **master**: The software as it is running at http://tools.geofabrik.de/osmi
+- **master**: The software as it is running at http://tools.geofabrik.de/osmi/?view=addresses
 - **dev**: The development version containing the newest features and fixes
 
 ## Compilation
