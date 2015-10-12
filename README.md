@@ -111,6 +111,8 @@ Request string:
 
 ## Debugging
 
+### Using gdb
+
 You can compile the software with debug information by activating the corresponding line at the top of `osmi/Makefile` (basically adding `-g` to the compile options).
 
 Start gdb:
@@ -124,3 +126,16 @@ Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gd
 Quit gdb with:
 
     quit
+
+### Known issues
+
+Not having enough memory results in a segmentation fault. gdb will show a message like this:
+
+```
+Program received signal SIGSEGV, Segmentation fault.
+google::sparsegroup<osmium::Location, (unsigned short)48, google::libc_allocator_with_realloc<osmium::Location> >::sparsegroup (this=0x1ba5d560, x=...)
+    at /usr/include/sparsehash/sparsetable:992
+    992	  sparsegroup(const sparsegroup& x) : group(0), settings(x.settings) {
+```
+
+This is also discussed in https://github.com/osmcode/libosmium/issues/23 . 
