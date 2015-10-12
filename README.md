@@ -28,6 +28,12 @@ to add them afterwards.
 
 The software was tested on Ubuntu but probably runs under other Unix variants (incl. Mac OS X) as well.
 
+## Branches
+
+You should find at least two branches in the Git repository:
+
+- **master**: The software as it is running at http://tools.geofabrik.de/osmi
+- **dev**: The development version containing the newest features and fixes
 
 ## Compilation
 
