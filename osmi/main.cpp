@@ -4,6 +4,11 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wredundant-decls"
+#pragma GCC diagnostic ignored "-Wpadded"
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#pragma GCC diagnostic ignored "-Wdocumentation-unknown-command"
+#pragma GCC diagnostic ignored "-Wfloat-equal"
 #include <ogr_api.h>
 #include <ogrsf_frmts.h>
 #pragma GCC diagnostic pop
