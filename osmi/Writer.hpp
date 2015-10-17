@@ -10,7 +10,6 @@
 #define DONT_USE_TRANSACTIONS false
 
 namespace bfs = boost::filesystem;
-using namespace bfs;
 
 class Writer {
 
