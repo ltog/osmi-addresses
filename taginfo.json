@@ -33,6 +33,6 @@
 		{ "key": "entrance", "value": "yes", "object_types": [ "node" ] },
 		{ "key": "highway", "object_types": [ "way", "area" ] },
 		{ "key": "name", "object_types": [ "way", "area" ] },
-		{ "key": "postal_code", "object_types": [ "way", "area" ] },
+		{ "key": "postal_code", "object_types": [ "way", "area" ] }
 	]
 }
