@@ -25,7 +25,7 @@
 		{ "key": "area", "value": "yes", "object_types": [ "area" ] },
 		{ "key": "area", "value": "true", "object_types": [ "area" ] },
 		{ "key": "building", "object_types": [ "area" ] },
-		{ "key": "building", "value": "entrance", "description": "Deprecated tagging style", "object_types": [ "node" ] },
+		{ "key": "building", "value": "entrance", "description": "Old tagging style", "object_types": [ "node" ] },
 		{ "key": "entrance", "value": "emergency", "object_types": [ "node" ] },
 		{ "key": "entrance", "value": "exit", "object_types": [ "node" ] },
 		{ "key": "entrance", "value": "main", "object_types": [ "node" ] },
