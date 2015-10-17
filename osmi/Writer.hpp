@@ -37,7 +37,7 @@ public:
 			m_layer->CommitTransaction();
 		}
 		OGRDataSource::DestroyDataSource(m_data_source);
-	};
+	}
 
 	virtual void feed_node(const osmium::Node&) = 0;
 
