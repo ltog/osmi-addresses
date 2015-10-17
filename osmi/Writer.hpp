@@ -46,8 +46,8 @@ public:
 
 protected:
 	osmium::geom::OGRFactory<> m_factory {};
-	std::string m_layer_name;
-	bool m_use_transaction;
+	const std::string m_layer_name;
+	const bool m_use_transaction;
 	OGRLayer* m_layer;
 
 	struct field_config {
