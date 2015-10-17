@@ -1,8 +1,8 @@
-# OSM Inspector Address view
+# OSM Inspector Address View
 
 This is the backend of the new OSM Inspector Address view. OSM Inspector is a quality assurance service for OpenStreetMap data by the german consulting company Geofabrik GmbH and can be found at http://tools.geofabrik.de/osmi/?view=addresses. This software was written by Lukas Toggenburger as part of a project thesis for his master studies. It makes heavy use of libosmium (https://github.com/osmcode/libosmium) written by Jochen Topf.
 
-If you have any thoughts about the software, I'd like to hear them. You can reach me per e-mail: lukas.toggenburgerXXhtwchur.ch (replace XX with @)
+I'd like to hear your feedback about this software. You can reach me per e-mail: lukas.toggenburgerXXhtwchur.ch (replace XX with @)
 
 ## Usage
 
