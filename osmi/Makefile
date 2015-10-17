@@ -38,6 +38,8 @@ endif
 
 LIB_EXPAT := -lexpat
 LIB_PBF   := -pthread -lz -lprotobuf-lite -losmpbf
+# statically link protobuf-lite when libprotobuf-lite.so.8 (or similar) isn't available on the target system; explanation: http://stackoverflow.com/a/938947
+#LIB_PBF   := -pthread -lz -Wl,-Bstatic -lprotobuf-lite -Wl,-Bdynamic -losmpbf
 LIB_GZIP  := -lz
 LIB_BZIP2 := -lbz2
 
