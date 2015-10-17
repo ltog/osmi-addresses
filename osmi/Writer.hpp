@@ -14,21 +14,28 @@ namespace bfs = boost::filesystem;
 class Writer {
 
 public:
-	Writer(const std::string& dirname, const std::string& layer_name, const bool& use_transaction, const OGRwkbGeometryType& geom_type)
-	:m_use_transaction(use_transaction),
+	Writer(
+			const std::string& dirname,
+			const std::string& layer_name,
+			const bool& use_transaction,
+			const OGRwkbGeometryType& geom_type)
+
+	:m_layer_name(layer_name),
+	 m_use_transaction(use_transaction),
 	 m_layer(nullptr) {
 
-		m_data_source = get_data_source(dirname, layer_name);
+		m_data_source = get_data_source(dirname);
 
 		if (!m_data_source) {
-			std::cerr << "Creation of data source for layer '" << layer_name << "' failed." << std::endl;
+			std::cerr << "Creation of data source for layer '" << m_layer_name
+					<< "' failed." << std::endl;
 			exit(1);
 		}
 
 		OGRSpatialReference spatialref;
 		spatialref.SetWellKnownGeogCS("WGS84");
 
-		this->create_layer(m_data_source, layer_name, geom_type);
+		this->create_layer(m_data_source, geom_type);
 	}
 
 	virtual ~Writer() {
@@ -62,8 +69,10 @@ protected:
 			if (it->width != NO_WIDTH) {
 				field_defn.SetWidth(it->width);
 			}
+			std::cout << "m_layer_name=" << m_layer_name << std::endl;
 			if (m_layer->CreateField(&field_defn) != OGRERR_NONE) {
-				std::cerr << "Creating field '" << it->name <<"' for layer '" << m_layer_name << "' failed." << std::endl;
+				std::cerr << "Creating field '" << it->name <<"' for layer '"
+						<< m_layer_name << "' failed." << std::endl;
 				exit(1);
 			}
 		}
@@ -93,15 +102,16 @@ private:
 
 	static bool is_output_dir_written;
 
-	void create_layer(OGRDataSource* data_source, const std::string& layer_name, const OGRwkbGeometryType& geom_type) {
+	void create_layer(OGRDataSource* data_source, const OGRwkbGeometryType& geom_type) {
 		OGRSpatialReference sparef;
 		sparef.SetWellKnownGeogCS("WGS84");
 
 		const char* layer_options[] = { "SPATIAL_INDEX=no", "COMPRESS_GEOM=yes", nullptr };
 
-		this->m_layer = data_source->CreateLayer(layer_name.c_str(), &sparef, geom_type, const_cast<char**>(layer_options));
+		this->m_layer = data_source->CreateLayer(m_layer_name.c_str(), &sparef,
+				geom_type, const_cast<char**>(layer_options));
 		if (!m_layer) {
-			std::cerr << "Creation of layer '"<< layer_name << "' failed.\n";
+			std::cerr << "Creation of layer '"<< m_layer_name << "' failed.\n";
 			exit(1);
 		}
 	}
@@ -115,7 +125,7 @@ private:
 		}
 	}
 
-	OGRDataSource* get_data_source(const std::string& dir_name, const std::string& layer_name) {
+	OGRDataSource* get_data_source(const std::string& dir_name) {
 		const std::string driver_name = std::string("SQLite");
 		OGRSFDriver* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
 		if (!driver) {
@@ -136,7 +146,7 @@ private:
 		}
 
 		maybe_create_dir(full_dir);
-		bfs::path layer_path = full_dir / bfs::path(layer_name + ".sqlite");
+		bfs::path layer_path = full_dir / bfs::path(m_layer_name + ".sqlite");
 		return driver->CreateDataSource(layer_path.c_str(), const_cast<char**>(options));
 	}
 
