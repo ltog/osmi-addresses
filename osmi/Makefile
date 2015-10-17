@@ -22,6 +22,9 @@ ifeq ($(CXX),clang++) # compiler is clang++
 	# disable warnings
 	CXXFLAGS_WARNINGS += -Wno-c++98-compat -Wno-c++98-compat-pedantic
 
+	# disable warnings that i don't want to see right now, but probably are useful to have
+	CXXFLAGS_WARNINGS += -Wno-padded -Wno-conversion -Wno-weak-vtables -Wno-float-equal -Wno-shadow
+
 else # other compiler (g++)
 	this_compiler_file=last_use_of_gcc.tmp
 	other_compiler_file=last_use_of_clang.tmp
