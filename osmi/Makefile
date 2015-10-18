@@ -9,7 +9,7 @@ ifeq ($(OS),Darwin)
 endif
 
 CXXFLAGS_GEOS     := $(shell geos-config --cflags)
-CXXFLAGS_OGR      := $(shell gdal-config --cflags)
+CXXFLAGS_OGR      := $(shell gdal-config --cflags | sed 's/^-I/-isystem/') # suppress warnings, see http://stackoverflow.com/a/6321926 and https://gcc.gnu.org/onlinedocs/cpp/System-Headers.html
 CXXFLAGS_WARNINGS := -Wall -Wextra -pedantic -Wredundant-decls -Wdisabled-optimization -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wsign-promo -Wold-style-cast -Wuninitialized
 
 ifeq ($(CXX),clang++) # compiler is clang++

@@ -1,38 +1,8 @@
 #include <iostream>
 #include <getopt.h>
 
-// pragmas exclusively for clang++
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
-#endif //__clang__
-
-// pragmas for all GCC compatible compilers (g++, clang++)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#pragma GCC diagnostic ignored "-Wredundant-decls"
-#pragma GCC diagnostic ignored "-Wpadded"
-#pragma GCC diagnostic ignored "-Wshadow"
-#pragma GCC diagnostic ignored "-Wdeprecated"
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-
-// pragmas exlusively for g++
-// Note: __GNUG__ is defined by g++ but also other compilers, see http://nadeausoftware.com/articles/2012/10/c_c_tip_how_detect_compiler_name_and_version_using_compiler_predefined_macros
-#if (defined(__GNUG__) && !(defined(__clang__) || defined(__INTEL_COMPILER)))
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma GCC diagnostic ignored "-Wuseless-cast"
-#endif //(defined(__GNUG__) && !(defined(__clang__) || defined(__INTEL_COMPILER)))
-
-#include <ogr_api.h> // all those compiler directives for only these two header files *facepalm*
+#include <ogr_api.h>
 #include <ogrsf_frmts.h>
-
-#if (defined(__GNUG__) && !(defined(__clang__) || defined(__INTEL_COMPILER)))
-#pragma GCC diagnostic pop
-#endif
-
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif //__clang__
 
 #include <stdlib.h>
 #include <set>
