@@ -68,6 +68,8 @@ PROGRAMS := osmi_addresses
 all: $(PROGRAMS)
 
 osmi_addresses: main.cpp Makefile *.hpp $(other_compiler_file)
+	@# $@ : name of the target
+	@# $< : first dependency
 	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_GEOS) $(LIB_OGR) $(LIB_PRGOPT) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) ; touch $(this_compiler_file)
 
 last_use_of_clang.tmp:
