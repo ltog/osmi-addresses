@@ -37,6 +37,9 @@ else # other compiler (g++)
 
 	# disable warnings
 	CXXFLAGS_WARNINGS += -Wno-long-long
+
+	# disable warnings that i don't want to see right now, but probably are useful to have
+	CXXFLAGS_WARNINGS += -Wno-inline -Wno-padded -Wno-conversion -Wno-shadow -Wno-sign-conversion -Wno-strict-overflow
 endif
 
 LIB_EXPAT := -lexpat
