@@ -69,10 +69,10 @@ protected:
 			if (it->width != NO_WIDTH) {
 				field_defn.SetWidth(it->width);
 			}
-
-			if (m_layer->CreateField(&field_defn) != OGRERR_NONE) {
+			OGRErr create_fields_err = m_layer->CreateField(&field_defn);
+			if (create_fields_err != OGRERR_NONE) {
 				std::cerr << "Creating field '" << it->name <<"' for layer '"
-						<< m_layer_name << "' failed." << std::endl;
+						<< m_layer_name << "' failed with error " << create_fields_err << std::endl;
 				exit(1);
 			}
 		}
