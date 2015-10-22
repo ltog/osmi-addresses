@@ -44,7 +44,7 @@ public:
 					std::set<std::string> streetnames = get_streetnames(way.tags());
 
 					// TODO: reuse mylookup struct
-					for (std::string streetname : streetnames) {
+					for (const std::string& streetname : streetnames) {
 						highway_lookup_type mylookup;
 
 						mylookup.way_id = way.id();
