@@ -133,6 +133,16 @@ Show the stack:
 
     bt
 
+(This shows only the stack of one thread.)
+
+Show all threads:
+
+    info threads
+
+Switch to another thread:
+
+    thread 7
+
 Quit gdb with:
 
     quit
