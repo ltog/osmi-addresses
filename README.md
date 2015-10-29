@@ -147,6 +147,10 @@ Switch to another thread:
 
     thread 7
 
+Show stacks of all threads:
+
+    thread apply all bt
+
 Quit gdb with:
 
     quit
