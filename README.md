@@ -129,6 +129,10 @@ Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gd
 
     run
 
+Attach the debugger after running a program (useful for analyzing deadlocks):
+
+    gdb osmi_addresses $(pgrep osmi_addresses)
+
 Show the stack:
 
     bt
