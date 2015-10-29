@@ -131,7 +131,7 @@ Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gd
 
 Attach the debugger after running a program (useful for analyzing deadlocks):
 
-    gdb osmi_addresses $(pgrep osmi_addresses)
+    sudo gdb osmi_addresses $(pgrep osmi_addresses)
 
 Show the stack:
 
