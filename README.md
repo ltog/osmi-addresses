@@ -167,6 +167,8 @@ Quit gdb with:
 
     quit
 
+A nice tutorial: http://www.unknownroad.com/rtfm/gdbtut/gdbtoc.html
+
 ### Known issues
 
 Not having enough memory results in a segmentation fault. gdb will show a message like this:
