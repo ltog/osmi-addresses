@@ -151,6 +151,18 @@ Show stacks of all threads:
 
     thread apply all bt
 
+Show where the debugged program stopped:
+
+    list
+
+Go *over* function call:
+
+    next
+
+Go *into* function call:
+
+    step
+
 Quit gdb with:
 
     quit
