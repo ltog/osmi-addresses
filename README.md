@@ -69,6 +69,24 @@ If you have never used clang before, you should give it a try. It compiles (at l
 
 ## Eclipse setup (incomplete)
 
+### Make Eclipse understand C++11 syntax
+
+In Eclipse go to: Window -> Preferences -> C/C++ -> Build -> Settings -> Discovery -> CDT GCC Built-in Compiler Settings [Shared]
+
+You should see
+
+    ${COMMAND} -E -P -v -dD "${INPUTS}"
+
+or
+
+    ${COMMAND} ${FLAGS} -E -P -v -dD "${INPUTS}"
+
+Change it to:
+
+    ${COMMAND} -std=c++11 ${FLAGS} -D__cplusplus=201103L -E -P -v -dD "${INPUTS}"
+
+Find further information here: https://www.eclipse.org/forums/index.php/mv/msg/490066/1068004/#msg_1068004
+
 ### Define the preprocessor symbol `OSMIUM_WITH_SPARSEHASH`
 
 Project properties -> C/C++ General -> Paths and Symbols -> Tab: Symbols -> Languages C++ -> Add... -> Name: `OSMIUM_WITH_SPARSEHASH`, Value: 1, [X] Add to all configurations
