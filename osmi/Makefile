@@ -64,13 +64,13 @@ LIB_BOOST_SYS := -lboost_system
 # different host
 #LIB_PRGOPT := -Wl,-Bstatic -lboost_program_options -Wl,-Bdynamic
 
-PROGRAMS := osmi_addresses
+PROGRAMS := osmi-addresses
 
 .PHONY: all clean
 
 all: $(PROGRAMS)
 
-osmi_addresses: main.cpp Makefile *.hpp $(other_compiler_file)
+osmi-addresses: main.cpp Makefile *.hpp $(other_compiler_file)
 	@# $@ : name of the target
 	@# $< : first dependency
 	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_GEOS) $(LIB_OGR) $(LIB_PRGOPT) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) ; touch $(this_compiler_file)
