@@ -133,6 +133,41 @@ Change the file `addresses.map`:
 Request string:  
 `http://localhost/cgi-bin/mapserv?LAYERS=nearest_roads%2Cconnection_lines%2Cnearest_points%2Cinterpolation%2Cbuildings%2Cbuildings_with_addresses%2Cnodes_with_addresses_interpolated%2Cnodes_with_addresses_defined%2Cpostal_code%2Cinterpolation_errors%2Cno_addr_street%2Cstreet_not_found&FORMAT=image%2Fpng%3B%20mode%3D24bit&PROJECTION=EPSG%3A900913&DISPLAYPROJECTION=EPSG%3A4326&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=928402.87147211,5959885.5572013,938540.33234703,5962035.3486215&WIDTH=1061&HEIGHT=225&map=X` where X is the full path to the cloned .map file
 
+## Information for developers
+
+### Call hierarchy
+
+A given input file will be processed in two passes. This happens by the classes `FirstHandler` and `SecondHandler`. The first pass is necessary to build a lookup structure to get street geometries based on the street's name. The second pass accesses this structure and writes the .sqlite files.
+
+Here is a hierarchical overview of calls/accesses:
+
+- `FirstHandler`
+  - `way()`
+    - `addr_interpolation_node_set`
+    - `name2highway_area`
+    - `name2highway_nonarea`
+- `SecondHandler`
+  - `node()`
+    - `ConnectionLinePreprocessor.process_node()`
+      - *
+    - `EntrancesWriter.feed_node()`
+    - `NodesWithAddressesWriter.process_node()`
+  - `way()`
+    - `BuildingsWriter.feed_way()`
+    - `ConnectionLinePreprocessor.process_way()` (reads buildings, etc. with `addr:street` tag)
+      - *
+    - `InterpolationWriter.feed_way()` (reads interpolation lines with `addr:interpolation` tag)
+      - `ConnectionLinePreprocessor.process_interpolated_node()`
+        - *
+      - `NodesWithAddressesWriter.process_interpolated_node()`
+    - `NodesWithAddressesWriter.process_way()`
+    - `WaysWithAddressesWriter.feed_way()`
+    - `WaysWithPostalCodeWriter.feed_way()`
+- * = `ConnectionLinePreprocessor.handle_connection_line()`
+  - `ConnectionLineWriter.write_line()`
+  - `NearestRoadsWriter.write_road()` XOR `NearestAreasWriter.write_area()`
+  - `NearestPointsWriter.write_point()`
+
 ## Debugging
 
 ### Using gdb
