@@ -4,6 +4,10 @@ This is the backend of the new OSM Inspector Address view. OSM Inspector is a qu
 
 I'd like to hear your feedback about this software. You can reach me per e-mail: lukas.toggenburgerXXhtwchur.ch (replace XX with @)
 
+## License
+
+This software is available under the Boost Software License 1.0, see http://www.boost.org/LICENSE_1_0.txt.
+
 ## Usage
 
 Casual users interested in seeing address data may find the hosted version at http://tools.geofabrik.de/osmi/?view=addresses much more useful than running this software. A WxS is also available there, see http://wiki.openstreetmap.org/wiki/OSM_Inspector/WxS on how to use it.
@@ -90,10 +94,6 @@ Find further information here: https://www.eclipse.org/forums/index.php/mv/msg/4
 ### Define the preprocessor symbol `OSMIUM_WITH_SPARSEHASH`
 
 Project properties -> C/C++ General -> Paths and Symbols -> Tab: Symbols -> Languages C++ -> Add... -> Name: `OSMIUM_WITH_SPARSEHASH`, Value: 1, [X] Add to all configurations
-
-## License
-
-This software is available under the Boost Software License 1.0, see http://www.boost.org/LICENSE_1_0.txt.
 
 ## MapServer setup
 
