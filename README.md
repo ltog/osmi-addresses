@@ -91,6 +91,10 @@ Change it to:
 
 Find further information here: https://www.eclipse.org/forums/index.php/mv/msg/490066/1068004/#msg_1068004
 
+### Include GDAL
+
+Project properties -> C/C++ General -> Paths and Symbols -> Tab: Includes -> Languages: GNU C++ -> Add... -> `/usr/include/gdal` ([X] Add to all configurations)
+
 ### Define the preprocessor symbol `OSMIUM_WITH_SPARSEHASH`
 
 Project properties -> C/C++ General -> Paths and Symbols -> Tab: Symbols -> Languages C++ -> Add... -> Name: `OSMIUM_WITH_SPARSEHASH`, Value: 1, [X] Add to all configurations
