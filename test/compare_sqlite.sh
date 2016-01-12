@@ -13,6 +13,7 @@ path2="$2"
 
 # set names of temporary files
 export tmpdir="/tmp/$(basename ${0})-$(date +%s%N)/"
+mkdir "$tmpdir"
 
 # make sure exactly two arguments are given
 if [ $# -ne 2 ]; then
