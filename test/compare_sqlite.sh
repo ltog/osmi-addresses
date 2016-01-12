@@ -44,6 +44,7 @@ handle_signals() {
 	exit 1
 }
 export -f handle_signals
+trap handle_signals SIGINT SIGTERM
 
 # compare the contents of the tables
 print_diff_of_all_tables() {
@@ -85,8 +86,6 @@ print_diff_of_all_tables() {
 	rm -rf "$tmpfile2"
 }
 export -f print_diff_of_all_tables
-
-trap handle_signals SIGINT SIGTERM
 
 if [[ -f "$path1" && -f "$path2" ]]; then # both args are files
 
