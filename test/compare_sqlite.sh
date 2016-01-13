@@ -11,9 +11,18 @@ parallel_options="--noswap"
 path1="$1"
 path2="$2"
 
-# set names of temporary files
-export tmpdir="/tmp/$(basename ${0})-$(date +%s%N)/"
-mkdir "$tmpdir"
+# delete the temporary directory and its files
+cleanup() {
+	rm -rf "$tmpdir"
+}
+export -f cleanup
+
+# create temporary directory
+export tmpdir=$(mktemp --tmpdir --directory "$(basename ${0})-XXXXXXXXXX") || {
+	echo "ERROR: Could not create temporary directory.";
+	cleanup
+	exit 1;
+}
 
 # make sure exactly two arguments are given
 if [ $# -ne 2 ]; then
@@ -32,12 +41,6 @@ difftool() {
 }
 export -f difftool
 
-# delete the temporary files
-cleanup() {
-	rm -rf "$tmpdir"
-}
-export -f cleanup
-
 handle_signals() {
 	echo "Signal handling function was called. Going to clean up..."
 	cleanup
@@ -50,8 +53,16 @@ trap handle_signals SIGINT SIGTERM
 print_diff_of_all_tables() {
 	local file1="$1"
 	local file2="$2"
-	local tmpfile1="$tmpdir/$(date +%s%N)-1"
-	local tmpfile2="$tmpdir/$(date +%s%N)-2"
+	local tmpfile1=$(mktemp --tmpdir="$tmpdir" "tmpfile1-XXXXXXXXXXXXXXXXXX") || {
+		echo "ERROR: Could not create temporary file.";
+		cleanup
+		exit 1;
+	}
+	local tmpfile2=$(mktemp --tmpdir="$tmpdir" "tmpfile2-XXXXXXXXXXXXXXXXXX") || {
+		echo "ERROR: Could not create temporary file.";
+		cleanup
+		exit 1;
+	}
 
 	# make note of the tables names of the two files (can't use ".tables" since its output has two columns)
 	local tables1=$(sqlite3 "$file1" '.schema' | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/" | sort)
