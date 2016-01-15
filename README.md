@@ -152,8 +152,8 @@ Here is a hierarchical overview of calls/accesses:
 - `FirstHandler`
   - `way()`
     - `addr_interpolation_node_set`
-    - `name2highway_area`
-    - `name2highway_nonarea`
+    - `highway_lookup_type` -> `name2highway_area`
+    - `highway_lookup_type` -> `name2highway_nonarea`
 - `SecondHandler`
   - `node()`
     - `ConnectionLinePreprocessor.process_node()`
