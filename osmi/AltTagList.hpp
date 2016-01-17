@@ -33,10 +33,10 @@ public:
 	}
 
 	const char* get_value_by_key_as_c_str(const char* key) {
-		if (!key) {
-			return nullptr;
+		if (key) {
+			return get_value_by_key_as_c_str(std::string(key));
 		} else {
-			return m_list.find(std::string(key))->second.c_str();
+			return nullptr;
 		}
 	}
 
@@ -49,10 +49,10 @@ public:
 	}
 
 	std::string get_value_by_key(const char* key) {
-		if (!key) {
-			return std::string("");
+		if (key) {
+			return get_value_by_key(std::string(key));
 		} else {
-			return m_list.find(std::string(key))->second;
+			return std::string("");
 		}
 	}
 
