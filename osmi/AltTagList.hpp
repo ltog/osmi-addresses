@@ -48,7 +48,7 @@ public:
 		}
 	}
 
-	std::string get_value_by_key(char* key) {
+	std::string get_value_by_key(const char* key) {
 		if (!key) {
 			return std::string("");
 		} else {
