@@ -30,7 +30,9 @@ public:
 			if (building && way.is_closed()) {
 				const char* street   = way.tags().get_value_by_key("addr:street");
 				const char* houseno  = way.tags().get_value_by_key("addr:housenumber");
+				const char* place    = way.tags().get_value_by_key("addr:place");
 				
+				//if (street || houseno || place) {
 				if (street || houseno) {
 					std::unique_ptr<OGRLineString> ogr_linestring = m_factory.create_linestring(way);
 					OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
@@ -44,7 +46,6 @@ public:
 					const char* city     = way.tags().get_value_by_key("addr:city");
 					const char* country  = way.tags().get_value_by_key("addr:country");
 					const char* fulladdr = way.tags().get_value_by_key("addr:full");
-					const char* place    = way.tags().get_value_by_key("addr:place");
 
 					if (street)   { feature->SetField("street"  , street);   }
 					if (houseno)  { feature->SetField("houseno" , houseno);  }
