@@ -16,11 +16,11 @@ If you are indeed interested in the backend, e.g. to see usage of libosmium in a
 
 A file can be processed like this:
 
-    ./osmi_addresses planet-latest.osm.pbf
+    ./osmi-addresses planet-latest.osm.pbf
 
 By default an output directory called `osmi_sqlite_out` is created in the current directory (that means: not necessarily the directory the binary resides in). If a second parameter is given, the name of the output directory can be changed:
 
-    ./osmi_addresses planet-latest.osm.pbf my-output-dir
+    ./osmi-addresses planet-latest.osm.pbf my-output-dir
 
 An existing directory will not be overwritten, the software will abort instead.
 
@@ -184,7 +184,7 @@ You can compile the software with debug information by activating the correspond
 
 Start gdb:
 
-    gdb [-ex run] --args osmi_addresses myfile.osm.pbf
+    gdb [-ex run] --args osmi-addresses myfile.osm.pbf
 
 Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gdb)`):
 
@@ -192,7 +192,7 @@ Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gd
 
 Attach the debugger after running a program (useful for analyzing deadlocks):
 
-    sudo gdb osmi_addresses $(pgrep osmi_addresses)
+    sudo gdb osmi-addresses $(pgrep osmi-addresses)
 
 Show the stack:
 
