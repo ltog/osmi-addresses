@@ -67,11 +67,11 @@ public:
 
 				// the raw expression given in the first addr:housenumber= entry
 				std::string first_raw =
-						first_taglist.get_value_by_key(std::string("addr:housenumber"));
+						first_taglist.get_value_by_key("addr:housenumber");
 
 				// the raw expression given in the last addr:housenumber= entry
 				std::string last_raw  =
-						last_taglist.get_value_by_key(std::string("addr:housenumber"));
+						last_taglist.get_value_by_key("addr:housenumber");
 
 				unsigned int first;
 				unsigned int last;
@@ -153,12 +153,12 @@ public:
 					feature->SetField("error", "interpolation odd but number even");
 
 				} else if (
-					(first_taglist.get_value_by_key(std::string("addr:street"))   != last_taglist.get_value_by_key(std::string("addr:street")))   ||
-					(first_taglist.get_value_by_key(std::string("addr:postcode")) != last_taglist.get_value_by_key(std::string("addr:postcode"))) ||
-					(first_taglist.get_value_by_key(std::string("addr:city"))     != last_taglist.get_value_by_key(std::string("addr:city")))     ||
-					(first_taglist.get_value_by_key(std::string("addr:country"))  != last_taglist.get_value_by_key(std::string("addr:country")))  ||
-					(first_taglist.get_value_by_key(std::string("addr:full"))     != last_taglist.get_value_by_key(std::string("addr:full")))     ||
-					(first_taglist.get_value_by_key(std::string("addr:place"))    != last_taglist.get_value_by_key(std::string("addr:place"))) ) {
+					(first_taglist.get_value_by_key("addr:street")   != last_taglist.get_value_by_key("addr:street"))   ||
+					(first_taglist.get_value_by_key("addr:postcode") != last_taglist.get_value_by_key("addr:postcode")) ||
+					(first_taglist.get_value_by_key("addr:city")     != last_taglist.get_value_by_key("addr:city"))     ||
+					(first_taglist.get_value_by_key("addr:country")  != last_taglist.get_value_by_key("addr:country"))  ||
+					(first_taglist.get_value_by_key("addr:full")     != last_taglist.get_value_by_key("addr:full"))     ||
+					(first_taglist.get_value_by_key("addr:place")    != last_taglist.get_value_by_key("addr:place")) ) {
 
 					feature->SetField("error", "different tags on endpoints");
 
@@ -212,19 +212,19 @@ public:
 						m_clpp.process_interpolated_node( // osmi_addresses_connection_line 
 								*(point.get()),
 								road_id,
-								first_taglist.get_value_by_key(std::string("addr:street"))
+								first_taglist.get_value_by_key("addr:street")
 						);
 						m_nwa_writer.process_interpolated_node( //osmi_addresses_nodes_with_addresses
 							*(point.get()),
 								nrstr,
 								//nr,
 								//std::to_string(nr),
-								first_taglist.get_value_by_key(std::string("addr:street")),
-								first_taglist.get_value_by_key(std::string("addr:postcode")),
-								first_taglist.get_value_by_key(std::string("addr:city")),
-								first_taglist.get_value_by_key(std::string("addr:country")),
-								first_taglist.get_value_by_key(std::string("addr:full")),
-								first_taglist.get_value_by_key(std::string("addr:place")),
+								first_taglist.get_value_by_key("addr:street"),
+								first_taglist.get_value_by_key("addr:postcode"),
+								first_taglist.get_value_by_key("addr:city"),
+								first_taglist.get_value_by_key("addr:country"),
+								first_taglist.get_value_by_key("addr:full"),
+								first_taglist.get_value_by_key("addr:place"),
 								road_id
 						);
 					}
