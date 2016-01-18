@@ -69,7 +69,6 @@ public:
 			AltTagList alt_tag_list(&(node.tags()), &list_of_keys);
 			m_addr_interpolation_node_map.set(node.id(), alt_tag_list);
 		}
-
 	}
 
 
