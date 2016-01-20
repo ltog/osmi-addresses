@@ -5,6 +5,8 @@
 
 constexpr osmium::object_id_type DUMMY_ID = 0;
 constexpr double MAXDIST = 0.06;
+constexpr bool is_addrstreet = true;
+constexpr bool is_addrplace  = false;
 
 #include "NearestPointsWriter.hpp"
 #include "NearestRoadsWriter.hpp"
@@ -15,9 +17,16 @@ constexpr double MAXDIST = 0.06;
 class ConnectionLinePreprocessor {
 
 public:
-	ConnectionLinePreprocessor(const std::string& dir_name, name2highways_type& name2highways_area, name2highways_type& name2highways_nonarea):
-	mp_name2highways_area(name2highways_area),
+	ConnectionLinePreprocessor(
+			const std::string& dir_name,
+			name2highways_type& name2highways_area,
+			name2highways_type& name2highways_nonarea,
+			name2place_type& name2place_nody,
+			name2place_type& name2place_wayy)
+  :	mp_name2highways_area(name2highways_area),
 	mp_name2highways_nonarea(name2highways_nonarea),
+	m_name2place_nody(name2place_nody),
+	m_name2place_wayy(name2place_wayy),
 	addrstreet(nullptr) {
 		mp_nearest_points_writer  = new NearestPointsWriter (dir_name);
 		mp_nearest_roads_writer   = new NearestRoadsWriter  (dir_name);
@@ -36,7 +45,7 @@ public:
 	void process_interpolated_node(OGRPoint& ogr_point, std::string& road_id, const std::string& street) {
 		addrstreet = street.c_str();
 		if (addrstreet && has_entry_in_name2highways(street)) {
-			handle_connection_lines(ogr_point, DUMMY_ID, object_type::interpolated_node_object, addrstreet, road_id);
+			handle_connection_line(ogr_point, DUMMY_ID, object_type::interpolated_node_object, addrstreet, road_id, is_addrstreet);
 		}
 	}
 
@@ -44,7 +53,13 @@ public:
 		addrstreet = node.tags().get_value_by_key("addr:street");
 		if (addrstreet && has_entry_in_name2highways(node)) {
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
-			handle_connection_lines(*ogr_point.get(), node.id(), object_type::node_object, addrstreet, road_id);
+			handle_connection_line(*ogr_point.get(), node.id(), object_type::node_object, addrstreet, road_id, is_addrstreet);
+		}
+
+		addrplace = node.tags().get_value_by_key("addr:place");
+		if (addrplace && has_entry_in_name2place(node)) {
+			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
+			handle_connection_line(*ogr_point.get(), node.id(), object_type::node_object, addrplace, road_id, is_addrplace);
 		}
 	}
 
@@ -53,40 +68,47 @@ public:
 			addrstreet = way.tags().get_value_by_key("addr:street");
 			if (addrstreet && has_entry_in_name2highways(way)) {
 				std::unique_ptr<OGRPoint> ogr_point = m_geometry_helper.centroid(way);
-				handle_connection_lines(*ogr_point.get(), way.id(), object_type::way_object, addrstreet, road_id);
+				handle_connection_line(*ogr_point.get(), way.id(), object_type::way_object, addrstreet, road_id, is_addrstreet);
 			}
 		}
 	}
 
 private:
 
-	void handle_connection_lines(
+	void handle_connection_line(
 			OGRPoint&                     ogr_point,
 			const osmium::object_id_type& objectid,
 			const object_type&            the_object_type,
 			const char*                   addrstreet,
-			std::string&                  road_id) {
+			std::string&                  road_id,
+			const bool&                   is_addrstreet) {
 
 		std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);
 		std::unique_ptr<OGRPoint>       closest_point(new OGRPoint);    // TODO: check if new is necessary
 		std::unique_ptr<OGRLineString>  closest_way(new OGRLineString); // TODO: check if new is necessary
-		osmium::unsigned_object_id_type closest_way_id = 0; // wouldn't need an initialization, but gcc warns otherwise
+		osmium::unsigned_object_id_type closest_obj_id = 0; // wouldn't need an initialization, but gcc warns otherwise
 		int                             ind_closest_node;
 		std::string						lastchange;
 		bool is_area;
+		bool is_nody;
 
-		if(get_closest_way(ogr_point, closest_way, is_area, closest_way_id, lastchange)) {
+		// handle addr:place here
+		if (!is_addrstreet && get_closest_place(ogr_point, closest_point, is_nody, closest_obj_id, lastchange)) {
+			mp_connection_line_writer->write_line(ogr_point, closest_point, closest_obj_id, the_object_type);
+		}
+
+		if (is_addrstreet && get_closest_way(ogr_point, closest_way, is_area, closest_obj_id, lastchange)) {
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get(), closest_point.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
 			m_geometry_helper.mercator2wgs({&ogr_point, closest_way.get(), closest_point.get()});
 
 			// TODO: could this be parallelized?
-			mp_nearest_points_writer->write_point(closest_point, closest_way_id);
+			mp_nearest_points_writer->write_point(closest_point, closest_obj_id);
 			if (is_area) {
-				mp_nearest_areas_writer->write_area(closest_way, closest_way_id, addrstreet, lastchange);
+				mp_nearest_areas_writer->write_area(closest_way, closest_obj_id, addrstreet, lastchange);
 			} else {
-				mp_nearest_roads_writer->write_road(closest_way, closest_way_id, addrstreet, lastchange);
+				mp_nearest_roads_writer->write_road(closest_way, closest_obj_id, addrstreet, lastchange);
 			}
 
 			mp_connection_line_writer->write_line(ogr_point, closest_point, objectid, the_object_type);
@@ -95,33 +117,62 @@ private:
 		}
 	}
 
+	bool get_closest_place(
+			const OGRPoint&                  ogr_point,
+			std::unique_ptr<OGRPoint>&       closest_point,
+			bool&                            is_nody,
+			osmium::unsigned_object_id_type& closest_obj_id,
+			std::string&                     lastchange) {
+
+		double best_dist = std::numeric_limits<double>::max();
+		double cur_dist = std::numeric_limits<double>::max();
+		bool is_assigned = false;
+
+		std::pair<name2place_type::iterator, name2place_type::iterator> name2place_it_pair_nody;
+		name2place_it_pair_nody = m_name2place_nody.equal_range(std::string(addrplace));
+
+		for (name2place_type::iterator it = name2place_it_pair_nody.first; it!=name2place_it_pair_nody.second; ++it) {
+			cur_dist = it->second.ogrpoint->Distance(&ogr_point);
+
+			if (cur_dist < best_dist) { // TODO: add check for minimum distance to prevent long connection lines
+				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone()));
+				is_nody     = true;
+				is_assigned = true;
+				// TODO: extract more info from struct
+			} // TODO: generate error message if place cannot be found
+		}
+
+		return is_assigned;
+	}
+
 
 	/* look up the closest way with the given name in the name2highway structs for ways and areas */
 	bool get_closest_way(
-			const OGRPoint& ogr_point,
+			const OGRPoint&                  ogr_point,
 			std::unique_ptr<OGRLineString>&  closest_way,
 			bool&                            is_area,
 			osmium::unsigned_object_id_type& closest_way_id,
 			std::string&                     lastchange) {
 
 		double best_dist = std::numeric_limits<double>::max();
-		bool assigned = false;
+		bool is_assigned = false;
 
+		// TODO: would one iterator suffice?
 		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_area;
 		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_nonarea;
 		name2highw_it_pair_area    = mp_name2highways_area.equal_range(std::string(addrstreet));
 		name2highw_it_pair_nonarea = mp_name2highways_nonarea.equal_range(std::string(addrstreet));
 
 		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_area)) {
-			is_area  = true;
-			assigned = true;
+			is_area     = true;
+			is_assigned = true;
 		}
 		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_nonarea)) {
-			is_area  = false;
-			assigned = true;
+			is_area     = false;
+			is_assigned = true;
 		}
 
-		return assigned;
+		return is_assigned;
 	}
 
 	/* look up the closest way in the given name2highway struct that is closer than best_dist using bbox
@@ -254,7 +305,7 @@ private:
 
 
 	bool has_entry_in_name2highways(const std::string& addrstreet) {
-		if (mp_name2highways_nonarea.find(std::string(addrstreet)) != mp_name2highways_nonarea.end() ||
+		if (mp_name2highways_nonarea.find(std::string(addrstreet)) != mp_name2highways_nonarea.end() || // TODO: check if string can be used directly
 				(mp_name2highways_area.find(std::string(addrstreet)) != mp_name2highways_area.end())) {
 			return true;
 		} else {
@@ -262,10 +313,23 @@ private:
 		}
 	}
 
+	bool has_entry_in_name2place(const osmium::OSMObject& object) {
+		return has_entry_in_name2place(std::string(object.tags().get_value_by_key("addr:place")));
+	}
+
+	bool has_entry_in_name2place(const std::string& addrplace) {
+		return m_name2place_nody.find(std::string(addrplace)) != m_name2place_nody.end(); // TODO: check if string can be used directly
+
+
+	}
+
 
 	name2highways_type& mp_name2highways_area;
 	name2highways_type& mp_name2highways_nonarea;
+	name2place_type& m_name2place_nody;
+	name2place_type& m_name2place_wayy;
 	const char* addrstreet;
+	const char* addrplace;
 	osmium::geom::OGRFactory<> m_factory {};
 	NearestPointsWriter*  mp_nearest_points_writer;
 	NearestRoadsWriter*   mp_nearest_roads_writer;

@@ -20,6 +20,11 @@ struct highway_lookup_type {
 	int16_t                        bbox_n, bbox_e, bbox_s, bbox_w;
 	std::string                    lastchange;
 };
+
+struct place_lookup_type {
+	osmium::object_id_type    id;
+	std::unique_ptr<OGRPoint> ogrpoint;
+};
 #pragma pack(pop)
 
 struct double_bbox {
@@ -41,5 +46,8 @@ constexpr bool DECREMENT_WHEN_ROUNDING = false;
 
 typedef std::pair<std::string, highway_lookup_type> name2highways_element_type;
 typedef std::multimap<const std::string, highway_lookup_type> name2highways_type;
+
+typedef std::pair<std::string, place_lookup_type> name2place_element_type;
+typedef std::multimap<const std::string, place_lookup_type> name2place_type;
 
 #endif /* MAIN_HPP_ */

@@ -10,15 +10,33 @@ public:
 	FirstHandler(
 			node_set& addr_interpolation_node_set,
 			name2highways_type& name2highway_area,
-			name2highways_type& name2highway_nonarea)
+			name2highways_type& name2highway_nonarea,
+			name2place_type& name2place_nody,
+			name2place_type& name2place_wayy)
 		: m_addr_interpolation_node_set(addr_interpolation_node_set),
 		  m_name2highways_area(name2highway_area),
-		  m_name2highways_nonarea(name2highway_nonarea){
+		  m_name2highways_nonarea(name2highway_nonarea),
+		  m_name2place_nody(name2place_nody),
+		  m_name2place_wayy(name2place_wayy) {
 
 	}
 
 	~FirstHandler() {
 
+	}
+
+	void node(const osmium::Node& node) {
+		const char* place = node.tags().get_value_by_key("place");
+		const char* name = node.tags().get_value_by_key("name");
+
+		// look out for places
+		if (place && name) {
+			place_lookup_type mylookup;
+			mylookup.id       = node.id();
+			mylookup.ogrpoint = m_factory.create_point(node);
+
+			m_name2place_nody.insert(name2place_element_type(name, std::move(mylookup)));
+		}
 	}
 
 	void way(const osmium::Way& way) {
@@ -80,6 +98,8 @@ private:
 	node_set& m_addr_interpolation_node_set;
 	name2highways_type& m_name2highways_area;
 	name2highways_type& m_name2highways_nonarea;
+	name2place_type& m_name2place_nody;
+	name2place_type& m_name2place_wayy;
 	GeometryHelper m_geometry_helper;
 
 	std::set<std::string> get_streetnames(const osmium::TagList& taglist) {

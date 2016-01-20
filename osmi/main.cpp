@@ -61,6 +61,8 @@ int main(int argc, char* argv[]) {
 	std::set<osmium::unsigned_object_id_type> addr_interpolation_node_set;
 	name2highways_type name2highway_area;
 	name2highways_type name2highway_nonarea;
+	name2place_type name2place_nody;
+	name2place_type name2place_wayy;
 
 	index_pos_type index_pos;
 	index_neg_type index_neg;
@@ -72,7 +74,12 @@ int main(int argc, char* argv[]) {
 	{
 	osmium::io::Reader reader(input_filename);
 
-	FirstHandler first_handler(addr_interpolation_node_set, name2highway_area, name2highway_nonarea);
+	FirstHandler first_handler(
+			addr_interpolation_node_set,
+			name2highway_area,
+			name2highway_nonarea,
+			name2place_nody,
+			name2place_wayy);
 
 	osmium::apply(reader, location_handler, first_handler);
 	reader.close();
@@ -80,7 +87,14 @@ int main(int argc, char* argv[]) {
 	//mem_helper.stop();
 
 	osmium::io::Reader reader2(input_filename);
-	SecondHandler second_handler(output_dirname, addr_interpolation_node_set, name2highway_area, name2highway_nonarea);
+	SecondHandler second_handler(
+			output_dirname,
+			addr_interpolation_node_set,
+			name2highway_area,
+			name2highway_nonarea,
+			name2place_nody,
+			name2place_wayy);
+
 	osmium::apply(reader2, location_handler, second_handler);
 	reader2.close();
 

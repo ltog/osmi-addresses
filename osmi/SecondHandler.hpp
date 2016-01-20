@@ -19,13 +19,17 @@ public:
 			const std::string& dir_name,
 			node_set& addr_interpolation_node_set,
 			name2highways_type& name2highways_area,
-			name2highways_type& name2highways_nonarea)
+			name2highways_type& name2highways_nonarea,
+			name2place_type& name2place_nody,
+			name2place_type& name2place_wayy)
 	: mp_addr_interpolation_node_set(addr_interpolation_node_set),
 	  mp_name2highways_area(name2highways_area),
-	  mp_name2highways_nonarea(name2highways_nonarea)
+	  mp_name2highways_nonarea(name2highways_nonarea),
+	  m_name2place_nody(name2place_nody),
+	  m_name2place_wayy(name2place_wayy)
 	{
 		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(dir_name));
-		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(dir_name, mp_name2highways_area, mp_name2highways_nonarea));
+		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(dir_name, mp_name2highways_area, mp_name2highways_nonarea, m_name2place_nody, m_name2place_wayy));
 		entrances_writer             = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter(dir_name));
 
 		interpolation_writer         = std::unique_ptr<InterpolationWriter>     (new InterpolationWriter     (dir_name, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
@@ -97,6 +101,8 @@ private:
 	name2highways_type& mp_name2highways_area;
 	name2highways_type& mp_name2highways_nonarea;
 	node_map_type m_addr_interpolation_node_map;
+	name2place_type& m_name2place_nody;
+	name2place_type& m_name2place_wayy;
 	GeometryHelper m_geometry_helper;
 
 	std::unique_ptr<InterpolationWriter> interpolation_writer;
