@@ -18,7 +18,7 @@ A file can be processed like this:
 
     ./osmi-addresses planet-latest.osm.pbf
 
-By default an output directory called `osmi_sqlite_out` is created in the current directory (that means: not necessarily the directory the binary resides in). If a second parameter is given, the name of the output directory can be changed:
+By default an output directory called `osmi-addresses_sqlite_out` is created in the current directory (that means: not necessarily the directory the binary resides in). If a second parameter is given, the name of the output directory can be changed:
 
     ./osmi-addresses planet-latest.osm.pbf my-output-dir
 
@@ -26,7 +26,7 @@ An existing directory will not be overwritten, the software will abort instead.
 
 In order to improve overall calculation speed, spatial indices are not calculated while writing the SpatiaLite files. Instead you are supposed to call
 
-    ./create_spatial_indices.sh osmi_sqlite_out
+    ./create_spatial_indices.sh osmi-addresses_sqlite_out
 
 to add them afterwards. 
 

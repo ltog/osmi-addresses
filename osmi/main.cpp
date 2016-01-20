@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 	std::string input_filename(argv[1]);
 	std::string output_dirname;
 	if (argc != 3) {
-		output_dirname = std::string("osmi_sqlite_out");
+		output_dirname = std::string("osmi-addresses_sqlite_out");
 	} else {
 		output_dirname = std::string(argv[2]);
 	}
