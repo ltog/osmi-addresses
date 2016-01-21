@@ -5,8 +5,8 @@
 
 constexpr osmium::object_id_type DUMMY_ID = 0;
 constexpr double MAXDIST = 0.06;
-constexpr bool is_addrstreet = true;
-constexpr bool is_addrplace  = false;
+constexpr bool IS_ADDRSTREET = true;
+constexpr bool IS_ADDRPLACE  = false;
 
 #include "NearestPointsWriter.hpp"
 #include "NearestRoadsWriter.hpp"
@@ -45,7 +45,7 @@ public:
 	void process_interpolated_node(OGRPoint& ogr_point, std::string& road_id, const std::string& street) {
 		addrstreet = street.c_str();
 		if (addrstreet && has_entry_in_name2highways(street)) {
-			handle_connection_line(ogr_point, DUMMY_ID, object_type::interpolated_node_object, addrstreet, road_id, is_addrstreet);
+			handle_connection_line(ogr_point, DUMMY_ID, object_type::interpolated_node_object, addrstreet, road_id, IS_ADDRSTREET);
 		}
 	}
 
@@ -53,13 +53,13 @@ public:
 		addrstreet = node.tags().get_value_by_key("addr:street");
 		if (addrstreet && has_entry_in_name2highways(node)) {
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
-			handle_connection_line(*ogr_point.get(), node.id(), object_type::node_object, addrstreet, road_id, is_addrstreet);
+			handle_connection_line(*ogr_point.get(), node.id(), object_type::node_object, addrstreet, road_id, IS_ADDRSTREET);
 		}
 
 		addrplace = node.tags().get_value_by_key("addr:place");
 		if (addrplace && has_entry_in_name2place(node)) {
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
-			handle_connection_line(*ogr_point.get(), node.id(), object_type::node_object, addrplace, road_id, is_addrplace);
+			handle_connection_line(*ogr_point.get(), node.id(), object_type::node_object, addrplace, road_id, IS_ADDRPLACE);
 		}
 	}
 
@@ -68,7 +68,7 @@ public:
 			addrstreet = way.tags().get_value_by_key("addr:street");
 			if (addrstreet && has_entry_in_name2highways(way)) {
 				std::unique_ptr<OGRPoint> ogr_point = m_geometry_helper.centroid(way);
-				handle_connection_line(*ogr_point.get(), way.id(), object_type::way_object, addrstreet, road_id, is_addrstreet);
+				handle_connection_line(*ogr_point.get(), way.id(), object_type::way_object, addrstreet, road_id, IS_ADDRSTREET);
 			}
 		} else {
 			// TODO: mark non-closed ways, see https://github.com/ltog/osmi-addresses/issues/70
