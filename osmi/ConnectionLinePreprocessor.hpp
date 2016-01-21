@@ -70,6 +70,12 @@ public:
 				std::unique_ptr<OGRPoint> ogr_point = m_geometry_helper.centroid(way);
 				handle_connection_line(*ogr_point.get(), way.id(), object_type::way_object, addrstreet, road_id, IS_ADDRSTREET);
 			}
+
+			addrplace = way.tags().get_value_by_key("addr:place");
+			if (addrplace && has_entry_in_name2place(way)) {
+				std::unique_ptr<OGRPoint> ogr_point = m_geometry_helper.centroid(way);
+				handle_connection_line(*ogr_point.get(), way.id(), object_type::way_object, addrplace, road_id, IS_ADDRPLACE);
+			}
 		} else {
 			// TODO: mark non-closed ways, see https://github.com/ltog/osmi-addresses/issues/70
 		}

@@ -10,7 +10,7 @@ fi
 # template:
 #./test_engine.pl $1 "Description" "Query" "Table/File(.sqlite)" "=" "Expected result"
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_connection_line" "=" "98"
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_connection_line" "=" "99"
 ./test_engine.pl $1 "Total number of entries in **"  "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_points" "=" "97"
 ./test_engine.pl $1 "Total number of entries in **"   "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_roads" "=" "7"
 
