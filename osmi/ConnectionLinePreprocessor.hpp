@@ -70,6 +70,8 @@ public:
 				std::unique_ptr<OGRPoint> ogr_point = m_geometry_helper.centroid(way);
 				handle_connection_line(*ogr_point.get(), way.id(), object_type::way_object, addrstreet, road_id, is_addrstreet);
 			}
+		} else {
+			// TODO: mark non-closed ways, see https://github.com/ltog/osmi-addresses/issues/70
 		}
 	}
 
@@ -97,6 +99,7 @@ private:
 			mp_connection_line_writer->write_line(ogr_point, closest_point, closest_obj_id, the_object_type);
 		}
 
+		// handle addr:street here
 		if (is_addrstreet && get_closest_way(ogr_point, closest_way, is_area, closest_obj_id, lastchange)) {
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get(), closest_point.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
