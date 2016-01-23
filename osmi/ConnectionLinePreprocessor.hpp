@@ -126,10 +126,11 @@ private:
 		}
 	}
 
+	// return value: was a closest place found/written
 	bool get_closest_place(
 			const OGRPoint&                  ogr_point,
-			std::unique_ptr<OGRPoint>&       closest_point,
-			bool&                            is_nody,
+			std::unique_ptr<OGRPoint>&       closest_point,  // out
+			bool&                            is_nody,        // out
 			osmium::unsigned_object_id_type& closest_obj_id,
 			std::string&                     lastchange) {
 
@@ -138,18 +139,33 @@ private:
 		bool is_assigned = false;
 
 		std::pair<name2place_type::iterator, name2place_type::iterator> name2place_it_pair_nody;
+		std::pair<name2place_type::iterator, name2place_type::iterator> name2place_it_pair_wayy;
 		name2place_it_pair_nody = m_name2place_nody.equal_range(std::string(addrplace));
+		name2place_it_pair_wayy = m_name2place_wayy.equal_range(std::string(addrplace));
 
 		for (name2place_type::iterator it = name2place_it_pair_nody.first; it!=name2place_it_pair_nody.second; ++it) {
 			cur_dist = it->second.ogrpoint->Distance(&ogr_point);
 
 			if (cur_dist < best_dist) { // TODO: add check for minimum distance to prevent long connection lines
-				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone()));
+				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone())); // TODO: check for memory leak
 				is_nody     = true;
 				is_assigned = true;
 				// TODO: extract more info from struct
-			} // TODO: generate error message if place cannot be found
+			}
 		}
+
+		for (name2place_type::iterator it = name2place_it_pair_wayy.first; it!=name2place_it_pair_wayy.second; ++it) {
+			cur_dist = it->second.ogrpoint->Distance(&ogr_point);
+
+			if (cur_dist < best_dist) { // TODO: add check for minimum distance to prevent long connection lines
+				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone())); // TODO: check for memory leak
+				is_nody     = false;
+				is_assigned = true;
+				// TODO: extract more info from struct
+			}
+		}
+
+		// TODO: generate error message in the sqlite output if place cannot be found
 
 		return is_assigned;
 	}
@@ -314,7 +330,7 @@ private:
 
 
 	bool has_entry_in_name2highways(const std::string& addrstreet) {
-		if (mp_name2highways_nonarea.find(std::string(addrstreet)) != mp_name2highways_nonarea.end() || // TODO: check if string can be used directly
+		if (mp_name2highways_nonarea.find(std::string(addrstreet)) != mp_name2highways_nonarea.end() || // TODO: use result directly
 				(mp_name2highways_area.find(std::string(addrstreet)) != mp_name2highways_area.end())) {
 			return true;
 		} else {
@@ -327,11 +343,13 @@ private:
 	}
 
 	bool has_entry_in_name2place(const std::string& addrplace) {
-		return m_name2place_nody.find(std::string(addrplace)) != m_name2place_nody.end(); // TODO: check if string can be used directly
-
-
+		if (m_name2place_nody.find(std::string(addrplace)) != m_name2place_nody.end() || // TODO: use result directly
+				(m_name2place_wayy.find(std::string(addrplace)) != m_name2place_wayy.end())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-
 
 	name2highways_type& mp_name2highways_area;
 	name2highways_type& mp_name2highways_nonarea;

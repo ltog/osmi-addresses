@@ -31,7 +31,7 @@ public:
 
 		// look out for places
 		if (place && name) {
-			place_lookup_type mylookup;
+			place_lookup_type mylookup; // TODO: use unique_ptr?
 			mylookup.id       = node.id();
 			mylookup.ogrpoint = m_factory.create_point(node);
 
@@ -85,6 +85,22 @@ public:
 
 					}
 				}
+
+				// -------------------------------------------------------------------
+
+				const char* place = way.tags().get_value_by_key("place");
+				const char* name = way.tags().get_value_by_key("name");
+
+				// look out for places
+				// TODO: remove duplicate code copied from void FirstHandler.node(const osmium::Node& node)
+				if (place && name) {
+					place_lookup_type mylookup; // TODO: use unique_ptr?
+					mylookup.id       = way.id();
+					mylookup.ogrpoint = m_geometry_helper.centroid(way);
+
+					m_name2place_wayy.insert(name2place_element_type(name, std::move(mylookup)));
+				}
+
 			}
 		} catch (osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
