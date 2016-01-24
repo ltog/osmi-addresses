@@ -57,7 +57,7 @@ error=0
 
 # color formatting according to http://misc.flogisoft.com/bash/tip_colors_and_formatting
 if [[ "$error" -eq 0 ]]; then
-	echo -e "\e[92m\e[1mPASS:\e[39m All tests passed.\e[0m"
+	echo -e "\e[92m\e[1mPASS:\e[21m\e[90m All tests passed.\e[0m"
 	exit 0
 else
 	echo -e "\e[91m\e[1mFAIL:\e[39m Test(s) failed.\e[0m"
