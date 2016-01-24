@@ -22,7 +22,7 @@ struct highway_lookup_type {
 };
 
 struct place_lookup_type {
-	osmium::object_id_type    id;
+	osmium::object_id_type    obj_id;
 	std::unique_ptr<OGRPoint> ogrpoint;
 };
 #pragma pack(pop)

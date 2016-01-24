@@ -32,7 +32,7 @@ public:
 		// look out for places
 		if (place && name) {
 			place_lookup_type mylookup; // TODO: use unique_ptr?
-			mylookup.id       = node.id();
+			mylookup.obj_id   = node.id();
 			mylookup.ogrpoint = m_factory.create_point(node);
 
 			m_name2place_nody.insert(name2place_element_type(name, std::move(mylookup)));
@@ -95,7 +95,7 @@ public:
 				// TODO: remove duplicate code copied from void FirstHandler.node(const osmium::Node& node)
 				if (place && name) {
 					place_lookup_type mylookup; // TODO: use unique_ptr?
-					mylookup.id       = way.id();
+					mylookup.obj_id   = way.id();
 					mylookup.ogrpoint = m_geometry_helper.centroid(way);
 
 					m_name2place_wayy.insert(name2place_element_type(name, std::move(mylookup)));
