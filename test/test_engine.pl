@@ -21,7 +21,7 @@ if ($op eq '=') {
 	$result = qx(sqlite3 "$directory/$file.sqlite" '$query');
 	chomp $result;
 
-	&print_result;
+	exit &print_result;
 } elsif ($op =~ /bbox/) {
 	my @values = split(';', $query);
 	my $table     = $values[0];
@@ -38,7 +38,7 @@ if ($op eq '=') {
 	} elsif ($op eq 'inbbox') {
 		$assembled_query = "SELECT COUNT(*) FROM $table WHERE ROWID IN (SELECT pkid FROM idx_${table}_GEOMETRY WHERE (xmin<$left AND xmax>$right AND ymin<$bottom AND ymax>$top) ";
 	} else {
-		&report_unknown_operator;
+		exit &report_unknown_operator;
 	}
 
 	if (defined $condition) {
@@ -49,21 +49,24 @@ if ($op eq '=') {
 	$result = qx(sqlite3 "$directory/$file.sqlite" '$assembled_query');
 	chomp $result;
 
-	&print_result;
+	exit &print_result;
 } else {
-	&report_unknown_operator;
+	exit &report_unknown_operator;
 }
 
 # print the test result
 sub print_result {
 	if ($result eq $expected) {
 		print BOLD, GREEN, "PASS: ", RESET, BRIGHT_BLACK, "$name\n", RESET;
+		return 0; # success
 	} else {
 		print BOLD, RED, "FAIL: ", RESET, BOLD, "$name: Expected '$expected', but result was '$result'\n", RESET;
+		return 1; # failure
 	}
 }
 
 # report unknown test operators
 sub report_unknown_operator {
 	print BOLD, RED, "FAIL: ", RESET, "$name: unknown operator\n", RESET;
+	return 2; # failure
 }
