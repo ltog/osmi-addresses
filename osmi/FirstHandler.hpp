@@ -89,7 +89,7 @@ public:
 				// -------------------------------------------------------------------
 
 				const char* place = way.tags().get_value_by_key("place");
-				const char* name = way.tags().get_value_by_key("name");
+				const char* name  = way.tags().get_value_by_key("name");
 
 				// look out for places
 				// TODO: remove duplicate code copied from void FirstHandler.node(const osmium::Node& node)
