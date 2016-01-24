@@ -93,7 +93,7 @@ public:
 
 				// look out for places
 				// TODO: remove duplicate code copied from void FirstHandler.node(const osmium::Node& node)
-				if (place && name) {
+				if (place && name && way.is_closed()) {
 					place_lookup_type mylookup; // TODO: use unique_ptr?
 					mylookup.obj_id   = way.id();
 					mylookup.ogrpoint = m_geometry_helper.centroid(way);
