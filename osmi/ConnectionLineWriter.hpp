@@ -31,9 +31,9 @@ public:
 		} else if (the_object_type == object_type::way_object) {
 			feature->SetField("way_id" , static_cast<double>(objectid)); //TODO: object.id() is of type int64_t. is this ok?
 		}
-		//else if (the_object_type == object_type::interpolated_node_object){
-		//		there is no id to write
-		//}
+		else if (the_object_type == object_type::interpolated_node_object){
+			//there is no id to write
+		}
 
 
 		create_feature(feature);
