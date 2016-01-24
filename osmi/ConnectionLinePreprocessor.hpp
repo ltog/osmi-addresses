@@ -180,17 +180,16 @@ private:
 		double best_dist = std::numeric_limits<double>::max();
 		bool is_assigned = false;
 
-		// TODO: would one iterator suffice?
-		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_area;
-		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair_nonarea;
-		name2highw_it_pair_area    = mp_name2highways_area.equal_range(std::string(addrstreet));
-		name2highw_it_pair_nonarea = mp_name2highways_nonarea.equal_range(std::string(addrstreet));
+		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair;
 
-		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_area)) {
+		name2highw_it_pair = mp_name2highways_area.equal_range(std::string(addrstreet));
+		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair)) {
 			is_area     = true;
 			is_assigned = true;
 		}
-		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair_nonarea)) {
+
+		name2highw_it_pair = mp_name2highways_nonarea.equal_range(std::string(addrstreet));
+		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair)) {
 			is_area     = false;
 			is_assigned = true;
 		}
