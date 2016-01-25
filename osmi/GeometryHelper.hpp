@@ -37,13 +37,13 @@ public:
 
 		std::unique_ptr<OGRPoint> centroid(new OGRPoint);
 		int ret = polygon.Centroid(centroid.get());
-		if (ret != OGRERR_NONE) {
+		if (ret == OGRERR_NONE) {
+			return centroid;
+		} else {
 			std::cerr << "Couldn't calculate centroid of way = " << way.id() << ".\n";
 			osmium::geometry_error e(std::string("Couldn't calculate centroid of way = ") + std::to_string(way.id()) + std::string(".\n"));
 			throw e;
 			return nullptr;
-		} else {
-			return centroid;
 		}
 
 		return nullptr;
