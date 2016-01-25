@@ -27,6 +27,7 @@ public:
 		}
 	}
 
+	// PRE: way.is_closed() == true
 	std::unique_ptr<OGRPoint> centroid(const osmium::Way& way) {
 
 		std::unique_ptr<OGRLineString> ogr_linestring = m_factory.create_linestring(way);
