@@ -41,8 +41,6 @@ public:
 		const char* country    = node.tags().get_value_by_key("addr:country");
 		const char* fulladdr   = node.tags().get_value_by_key("addr:full");
 		const char* place      = node.tags().get_value_by_key("addr:place");
-
-		
 		
 		if (addrstreet || houseno || postcode || city || country || fulladdr || place) {
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
