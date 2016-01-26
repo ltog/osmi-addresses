@@ -69,6 +69,7 @@ public:
 
 	}
 
+	// process OSM-ways with tag building=...
 	void process_way(const osmium::Way& way, const std::string& road_id) {
 		try {
 			const char* building = way.tags().get_value_by_key("building");
