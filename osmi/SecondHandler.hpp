@@ -54,7 +54,7 @@ public:
 		entrances_writer->feed_node(node);
 
 		std::string road_id("");
-		connection_line_preprocessor->process_node(node, road_id);
+		connection_line_preprocessor->process_node(node, road_id); // overwrites road_id if matching street can be found
 
 		nodes_with_addresses_writer->process_node(node, road_id);
 
@@ -85,7 +85,7 @@ public:
 				ways_with_postal_code_writer->feed_way(way);
 
 				std::string road_id("");
-				connection_line_preprocessor->process_way(way, road_id);
+				connection_line_preprocessor->process_way(way, road_id); // overwrites road_id if matching street can be found
 				nodes_with_addresses_writer->process_way(way, road_id);
 			}
 		} catch (osmium::geometry_error&) {

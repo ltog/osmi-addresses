@@ -49,7 +49,10 @@ public:
 		}
 	}
 
-	void process_node(const osmium::Node& node, std::string& road_id) {
+	void process_node(
+			const osmium::Node& node,
+			std::string& road_id)     // out
+	{
 		addrstreet = node.tags().get_value_by_key("addr:street");
 		if (addrstreet && has_entry_in_name2highways(node)) {
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
@@ -63,7 +66,10 @@ public:
 		}
 	}
 
-	void process_way(const osmium::Way& way, std::string& road_id) {
+	void process_way(
+			const osmium::Way& way,
+			std::string& road_id)   // out
+	{
 		if (way.is_closed()) {
 			addrstreet = way.tags().get_value_by_key("addr:street");
 			if (addrstreet && has_entry_in_name2highways(way)) {
@@ -86,7 +92,7 @@ private:
 			const osmium::object_id_type& objectid,
 			const object_type&            the_object_type,
 			const char*                   addrstreet,
-			std::string&                  road_id,
+			std::string&                  road_id,         // out
 			const bool&                   is_addrstreet) {
 
 		std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);

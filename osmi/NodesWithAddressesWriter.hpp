@@ -63,7 +63,7 @@ public:
 			if (fulladdr)   { feature->SetField("fulladdr", fulladdr);   }
 			if (place)      { feature->SetField("place",    place);      }
 
-			if (road_id != "") { // TODO: road_id is always "" ?
+			if (road_id != "") {
 				feature->SetField("road_id", road_id.c_str());
 			}
 
@@ -105,7 +105,7 @@ public:
 					if (fulladdr) { feature->SetField("fulladdr", fulladdr); }
 					if (place)    { feature->SetField("place",    place);    }
 
-					if (road_id != "") { // TODO: road_id is always "" ?
+					if (road_id != "") {
 						feature->SetField("road_id", road_id.c_str());
 					}
 
@@ -146,7 +146,7 @@ public:
 		if (full.c_str())     { feature->SetField("fulladdr", full.c_str()); }
 		if (place.c_str())    { feature->SetField("place",    place.c_str());    }
 
-		if (road_id != "") { // TODO: road_id is always "" ?
+		if (road_id != "") {
 			feature->SetField("road_id", road_id.c_str());
 		}
 
