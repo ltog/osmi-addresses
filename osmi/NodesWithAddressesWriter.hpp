@@ -6,6 +6,12 @@
 #define IS_INTERPOLATION     true
 #define IS_NOT_INTERPOLATION false
 
+/*
+ * The .sqlite file written by this class contains nodes and centroids of ways
+ * that have at least partial (and potentially erroneous) address data.
+ *
+ * See also WaysWithAddressesWriter.
+ */
 class NodesWithAddressesWriter : public Writer {
 
 public:
