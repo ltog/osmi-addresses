@@ -18,12 +18,12 @@ error=0
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_interpolation" "=" "27"; ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nodes_with_addresses" "=" "117"; ((error+=$?))
-./test_engine.pl $1 "Number of entries in ** with is_ip=false" "SELECT COUNT(*) FROM ** WHERE is_ip=0" "osmi_addresses_nodes_with_addresses" "=" "98"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nodes_with_addresses" "=" "119"; ((error+=$?))
+./test_engine.pl $1 "Number of entries in ** with is_ip=false" "SELECT COUNT(*) FROM ** WHERE is_ip=0" "osmi_addresses_nodes_with_addresses" "=" "100"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with is_ip=true" "SELECT COUNT(*) FROM ** WHERE is_ip=1" "osmi_addresses_nodes_with_addresses" "=" "19"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with road_id not null" "SELECT COUNT(*) FROM ** WHERE road_id IS NOT NULL" "osmi_addresses_nodes_with_addresses" "=" "97"; ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_ways_with_addresses" "=" "35"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_ways_with_addresses" "=" "36"; ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_buildings" "=" "0"; ((error+=$?))
 
