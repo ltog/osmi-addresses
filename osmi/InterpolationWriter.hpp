@@ -200,6 +200,8 @@ public:
 						}
 
 						std::string road_id("");
+						std::string nody_place_id("");
+						std::string wayy_place_id("");
 						std::string nrstr;
 						
 						if(strcmp(interpolation, "alphabetic")) {
@@ -212,6 +214,8 @@ public:
 						m_clpp.process_interpolated_node( // osmi_addresses_connection_line 
 								*(point.get()),
 								road_id,
+								nody_place_id,
+								wayy_place_id,
 								first_taglist.get_value_by_key("addr:street")
 						);
 						m_nwa_writer.process_interpolated_node( //osmi_addresses_nodes_with_addresses

@@ -18,8 +18,8 @@ public:
 	void write_line(
 			OGRPoint&                        ogr_point,
 			const std::unique_ptr<OGRPoint>& closest_point,
-			const osmium::object_id_type&    objectid,
-			const object_type&               the_object_type) {
+			const osmium::object_id_type&    objectid, // ID of the object (e.g. building) carrying addr:street, addr:place
+			const object_type&               the_object_type) { // type of the object carrying addr:street, addr:place
 
 		OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 		OGRLineString connection_line;
@@ -34,7 +34,6 @@ public:
 		else if (the_object_type == object_type::interpolated_node_object){
 			//there is no id to write
 		}
-
 
 		create_feature(feature);
 	}

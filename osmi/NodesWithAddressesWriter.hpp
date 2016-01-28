@@ -19,19 +19,21 @@ public:
 		Writer(dir_name, "osmi_addresses_nodes_with_addresses", USE_TRANSACTIONS, wkbPoint) {
 
 		std::vector<field_config> field_configurations;
-		field_configurations.push_back({"node_id",    OFTString,  NO_WIDTH});
-		field_configurations.push_back({"way_id",     OFTString,  NO_WIDTH});
-		field_configurations.push_back({"ip_id",      OFTString,  NO_WIDTH});
-		field_configurations.push_back({"is_ip",      OFTInteger, NO_WIDTH});
-		field_configurations.push_back({"street",     OFTString,  NO_WIDTH});
-		field_configurations.push_back({"houseno",    OFTString,  NO_WIDTH});
-		field_configurations.push_back({"postcode",   OFTString,  NO_WIDTH});
-		field_configurations.push_back({"city",       OFTString,  NO_WIDTH});
-		field_configurations.push_back({"country",    OFTString,  NO_WIDTH});
-		field_configurations.push_back({"fulladdr",   OFTString,  NO_WIDTH});
-		field_configurations.push_back({"place",      OFTString,  NO_WIDTH});
-		field_configurations.push_back({"road_id",    OFTString,  NO_WIDTH});
-		field_configurations.push_back({"lastchange", OFTString,  NO_WIDTH});
+		field_configurations.push_back({"node_id",       OFTString,  NO_WIDTH});
+		field_configurations.push_back({"way_id",        OFTString,  NO_WIDTH});
+		field_configurations.push_back({"ip_id",         OFTString,  NO_WIDTH});
+		field_configurations.push_back({"is_ip",         OFTInteger, NO_WIDTH});
+		field_configurations.push_back({"street",        OFTString,  NO_WIDTH});
+		field_configurations.push_back({"houseno",       OFTString,  NO_WIDTH});
+		field_configurations.push_back({"postcode",      OFTString,  NO_WIDTH});
+		field_configurations.push_back({"city",          OFTString,  NO_WIDTH});
+		field_configurations.push_back({"country",       OFTString,  NO_WIDTH});
+		field_configurations.push_back({"fulladdr",      OFTString,  NO_WIDTH});
+		field_configurations.push_back({"place",         OFTString,  NO_WIDTH});
+		field_configurations.push_back({"road_id",       OFTString,  NO_WIDTH});
+		field_configurations.push_back({"nody_place_id", OFTString,  NO_WIDTH});
+		field_configurations.push_back({"wayy_place_id", OFTString,  NO_WIDTH});
+		field_configurations.push_back({"lastchange",    OFTString,  NO_WIDTH});
 		create_fields(field_configurations);
 	}
 
@@ -39,7 +41,12 @@ public:
 
 	}
 
-	void process_node(const osmium::Node& node, const std::string& road_id) {
+	void process_node(
+			const osmium::Node& node,
+			const std::string& road_id,
+			const std::string& nody_place_id,
+			const std::string& wayy_place_id)
+	{
 		const char* addrstreet = node.tags().get_value_by_key("addr:street");
 		const char* houseno    = node.tags().get_value_by_key("addr:housenumber");
 		const char* postcode   = node.tags().get_value_by_key("addr:postcode");
@@ -67,6 +74,13 @@ public:
 				feature->SetField("road_id", road_id.c_str());
 			}
 
+			if (nody_place_id != "") {
+				feature->SetField("nody_place_id", nody_place_id.c_str());
+			}
+
+			if (wayy_place_id != "") {
+				feature->SetField("wayy_place_id", wayy_place_id.c_str());
+			}
 			create_feature(feature);
 		}
 	}
@@ -76,7 +90,12 @@ public:
 	}
 
 	// process OSM-ways with tag building=...
-	void process_way(const osmium::Way& way, const std::string& road_id) {
+	void process_way(
+			const osmium::Way& way,
+			const std::string& road_id,
+			const std::string& nody_place_id,
+			const std::string& wayy_place_id)
+	{
 		try {
 			const char* building = way.tags().get_value_by_key("building");
 			if (building && way.is_closed()) {
@@ -107,6 +126,14 @@ public:
 
 					if (road_id != "") {
 						feature->SetField("road_id", road_id.c_str());
+					}
+
+					if (nody_place_id != "") {
+						feature->SetField("nody_place_id", nody_place_id.c_str());
+					}
+
+					if (wayy_place_id != "") {
+						feature->SetField("wayy_place_id", wayy_place_id.c_str());
 					}
 
 					create_feature(feature);

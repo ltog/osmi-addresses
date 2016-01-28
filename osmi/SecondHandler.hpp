@@ -54,9 +54,10 @@ public:
 		entrances_writer->feed_node(node);
 
 		std::string road_id("");
-		connection_line_preprocessor->process_node(node, road_id); // overwrites road_id if matching street can be found
-
-		nodes_with_addresses_writer->process_node(node, road_id);
+		std::string nody_place_id("");
+		std::string wayy_place_id("");
+		connection_line_preprocessor->process_node(node, road_id, nody_place_id, wayy_place_id); // overwrites IDs if matching street/place can be found
+		nodes_with_addresses_writer->process_node(node,  road_id, nody_place_id, wayy_place_id);
 
 		// save tags of nodes relevant for address interpolation
 		std::set<osmium::unsigned_object_id_type>::iterator it = mp_addr_interpolation_node_set.find(node.id());
@@ -85,8 +86,10 @@ public:
 				ways_with_postal_code_writer->feed_way(way);
 
 				std::string road_id("");
-				connection_line_preprocessor->process_way(way, road_id); // overwrites road_id if matching street can be found
-				nodes_with_addresses_writer->process_way(way, road_id);
+				std::string nody_place_id("");
+				std::string wayy_place_id("");
+				connection_line_preprocessor->process_way(way, road_id, nody_place_id, wayy_place_id); // overwrites IDs if matching street/place can be found
+				nodes_with_addresses_writer->process_way(way, road_id, nody_place_id, wayy_place_id);
 			}
 		} catch (osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
