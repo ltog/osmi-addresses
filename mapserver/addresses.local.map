@@ -1,0 +1,961 @@
+#----------------------------------------------------------
+# THIS FILE HAS BEEN GENERATED AUTOMATICALLY. DO NOT EDIT!
+#----------------------------------------------------------
+MAP
+    NAME geofabrik_tools_osminspector_addresses
+    EXTENT -90 -180 90 180
+    FONTSET "../fontset"
+    SYMBOLSET "../symbolset"
+    CONFIG PROJ_LIB "/srv/tools/svn-tools/osm-inspector/proj/"
+    CONFIG MS_ERRORFILE "/var/log/mapserver/addresses.log"
+    DEBUG 5
+    SHAPEPATH "/srv/tools/shapes"
+
+    PROJECTION
+        "init=epsg:4326"
+    END
+
+    IMAGECOLOR 255 255 254
+
+    LEGEND
+        STATUS ON
+    END
+
+    WEB
+        METADATA
+            OWS_NAME geofabrik_tools_osminspector_addresses
+            OWS_TITLE "Geofabrik Tools: OSM Inspector (Addresses)"
+            OWS_ABSTRACT "OSM Inspector is a debugging tool for OpenStreetMap data."
+            OWS_ONLINERESOURCE "http://tools.geofabrik.de/osmi/views/addresses/wxs?"
+            OWS_SERVER_VERSION "1.1.1"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            OWS_ATTRIBUTION_TITLE "Geofabrik GmbH/OpenStreetMap Contributors"
+            OWS_ATTRIBUTION_ONLINERESOURCE "http://www.geofabrik.de/"
+            OWS_KEYWORDLIST "Geofabrik,OpenStreetMap,OSM,OSM Inspector"
+            OWS_FEATURE_INFO_MIME_TYPE "text/html"
+            OWS_CONTACTELECTRONICMAILADDRESS "info@geofabrik.de"
+            OWS_CONTACTPERSON "Jochen Topf"
+            OWS_CONTACTVOICETELEPHONE "+49-721-1803560-0"
+            OWS_CONTACTORGANIZATION "Geofabrik GmbH"
+            OWS_ENCODING "utf-8"
+            OWS_ENABLE_REQUEST "*"
+        END
+    END
+
+
+    #-------------------------------------------------------------------
+#    LAYER
+#        NAME postcodeareas
+#        TYPE POLYGON
+#        STATUS ON
+#	    POSTGIS osmi_addresses_postcodeareas
+#        OPACITY 40
+#        DUMP true
+#        METADATA
+#            OWS_NAME postcodeareas
+#            OWS_TITLE "Postcode areas"
+#            OWS_ABSTRACT "Convex hull of all points with the same postal code. Of course this is only an approximation, because postal code areas don't have to be convex."
+#            OWS_KEYWORDLIST "datasrc=OSM,min=6,max=13,label=postal code,labelmin=8,labelmax=22"
+#            OWS_SRS "EPSG:4326 EPSG:900913"
+#            GML_FEATUREID "ID"
+#            GML_INCLUDE_ITEMS "all"
+#        END
+#        LABELITEM 'postcode'
+#        LABELZOOM 8 22
+#        CLASS
+#            NAME "postcodeareas"
+#            ZOOM 6 13
+#            STYLE
+#                WIDTH 2
+#                COLOR 249 144 238
+#                OUTLINECOLOR 199 23 205
+#                ANTIALIAS true
+#            END
+#            LABEL
+#                SIZE 8
+#                COLOR 249 144 238
+#                ANTIALIAS true
+#                OUTLINECOLOR 255 255 255
+#                TYPE TRUETYPE
+#                FONT "DejaVuSans,unifont"
+#                OFFSET 0 0
+#            END
+#        END
+#        CLASS
+#            ZOOM 14 22
+#            STYLE
+#                WIDTH 2
+#                OUTLINECOLOR 199 23 205
+#                ANTIALIAS true
+#            END
+#            LABEL
+#                SIZE 24
+#                COLOR 249 144 238
+#                ANTIALIAS true
+#                OUTLINECOLOR 255 255 255
+#                TYPE TRUETYPE
+#                FONT "DejaVuSans,unifont"
+#                OFFSET 0 0
+#            END
+#        END
+#    END
+#
+#    #-------------------------------------------------------------------
+#    # not queryable
+#    LAYER
+#        NAME postcodeoutline
+#        TYPE LINE
+#        STATUS ON
+#	    POSTGIS osmi_addresses_postcodeareas
+#        OPACITY 40
+#        DUMP true
+#        TOLERANCE 5
+#        METADATA
+#            OWS_NAME postcodeoutline
+#            OWS_TITLE "Outline of postcode areas"
+#            OWS_ABSTRACT "Outline of convex hull of all points with the same postal code. Of course this is only an approximation, because postal code areas don't have to be convex."
+#            OWS_KEYWORDLIST "datasrc=OSM,min=14,max=22"
+#            OWS_SRS "EPSG:4326 EPSG:900913"
+#            GML_FEATUREID "ID"
+#            GML_INCLUDE_ITEMS "all"
+#        END
+#        ZOOM 14 22
+#        CLASS
+#            NAME "postcodeoutline"
+#            STYLE
+#                WIDTH 10
+#                OUTLINECOLOR 249 144 238
+#                ANTIALIAS true
+#                OFFSET 5 -99
+#            END
+#            STYLE
+#                WIDTH 2
+#                OUTLINECOLOR 199 23 205
+#                ANTIALIAS true
+#            END
+#        END
+#    END
+
+    #-------------------------------------------------------------------
+	#CONFIG "MS_ERRORFILE" "/srv/tools/sqlite/debug.txt"
+  	#DEBUG 5
+#   LAYER
+#       NAME uncovered_area
+#       TYPE POLYGON
+#       STATUS DEFAULT
+#       DUMP true
+#       FEATURE
+#            WKT "POLYGON((-180 -85.05113, -180 85.05113, 180 85.05113, 180 -85.05113, -180 -85.05113), (-30.0 30.0, -30.0 75.0, 45.0 75.0, 45.0 30.0, -30.0 30.0))"
+#           POINTS
+#               -180 -85.05113
+#               -180 85.05113
+#               180 85.05113
+#               180 -85.05113
+#               -180 -85.05113
+#               -30.0 30.0
+#               -30.0 75.0
+#               45.0 75.0
+#               45.0 30.0
+#               -30.0 30.0
+#               -180 -85.05113
+#           END
+#       END
+#       METADATA
+#           OWS_NAME uncovered_area
+#           OWS_TITLE "Uncovered area"
+#           OWS_ABSTRACT "Area not covered in this view."
+#           OWS_SRS "EPSG:4326 EPSG:900913"
+#       END
+#       ZOOM 1 22
+#       CLASS
+#           NAME "uncovered_area"
+#           STYLE
+#               WIDTH 2
+#               COLOR 160 160 160
+#               SYMBOL "hatch-nodata"
+#               SIZE 10
+#               ANGLE 45
+#                OUTLINECOLOR 160 160 160
+#           END
+#       END
+#    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        Name nearest_areas
+        TYPE POLYGON
+        STATUS ON
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_areas.sqlite"
+	DATA "osmi_addresses_nearest_areas"
+        CONNECTIONTYPE OGR
+        TEMPLATE "/srv/tools/views/addresses/nearest_areas-template.html"
+        TEMPLATE "/srv/tools/views/addresses/-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nearest_areas
+            OWS_TITLE "Nearest areas"
+            OWS_ABSTRACT "All areas which have nodes or buildings with addresses next to them."
+            OWS_KEYWORDLIST "datasrc=OSM,min=12,max=22,label=name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:3857"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 200000
+        MINSCALEDENOM 1
+        MAXSCALEDENOM 200000
+        MINSCALEDENOM 1
+        LABELITEM 'name'
+        CLASS
+            NAME "Nearest areas"
+            STYLE
+                WIDTH 2
+                COLOR 33 155 82
+                OPACITY 25
+                ANTIALIAS true
+            END
+            STYLE
+                OUTLINECOLOR 33 155 82
+                WIDTH 2
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 10
+                COLOR 33 155 82
+                ANTIALIAS true
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+                ENCODING "utf-8"
+                ANGLE AUTO
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME nearest_roads
+        TYPE LINE
+        STATUS ON
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_roads.sqlite"
+	DATA "osmi_addresses_nearest_roads"
+	CONNECTIONTYPE OGR
+        TEMPLATE "/srv/tools/views/addresses/nearest_roads-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nearest_roads
+            OWS_TITLE "Nearest roads"
+            OWS_ABSTRACT "All roads which have nodes or buildings with addresses next to them."
+            OWS_KEYWORDLIST "datasrc=OSM,min=12,max=22,label=name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 200000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM 'name'
+        CLASS
+            NAME "Nearest roads"
+            STYLE
+                WIDTH 2
+                COLOR 33 155 82
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 10
+                COLOR 33 155 82
+                ANTIALIAS true
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+                ENCODING "utf-8"
+#                ANGLE FOLLOW
+                ANGLE AUTO
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    # not queryable
+    LAYER
+        NAME connection_lines
+        TYPE LINE
+        STATUS ON
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_connection_line.sqlite"
+	DATA "osmi_addresses_connection_line"
+	CONNECTIONTYPE OGR
+	#    POSTGIS osmi_addresses_connection_line
+        TEMPLATE "/srv/tools/views/addresses/connection_lines-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME connection_lines
+            OWS_TITLE "Connection lines"
+            OWS_ABSTRACT "Lines connecting a node or building with an address to the nearest point on the road given in the addr:street tag. These lines are not in the OSM database, they are computed automatically"
+            OWS_KEYWORDLIST "datasrc=OSM,min=17,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 5000
+        MINSCALEDENOM 1
+        CLASS
+            NAME "Connection lines"
+            STYLE
+                SYMBOL "dashed-line-2-2"
+                COLOR 104 88 104
+                ANTIALIAS true
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME nearest_points
+        TYPE POINT
+        STATUS ON
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_points.sqlite"
+	DATA "osmi_addresses_nearest_points"
+	CONNECTIONTYPE OGR
+        TEMPLATE "/srv/tools/views/addresses/nearest_points-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nearest_points
+            OWS_TITLE "Connection point on roads"
+            OWS_ABSTRACT "For every node or building with an address this is the nearest point on the corresponding road. These points are not in the OSM database, they are computed automatically."
+            OWS_KEYWORDLIST "datasrc=OSM,min=17,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 5000
+        MINSCALEDENOM 1
+        CLASS
+            NAME "Connection point"
+            STYLE
+                SYMBOL "circle"
+                SIZE 6
+                COLOR 33 155 82
+#                COLOR 255 0 0 
+                ANTIALIAS true
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME interpolation
+        TYPE LINE
+        STATUS ON
+	CONNECTIONTYPE OGR
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_interpolation.sqlite"
+	DATA "osmi_addresses_interpolation"
+        TEMPLATE "/srv/tools/views/addresses/interpolation-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME interpolation
+            OWS_TITLE "House number interpolation lines"
+            OWS_ABSTRACT "Lines between house number nodes to denote interpolation of missing house numbers between those nodes. Interpolation lines can be for even (two thin lines), odd (one thin line), or all housenumbers (one thick line)."
+            OWS_KEYWORDLIST "datasrc=OSM,min=16,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 12500
+        MINSCALEDENOM 1
+        CLASSITEM 'typename'
+        LABELITEM 'typename'
+        CLASS
+            EXPRESSION 'all'
+            STYLE
+                WIDTH 6
+                COLOR 20 20 160
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            EXPRESSION 'odd'
+            NAME "House number interpolation lines"
+            STYLE
+                WIDTH 2
+                COLOR 20 20 160
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            EXPRESSION 'even'
+            STYLE
+                WIDTH 6
+                COLOR 20 20 160
+                ANTIALIAS true
+            END
+            STYLE
+                WIDTH 2
+                COLOR 255 255 255
+#                COLOR 255 0 0
+                ANTIALIAS true
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME buildings
+        TYPE POLYGON
+        STATUS ON
+	FEATURE 
+		WKT "POLYGON((0 0,0 0,0 0,0 0,0 0))"
+	END
+
+#	    POSTGIS osmi_addresses_buildings
+        TEMPLATE "/srv/tools/views/addresses/buildings-template.html"
+        DUMP true
+        METADATA
+            OWS_NAME buildings
+            OWS_TITLE "Buildings"
+            OWS_ABSTRACT "Buildings (closed ways tagged building=yes) with or without addresses."
+            OWS_KEYWORDLIST "datasrc=OSM,min=12,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 200000
+        MINSCALEDENOM 1
+        CLASS
+            NAME "Buildings"
+            STYLE
+                WIDTH 2
+                COLOR 237 185 117
+                ANTIALIAS true
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME buildings_with_addresses
+        TYPE POLYGON
+        STATUS ON
+	#    POSTGIS osmi_addresses_ways_with_addresses
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_ways_with_addresses.sqlite"
+	DATA "osmi_addresses_ways_with_addresses"
+	CONNECTIONTYPE OGR
+	#CONNECTION "/srv/tools/sqlite/europe-neu.sqlite"
+        TEMPLATE "/srv/tools/views/addresses/buildings_with_addresses-template.html"
+        DUMP true
+        METADATA
+            OWS_NAME buildings_with_addresses
+            OWS_TITLE "Buildings with addresses"
+            OWS_ABSTRACT "Buildings (closed ways tagged building=yes) with addresses."
+            OWS_KEYWORDLIST "datasrc=OSM,min=12,max=22,label=house number,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 200000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "houseno"
+        CLASS
+            NAME "Ways with addresses"
+            STYLE
+                WIDTH 2
+                COLOR 237 185 117
+                OUTLINECOLOR 162 106 34
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 162 106 34
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME nodes_with_addresses_interpolated
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+	DATA "osmi_addresses_nodes_with_addresses"
+	CONNECTIONTYPE OGR
+	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=1"
+        TEMPLATE "/srv/tools/views/addresses/nodes_with_addresses_interpolated-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nodes_with_addresses_interpolated
+            OWS_TITLE "Nodes with interpolated addresses"
+            OWS_ABSTRACT "Virtual nodes with addresses computed from interpolation lines and their endpoints. These nodes are not in the OSM database."
+            OWS_KEYWORDLIST "datasrc=OSM,min=17,max=22,label=house number,labelmin=22,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 5000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 2500
+        LABELMINSCALEDENOM 1
+        LABELITEM "houseno"
+        FILTER ([is_ip]=1)
+        CLASS
+            NAME "Nodes with addresses"
+            STYLE
+                SYMBOL "circle"
+                SIZE 6
+                COLOR 100 100 100
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 0 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME nodes_with_addresses_defined
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+	DATA "osmi_addresses_nodes_with_addresses"
+	CONNECTIONTYPE OGR
+	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=0 and node_id is not null"
+        TEMPLATE "/srv/tools/views/addresses/nodes_with_addresses_defined-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME nodes_with_addresses_defined
+            OWS_TITLE "Nodes with defined addresses"
+            OWS_ABSTRACT "Nodes with addresses."
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=house number,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "houseno"
+        # Filter out interpolated nodes and centroid nodes of building polygons
+        FILTER ([is_ip]=0 AND [node_id] > 0)
+        #FILTER ([is_ip]=0)
+        CLASS
+            NAME "Nodes with defined addresses"
+            STYLE
+                SYMBOL "circle"
+                SIZE 6
+                COLOR 0 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 0 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME postal_code
+        TYPE LINE
+        STATUS ON
+	#    POSTGIS osmi_addresses_ways_with_postal_code
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_ways_with_postal_code.sqlite"
+	DATA "osmi_addresses_ways_with_postal_code"
+	CONNECTIONTYPE OGR
+        TEMPLATE "/srv/tools/views/addresses/postal_code-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME ways_with_postal_code
+            OWS_TITLE "Ways tagged with postal_code"
+            OWS_ABSTRACT "All ways which have a tag postal_code=*. (This is distinct from the addr:postcode tag used in the Karlsruhe schema.)"
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=postalcode,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM 'postalcode'
+        CLASS
+            NAME "Ways with Postal code"
+            STYLE
+                WIDTH 2
+                COLOR 255 131 76
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 10
+                COLOR 255 131 76
+                ANTIALIAS true
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+                ENCODING "utf-8"
+                ANGLE AUTO
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME entrances_deprecated
+        TYPE POINT
+        STATUS ON
+        CONNECTIONTYPE OGR
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_entrances.sqlite"
+	DATA "osmi_addresses_entrances"
+        #TEMPLATE ...
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME entrances
+            OWS_TITLE "Entrances"
+            OWS_ABSTRACT "Nodes tagged as entrances using the deprecated tagging scheme building=entrance."
+            OWS_KEYWORDLIST "datasrc=OSM,min=18,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        CLASS
+            NAME "Deprecated entrances (building=entrance)"
+	    EXPRESSION ("[entrance]" = '')
+            STYLE
+                SYMBOL "entrance-deprecated"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+    END
+
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME entrances
+        TYPE POINT
+        STATUS ON
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_entrances.sqlite"
+	DATA "osmi_addresses_entrances"
+        CONNECTIONTYPE OGR
+        #TEMPLATE ...
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME entrances
+            OWS_TITLE "Entrances"
+            OWS_ABSTRACT "Nodes tagged as entrances with entrance=..."
+            OWS_KEYWORDLIST "datasrc=OSM,min=18,max=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        CLASS
+            NAME "Entrances (entrance=emergency)"
+	    EXPRESSION ("[entrance]" = 'emergency')
+            STYLE
+                SYMBOL "entrance-emergency"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=exit)"
+	    EXPRESSION ("[entrance]" = 'exit')
+            STYLE
+                SYMBOL "entrance-exit"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=main)"
+	    EXPRESSION ("[entrance]" = 'main')
+            STYLE
+                SYMBOL "entrance-main"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=service)"
+	    EXPRESSION ("[entrance]" = 'service')
+            STYLE
+                SYMBOL "entrance-service"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+        CLASS
+            NAME "Entrances (entrance=yes)"
+	    EXPRESSION ("[entrance]" = 'yes')
+            STYLE
+                SYMBOL "entrance-yes"
+                SIZE 12
+                ANTIALIAS true
+            END
+        END
+    END
+    
+    #-------------------------------------------------------------------
+    LAYER
+        NAME interpolation_errors
+        TYPE LINE
+        STATUS ON
+	#    POSTGIS osmi_addresses_interpolation
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_interpolation.sqlite"
+	DATA "osmi_addresses_interpolation"
+	CONNECTIONTYPE OGR
+        TEMPLATE "/srv/tools/views/addresses/interpolation_errors-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME interpolation_errors
+            OWS_TITLE "Interpolation errors"
+            OWS_ABSTRACT "Errors on interpolation lines such as wrong endpoint numbers. If you zoom in far enough the lines are labelled with the error."
+            OWS_KEYWORDLIST "datasrc=OSM,min=8,max=22,label=error message,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 3000000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "error"
+        FILTER ("[error]"!='')
+        CLASS
+            NAME "Interpolation errors"
+            STYLE
+                WIDTH 2
+                COLOR 200 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 200 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 10
+                ANGLE AUTO
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME no_addr_street
+        TYPE POINT
+        STATUS ON
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+	DATA "osmi_addresses_nodes_with_addresses"
+	CONNECTIONTYPE OGR
+        TEMPLATE "/srv/tools/views/addresses/no_addr_street-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME no_addr_street
+            OWS_TITLE "No addr:street"
+            OWS_ABSTRACT "Nodes without addr:street tag (but other addr:* tags)."
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=street name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "street"
+        FILTER (([is_ip]=0) AND ("[street]" = '') AND ("[fulladdr]" = '') AND ("[place]" = ''))
+        CLASS
+            NAME "Nodes with defined addresses but no addr:street tag"
+            STYLE
+                SYMBOL "circle"
+                SIZE 10
+                COLOR 255 26 215
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 255 26 215
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                POSITION lc
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME street_not_found
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+	DATA "osmi_addresses_nodes_with_addresses"
+	CONNECTIONTYPE OGR
+	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        TEMPLATE "/srv/tools/views/addresses/street_not_found-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME street_not_found
+            OWS_TITLE "Street not found"
+            OWS_ABSTRACT "Nodes with defined addresses where the matching street couldn't be found, ie there is no road with that name inside an about 1km radius."
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=street name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "street"
+        #FILTER ([is_ip]=0 AND [street] IS NOT NULL AND [street] != '' AND [road_id] IS NULL)
+        FILTER (([is_ip]=0) AND ("[street]" != '') AND ("[road_id]" = ''))
+        CLASS
+            NAME "Nodes with defined addresses (addr:street=...) with road not found"
+            STYLE
+                SYMBOL "circle"
+                SIZE 10
+                COLOR 200 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 200 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                POSITION lc
+            END
+        END
+    END
+    
+    #-------------------------------------------------------------------
+    LAYER
+        NAME place_not_found
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+	DATA "osmi_addresses_nodes_with_addresses"
+	CONNECTIONTYPE OGR
+	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        TEMPLATE "/srv/tools/views/addresses/place_not_found-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME place_not_found
+            OWS_TITLE "Place not found"
+            OWS_ABSTRACT "Nodes with defined addresses where the matching place couldn't be found, ie there is no place with that name inside an about 1km radius."
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=place name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "place"
+        FILTER ([is_ip]=0 AND "[place]" != '' AND "[nody_place_id]" = '' AND "[wayy_place_id]" = '')
+        CLASS
+            NAME "Nodes with defined addresses (addr:place=...) with place not found"
+            STYLE
+                SYMBOL "circle"
+                SIZE 10
+                COLOR 200 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 200 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                POSITION lc
+            END
+        END
+    END
+    #-------------------------------------------------------------------
+
+    LAYER
+        NAME "sponsor_mask"
+        STATUS OFF
+        TYPE polygon
+        TRANSFORM ll
+        FEATURE
+            POINTS
+                440 -6   
+                5000 -6
+                5000 0
+                440 0
+                440 -6
+            END
+        END
+	CLASS
+	  STYLE
+	   COLOR "#88888801"
+	  END
+	END
+        UNITS PIXELS
+    END
+    LAYER
+        NAME "sponsor"
+        STATUS DEFAULT
+        TYPE annotation
+        TRANSFORM lr
+        MASK "sponsor_mask"
+        FEATURE
+            POINTS
+                -95 -6
+            END
+            TEXT "this view sponsored by Geotab"
+        END
+        CLASS
+            LABEL
+                FONT "DejaVuSans"
+                TYPE TRUETYPE
+                SIZE 8
+                BUFFER 1
+                COLOR 20 0 0
+                OUTLINECOLOR 255 255 255
+                FORCE TRUE
+            END
+        END
+        UNITS PIXELS
+    END
+
+END

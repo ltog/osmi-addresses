@@ -140,8 +140,17 @@ Change the file `addresses.map`:
 - For each layer add a line `CONNECTION "X"` where X is the path to the .sqlite file
 - For each layer add a line `DATA "X"` where X is the name of a table in the sqlite file, e.g. `osmi_addresses_nearest_roads` (you can derive the table name from the name of the .shp file in the `TILEINDEX ...` line)
 
-Request string:  
-`http://localhost/cgi-bin/mapserv?LAYERS=nearest_roads%2Cconnection_lines%2Cnearest_points%2Cinterpolation%2Cbuildings%2Cbuildings_with_addresses%2Cnodes_with_addresses_interpolated%2Cnodes_with_addresses_defined%2Cpostal_code%2Cinterpolation_errors%2Cno_addr_street%2Cstreet_not_found&FORMAT=image%2Fpng%3B%20mode%3D24bit&PROJECTION=EPSG%3A900913&DISPLAYPROJECTION=EPSG%3A4326&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=928402.87147211,5959885.5572013,938540.33234703,5962035.3486215&WIDTH=1061&HEIGHT=225&map=X` where X is the full path to the cloned .map file
+Request strings:
+
+The whole test zone:
+
+`http://localhost/cgi-bin/mapserv?LAYERS=nearest_roads%2Cconnection_lines%2Cnearest_points%2Cinterpolation%2Cbuildings%2Cbuildings_with_addresses%2Cnodes_with_addresses_interpolated%2Cnodes_with_addresses_defined%2Cpostal_code%2Centrances_deprecated%2Centrances%2Cinterpolation_errors%2Cno_addr_street%2Cstreet_not_found%2Cplace_not_found&FORMAT=image%2Fpng%3B%20mode%3D24bit&PROJECTION=EPSG%3A900913&DISPLAYPROJECTION=EPSG%3A4326&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=977596.07080954,5983046.5739326,978979.10328988,5983822.887501&WIDTH=1158&HEIGHT=650&map=X`
+
+The north-western part of the test zone:
+
+`http://localhost/cgi-bin/mapserv?LAYERS=nearest_roads%2Cconnection_lines%2Cnearest_points%2Cinterpolation%2Cbuildings%2Cbuildings_with_addresses%2Cnodes_with_addresses_interpolated%2Cnodes_with_addresses_defined%2Cpostal_code%2Centrances_deprecated%2Centrances%2Cinterpolation_errors%2Cno_addr_street%2Cstreet_not_found%2Cplace_not_found&FORMAT=image%2Fpng%3B%20mode%3D24bit&PROJECTION=EPSG%3A900913&DISPLAYPROJECTION=EPSG%3A4326&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=977740.58456611,5983529.97842,978086.3426862,5983766.1568941&WIDTH=1158&HEIGHT=791&map=X`
+
+where the last X is the absolute path to the `addresses.local.map` file
 
 ### Debugging MapServer
 
