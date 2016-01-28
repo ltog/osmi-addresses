@@ -105,6 +105,8 @@ Project properties -> C/C++ General -> Paths and Symbols -> Tab: Symbols -> Lang
 
 ## MapServer setup
 
+### Installation instructions
+
 Install MapServer (Ubuntu):  
 `sudo apt-get install mapserver-bin cgi-mapserver apache2 proj-data unifont`
 
@@ -140,6 +142,14 @@ Change the file `addresses.map`:
 
 Request string:  
 `http://localhost/cgi-bin/mapserv?LAYERS=nearest_roads%2Cconnection_lines%2Cnearest_points%2Cinterpolation%2Cbuildings%2Cbuildings_with_addresses%2Cnodes_with_addresses_interpolated%2Cnodes_with_addresses_defined%2Cpostal_code%2Cinterpolation_errors%2Cno_addr_street%2Cstreet_not_found&FORMAT=image%2Fpng%3B%20mode%3D24bit&PROJECTION=EPSG%3A900913&DISPLAYPROJECTION=EPSG%3A4326&TRANSPARENT=TRUE&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&SRS=EPSG%3A900913&BBOX=928402.87147211,5959885.5572013,938540.33234703,5962035.3486215&WIDTH=1061&HEIGHT=225&map=X` where X is the full path to the cloned .map file
+
+### Debugging MapServer
+
+#### Error message: MS_DEFAULT_MAPFILE_PATTERN validation failed
+
+    msLoadMap(): Regular expression error. MS_DEFAULT_MAPFILE_PATTERN validation failed. msEvalRegex(): Regular expression error. String failed expression test.
+
+Make sure that your .map file actually ends with `.map`. See also http://gis.stackexchange.com/a/11444
 
 ## Information for developers
 
