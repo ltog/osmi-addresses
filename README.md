@@ -155,6 +155,10 @@ Make sure that your .map file actually ends with `.map`. See also http://gis.sta
 
 The logfile's location is configured using `CONFIG MS_ERRORFILE`. Try `/var/log/mapserver/addresses.log`
 
+#### Contents of layer not showing up
+
+Have you included the desired layer in your HTTP request?
+
 ## Information for developers
 
 ### Call hierarchy
