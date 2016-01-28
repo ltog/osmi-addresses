@@ -23,7 +23,7 @@
 		{ "key": "addr:postcode",                             "object_types": [ "node",        "area" ] },
 		{ "key": "addr:street",                               "object_types": [ "node",        "area" ] },
 		{ "key": "area",               "value": "yes",        "object_types": [                "area" ] },
-		{ "key": "area",               "value": "true",       "object_types": [                "area" ] },
+		{ "key": "area",               "value": "true",       "object_types": [                "area" ], "description": "Unrecommended tagging style" },
 		{ "key": "building",                                  "object_types": [                "area" ] },
 		{ "key": "building",           "value": "entrance",   "object_types": [ "node" ],                "description": "Old tagging style" },
 		{ "key": "entrance",           "value": "emergency",  "object_types": [ "node" ] },
