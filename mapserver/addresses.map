@@ -845,7 +845,54 @@ MAP
         #FILTER ([is_ip]=0 AND [street] IS NOT NULL AND [street] != '' AND [road_id] IS NULL)
         FILTER (([is_ip]=0) AND ("[street]" != '') AND ("[road_id]" = ''))
         CLASS
-            NAME "Nodes with defined addresses with road not found"
+            NAME "Nodes with defined addresses (addr:street=...) with road not found"
+            STYLE
+                SYMBOL "circle"
+                SIZE 10
+                COLOR 200 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 200 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                POSITION lc
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
+        NAME place_not_found
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+	DATA "osmi_addresses_nodes_with_addresses"
+	CONNECTIONTYPE OGR
+	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        TEMPLATE "/srv/tools/views/addresses/place_not_found-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME place_not_found
+            OWS_TITLE "Place not found"
+            OWS_ABSTRACT "Nodes with defined addresses where the matching place couldn't be found, ie there is no place with that name inside an about 1km radius."
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=place name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "place"
+        FILTER ([is_ip]=0 AND "[place]" != '' AND "[nody_place_id]" = '' AND "[wayy_place_id]" = '')
+        CLASS
+            NAME "Nodes with defined addresses (addr:place=...) with place not found"
             STYLE
                 SYMBOL "circle"
                 SIZE 10
