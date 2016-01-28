@@ -795,7 +795,7 @@ MAP
         LABELMAXSCALEDENOM 12500
         LABELMINSCALEDENOM 1
         LABELITEM "street"
-        FILTER (([is_ip]=0) AND ("[street]" = '') AND ("[fulladdr]" = ''))
+        FILTER (([is_ip]=0) AND ("[street]" = '') AND ("[fulladdr]" = '') AND ("[place]" = ''))
         CLASS
             NAME "Nodes with defined addresses but no addr:street tag"
             STYLE
