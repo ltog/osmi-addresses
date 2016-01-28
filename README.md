@@ -151,6 +151,10 @@ Request string:
 
 Make sure that your .map file actually ends with `.map`. See also http://gis.stackexchange.com/a/11444
 
+#### MapServer logfile
+
+The logfile's location is configured using `CONFIG MS_ERRORFILE`. Try `/var/log/mapserver/addresses.log`
+
 ## Information for developers
 
 ### Call hierarchy
