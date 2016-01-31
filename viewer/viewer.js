@@ -17,5 +17,6 @@ L.tileLayer.wms('http://localhost/cgi-bin/mapserv?',{
 	projection: 'EPSG:900913',
 	//map: 'X', // replace X with absolute path to .map file if you can't use/want to overwrite default path (set in environment variable MS_MAPFILE)
 	displayprojection: 'EPSG:4326',
+	tileSize: 2048,
 	maxZoom: 25
 }).addTo(map);
