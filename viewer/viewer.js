@@ -1,4 +1,4 @@
-var map = L.map('map').setView([47.25278, 8.78823], 17);
+var map = L.map('map', {fadeAnimation: false}).setView([47.25278, 8.78823], 17);
 
 // osm.org base map
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
