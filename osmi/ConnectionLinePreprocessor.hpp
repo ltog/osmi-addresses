@@ -128,8 +128,8 @@ private:
 		std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);
 		std::unique_ptr<OGRPoint>       closest_point(new OGRPoint);    // TODO: check if new is necessary
 		std::unique_ptr<OGRLineString>  closest_way(new OGRLineString); // TODO: check if new is necessary
-		osmium::unsigned_object_id_type closest_obj_id = 0; // wouldn't need an initialization, but gcc warns otherwise
-		osmium::unsigned_object_id_type closest_way_id = 0; // wouldn't need an initialization, but gcc warns otherwise
+		osmium::unsigned_object_id_type closest_obj_id = 0; // gets written later; wouldn't need an initialization, but gcc warns otherwise
+		osmium::unsigned_object_id_type closest_way_id = 0; // gets written later; wouldn't need an initialization, but gcc warns otherwise
 		int                             ind_closest_node;
 		std::string                     lastchange;
 		bool is_area;
