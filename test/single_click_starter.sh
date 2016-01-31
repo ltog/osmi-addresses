@@ -7,7 +7,7 @@ cd $DIR
 
 # compile osmi-addresses
 cd ../osmi
-CXX=clang++ make
+CXX=clang++ make || exit $?
 cd $DIR
 
 # generate 'pos-osmi-testzone.osm'
