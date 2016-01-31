@@ -210,8 +210,6 @@ private:
 			}
 		}
 
-		// TODO: generate error message in the sqlite output if place cannot be found
-
 		return is_assigned;
 	}
 
