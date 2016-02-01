@@ -67,6 +67,9 @@ error=0
 ./test_engine.pl $1 "Minimum occurring length in **" "SELECT MIN(ST_Length(geometry, 0)) FROM **" "osmi_addresses_ways_with_postal_code" "=" "85.0653586130059"; ((error+=$?))
 ./test_engine.pl $1 "Maximum occurring length in **" "SELECT MAX(ST_Length(geometry, 0)) FROM **" "osmi_addresses_ways_with_postal_code" "=" "1932.24220904501"; ((error+=$?))
 
+./test_engine.pl $1 "Minimum area in **" "SELECT MIN(ST_Area(ST_Transform(geometry, 2056))) FROM **" "osmi_addresses_ways_with_addresses" "=" "0.958406202423518"; ((error+=$?))
+./test_engine.pl $1 "Maximum area in **" "SELECT MAX(ST_Area(ST_Transform(geometry, 2056))) FROM **" "osmi_addresses_ways_with_addresses" "=" "49.3336374588885"; ((error+=$?))
+
 # color formatting according to http://misc.flogisoft.com/bash/tip_colors_and_formatting
 if [[ "$error" -eq 0 ]]; then
 	echo -e "\e[92m\e[1mPASS:\e[21m\e[90m All tests passed.\e[0m"
