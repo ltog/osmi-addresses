@@ -55,6 +55,8 @@ error=0
 ./test_engine.pl $1 "Number of entries in ** without value for 'entrance'" "SELECT COUNT(*) FROM ** WHERE entrance IS NULL" "osmi_addresses_entrances" "=" "1"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with entrance=emergency" "SELECT COUNT(*) FROM ** WHERE entrance=\"emergency\"" "osmi_addresses_entrances" "=" "1"; ((error+=$?))
 
+./test_engine.pl $1 "Maximum occurring length in **" "SELECT MAX(ST_Length(geometry, 0)) FROM **" "osmi_addresses_connection_line" "=" "17.3055759386695"; ((error+=$?))
+
 # color formatting according to http://misc.flogisoft.com/bash/tip_colors_and_formatting
 if [[ "$error" -eq 0 ]]; then
 	echo -e "\e[92m\e[1mPASS:\e[21m\e[90m All tests passed.\e[0m"

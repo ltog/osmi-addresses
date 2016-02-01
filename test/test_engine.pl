@@ -18,7 +18,7 @@ $query =~ s/\Q**\E/$file/g;
 
 # call code-branches for specific operators
 if ($op eq '=') {
-	$result = qx(sqlite3 "$directory/$file.sqlite" '$query');
+	$result = qx(spatialite "$directory/$file.sqlite" '$query');
 	chomp $result;
 
 	exit &print_result;
@@ -46,7 +46,7 @@ if ($op eq '=') {
 	} else {
 		$assembled_query .= ")";
 	}
-	$result = qx(sqlite3 "$directory/$file.sqlite" '$assembled_query');
+	$result = qx(spatialite "$directory/$file.sqlite" '$assembled_query');
 	chomp $result;
 
 	exit &print_result;
