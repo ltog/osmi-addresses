@@ -55,7 +55,17 @@ error=0
 ./test_engine.pl $1 "Number of entries in ** without value for 'entrance'" "SELECT COUNT(*) FROM ** WHERE entrance IS NULL" "osmi_addresses_entrances" "=" "1"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with entrance=emergency" "SELECT COUNT(*) FROM ** WHERE entrance=\"emergency\"" "osmi_addresses_entrances" "=" "1"; ((error+=$?))
 
+./test_engine.pl $1 "Minimum occurring length in **" "SELECT MIN(ST_Length(geometry, 0)) FROM **" "osmi_addresses_connection_line" "=" "1.34749447344977"; ((error+=$?))
 ./test_engine.pl $1 "Maximum occurring length in **" "SELECT MAX(ST_Length(geometry, 0)) FROM **" "osmi_addresses_connection_line" "=" "17.3055759386695"; ((error+=$?))
+
+./test_engine.pl $1 "Minimum occurring length in **" "SELECT MIN(ST_Length(geometry, 0)) FROM **" "osmi_addresses_interpolation" "=" "2.81660826175927"; ((error+=$?))
+./test_engine.pl $1 "Maximum occurring length in **" "SELECT MAX(ST_Length(geometry, 0)) FROM **" "osmi_addresses_interpolation" "=" "31.288447031296"; ((error+=$?))
+
+./test_engine.pl $1 "Minimum occurring length in **" "SELECT MIN(ST_Length(geometry, 0)) FROM **" "osmi_addresses_nearest_roads" "=" "16.0156550129829"; ((error+=$?))
+./test_engine.pl $1 "Maximum occurring length in **" "SELECT MAX(ST_Length(geometry, 0)) FROM **" "osmi_addresses_nearest_roads" "=" "139.896459880885"; ((error+=$?))
+
+./test_engine.pl $1 "Minimum occurring length in **" "SELECT MIN(ST_Length(geometry, 0)) FROM **" "osmi_addresses_ways_with_postal_code" "=" "85.0653586130059"; ((error+=$?))
+./test_engine.pl $1 "Maximum occurring length in **" "SELECT MAX(ST_Length(geometry, 0)) FROM **" "osmi_addresses_ways_with_postal_code" "=" "1932.24220904501"; ((error+=$?))
 
 # color formatting according to http://misc.flogisoft.com/bash/tip_colors_and_formatting
 if [[ "$error" -eq 0 ]]; then
