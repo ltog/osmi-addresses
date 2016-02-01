@@ -313,7 +313,8 @@ private:
 			const OGRPoint&                       ogr_point,
 			const std::unique_ptr<OGRLineString>& closest_way,
 			const int&                            ind_closest_node,
-			std::unique_ptr<OGRPoint>&            closest_point) {
+			std::unique_ptr<OGRPoint>&            closest_point)    // out
+	{
 
 		OGRPoint neighbour_node;
 
