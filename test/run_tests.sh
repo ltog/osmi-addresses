@@ -12,18 +12,19 @@ error=0
 # template:
 #./test_engine.pl $1 "Description" "Query" "Table/File(.sqlite)" "=" "Expected result"; ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_connection_line" "=" "101"; ((error+=$?))
-./test_engine.pl $1 "Total number of entries in **"  "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_points" "=" "97"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_connection_line" "=" "105"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **"  "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_points" "=" "101"; ((error+=$?))
 ./test_engine.pl $1 "Total number of entries in **"   "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_roads" "=" "7"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **"   "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_areas" "=" "1"; ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_interpolation" "=" "27"; ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nodes_with_addresses" "=" "119"; ((error+=$?))
-./test_engine.pl $1 "Number of entries in ** with is_ip=false" "SELECT COUNT(*) FROM ** WHERE is_ip=0" "osmi_addresses_nodes_with_addresses" "=" "100"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nodes_with_addresses" "=" "123"; ((error+=$?))
+./test_engine.pl $1 "Number of entries in ** with is_ip=false" "SELECT COUNT(*) FROM ** WHERE is_ip=0" "osmi_addresses_nodes_with_addresses" "=" "104"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with is_ip=true" "SELECT COUNT(*) FROM ** WHERE is_ip=1" "osmi_addresses_nodes_with_addresses" "=" "19"; ((error+=$?))
-./test_engine.pl $1 "Number of entries in ** with road_id not null" "SELECT COUNT(*) FROM ** WHERE road_id IS NOT NULL" "osmi_addresses_nodes_with_addresses" "=" "97"; ((error+=$?))
+./test_engine.pl $1 "Number of entries in ** with road_id not null" "SELECT COUNT(*) FROM ** WHERE road_id IS NOT NULL" "osmi_addresses_nodes_with_addresses" "=" "101"; ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_ways_with_addresses" "=" "36"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_ways_with_addresses" "=" "38"; ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_buildings" "=" "0"; ((error+=$?))
 
@@ -35,6 +36,7 @@ error=0
 ./test_engine.pl $1 "No elements outside of bbox of **" "**;8.783;8.793;47.25;47.2544" "osmi_addresses_interpolation" "outofbbox" "0"; ((error+=$?))
 ./test_engine.pl $1 "No elements outside of bbox of **" "**;8.783;8.793;47.25;47.2544" "osmi_addresses_nearest_points" "outofbbox" "0"; ((error+=$?))
 ./test_engine.pl $1 "No elements outside of bbox of **" "**;8.783;8.793;47.25;47.2544" "osmi_addresses_nearest_roads" "outofbbox" "0"; ((error+=$?))
+./test_engine.pl $1 "No elements outside of bbox of **" "**;8.783;8.793;47.25;47.2544" "osmi_addresses_nearest_areas" "outofbbox" "0"; ((error+=$?))
 ./test_engine.pl $1 "No elements outside of bbox of **" "**;8.783;8.793;47.25;47.2544" "osmi_addresses_nodes_with_addresses" "outofbbox" "0"; ((error+=$?))
 ./test_engine.pl $1 "No elements outside of bbox of **" "**;8.783;8.793;47.25;47.2544" "osmi_addresses_ways_with_addresses" "outofbbox" "0"; ((error+=$?))
 ./test_engine.pl $1 "No elements outside of bbox of **" "**;8.783;8.793;47.25;47.2544" "osmi_addresses_buildings" "outofbbox" "0"; ((error+=$?))
@@ -69,6 +71,9 @@ error=0
 
 ./test_engine.pl $1 "Minimum area in **" "SELECT MIN(ST_Area(ST_Transform(geometry, 2056))) FROM **" "osmi_addresses_ways_with_addresses" "=" "0.958406202423518"; ((error+=$?))
 ./test_engine.pl $1 "Maximum area in **" "SELECT MAX(ST_Area(ST_Transform(geometry, 2056))) FROM **" "osmi_addresses_ways_with_addresses" "=" "49.3336374588885"; ((error+=$?))
+
+./test_engine.pl $1 "Minimum area in **" "SELECT MIN(ST_Area(ST_Transform(geometry, 2056))) FROM **" "osmi_addresses_nearest_areas" "=" "198.809381183972"; ((error+=$?))
+./test_engine.pl $1 "Maximum area in **" "SELECT MAX(ST_Area(ST_Transform(geometry, 2056))) FROM **" "osmi_addresses_nearest_areas" "=" "198.809381183972"; ((error+=$?))
 
 # color formatting according to http://misc.flogisoft.com/bash/tip_colors_and_formatting
 if [[ "$error" -eq 0 ]]; then
