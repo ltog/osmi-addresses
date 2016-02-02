@@ -9,7 +9,7 @@ L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // add osmi-addresses output
 L.tileLayer.wms('http://localhost/cgi-bin/mapserv?',{
-	layers: 'nearest_roads,connection_lines,nearest_points,interpolation,buildings,buildings_with_addresses,nodes_with_addresses_interpolated,nodes_with_addresses_defined,postal_code,entrances_deprecated,entrances,interpolation_errors,no_addr_street,street_not_found,place_not_found',
+	layers: 'nearest_areas,nearest_roads,connection_lines,nearest_points,interpolation,buildings,buildings_with_addresses,nodes_with_addresses_interpolated,nodes_with_addresses_defined,postal_code,entrances_deprecated,entrances,interpolation_errors,no_addr_street,street_not_found,place_not_found',
 	format: 'image/png; mode=24bit',
 	transparent: 'TRUE',
 	version: '1.1.1',
