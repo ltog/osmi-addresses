@@ -344,8 +344,8 @@ private:
 	// see also: http://femto.cs.illinois.edu/faqs/cga-faq.html#S1.02
 	/* given a single line segment from a to b, return the point on it that is closest to p */
 	void get_closest_point_from_segment(
-			OGRPoint& a,
-			OGRPoint& b,
+			const OGRPoint& a,
+			const OGRPoint& b,
 			const OGRPoint& p,
 			OGRPoint& ret) {
 
@@ -359,8 +359,8 @@ private:
 			ret = b;
 		} else {
 			OGRLineString linestring;
-			linestring.addPoint(&a);
-			linestring.addPoint(&b);
+			linestring.addPoint(a.getX(), a.getY());
+			linestring.addPoint(b.getX(), b.getY());
 			linestring.Value(r*linestring.get_Length(), &ret);
 		}
 
