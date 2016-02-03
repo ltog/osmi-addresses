@@ -16,15 +16,15 @@ public:
 	}
 
 	void write_line(
-			OGRPoint&                        ogr_point,
+			const OGRPoint&                  ogr_point,
 			const std::unique_ptr<OGRPoint>& closest_point,
 			const osmium::object_id_type&    objectid, // ID of the object (e.g. building) carrying addr:street, addr:place
 			const object_type&               the_object_type) { // type of the object carrying addr:street, addr:place
 
 		OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 		OGRLineString connection_line;
-		connection_line.addPoint(&ogr_point);
-		connection_line.addPoint(closest_point.get());
+		connection_line.addPoint(ogr_point.getX(), ogr_point.getY());
+		connection_line.addPoint(closest_point->getX(), closest_point->getY());
 		feature->SetGeometry(&connection_line);
 		if (the_object_type == object_type::node_object) {
 			feature->SetField("node_id", static_cast<double>(objectid)); //TODO: object.id() is of type int64_t. is this ok?
