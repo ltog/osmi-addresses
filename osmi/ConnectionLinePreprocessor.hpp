@@ -245,8 +245,8 @@ private:
 	/* look up the closest way in the given name2highway struct that is closer than best_dist using bbox
 	 * return true if found */
 	bool get_closest_way_from_argument(
-			const OGRPoint& ogr_point,
-			double& best_dist,
+			const OGRPoint&                  ogr_point,
+			double&                          best_dist,
 			std::unique_ptr<OGRLineString>&  closest_way,
 			osmium::unsigned_object_id_type& closest_way_id,
 			std::string&                     lastchange,
