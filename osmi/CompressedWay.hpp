@@ -26,6 +26,7 @@ public:
 		delete[] deltas;
 	}
 
+	/* returns a unique_ptr to a newly created (cloned) OGRLineString */
 	std::unique_ptr<OGRLineString> uncompress() {
 		std::unique_ptr<OGRLineString> linestring(new OGRLineString);
 		linestring.get()->addPoint(first.x, first.y);
