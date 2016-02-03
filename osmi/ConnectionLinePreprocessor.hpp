@@ -215,13 +215,14 @@ private:
 
 
 	/* look up the closest way with the given name in the name2highway structs for ways and areas */
+	/* return: was a way found/assigned to closest_way */
 	bool get_closest_way(
-			const OGRPoint&                  ogr_point,
-			std::unique_ptr<OGRLineString>&  closest_way,
-			bool&                            is_area,
-			osmium::unsigned_object_id_type& closest_way_id,
-			std::string&                     lastchange) {
-
+			const OGRPoint&                  ogr_point,      // in
+			std::unique_ptr<OGRLineString>&  closest_way,    // out
+			bool&                            is_area,        // out
+			osmium::unsigned_object_id_type& closest_way_id, // out
+			std::string&                     lastchange)     // out
+	{
 		double best_dist = std::numeric_limits<double>::max();
 		bool is_assigned = false;
 
@@ -245,12 +246,12 @@ private:
 	/* look up the closest way in the given name2highway struct that is closer than best_dist using bbox
 	 * return true if found */
 	bool get_closest_way_from_argument(
-			const OGRPoint&                  ogr_point,
-			double&                          best_dist,
-			std::unique_ptr<OGRLineString>&  closest_way,
-			osmium::unsigned_object_id_type& closest_way_id,
-			std::string&                     lastchange,
-			const std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair) {
+			const OGRPoint&                  ogr_point,      // in
+			double&                          best_dist,      // in,out
+			std::unique_ptr<OGRLineString>&  closest_way,    // out
+			osmium::unsigned_object_id_type& closest_way_id, // out
+			std::string&                     lastchange,     // out
+			const std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair) { // in
 
 		double cur_dist;
 		bool assigned = false;
