@@ -192,7 +192,7 @@ private:
 			cur_dist = it->second.ogrpoint->Distance(&ogr_point);
 
 			if (cur_dist < best_dist) { // TODO: add check for minimum distance to prevent long connection lines
-				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone())); // TODO: check for memory leak
+				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone()));
 				is_nody     = true;
 				is_assigned = true;
 				// TODO: extract more info from struct
@@ -203,7 +203,7 @@ private:
 			cur_dist = it->second.ogrpoint->Distance(&ogr_point);
 
 			if (cur_dist < best_dist) { // TODO: add check for minimum distance to prevent long connection lines
-				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone())); // TODO: check for memory leak
+				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone()));
 				is_nody     = false;
 				is_assigned = true;
 				// TODO: extract more info from struct
