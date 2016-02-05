@@ -13,11 +13,11 @@ error=0
 #./test_engine.pl $1 "Description" "Query" "Table/File(.sqlite)" "=" "Expected result"; ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_connection_line" "=" "105"; ((error+=$?))
-./test_engine.pl $1 "Total number of entries in **"  "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_points" "=" "101"; ((error+=$?))
-./test_engine.pl $1 "Total number of entries in **"   "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_roads" "=" "7"; ((error+=$?))
-./test_engine.pl $1 "Total number of entries in **"   "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_areas" "=" "1"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_points"  "=" "101"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_roads"   "=" "7";   ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_areas"   "=" "1";   ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_interpolation" "=" "27"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_interpolation"   "=" "27";  ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nodes_with_addresses" "=" "123"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with is_ip=false" "SELECT COUNT(*) FROM ** WHERE is_ip=0" "osmi_addresses_nodes_with_addresses" "=" "104"; ((error+=$?))
