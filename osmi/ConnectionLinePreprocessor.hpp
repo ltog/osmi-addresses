@@ -4,7 +4,12 @@
 #include <math.h> 
 
 constexpr osmium::object_id_type DUMMY_ID = 0;
+
+// maximum length of a connection line (given in degrees)
+// the given value is not a strict limit: some connection lines may be longer (up to a factor of maybe 1.5)
+// approximate length in meters = MAXDIST*40'000'000/360
 constexpr double MAXDIST = 0.01;
+
 constexpr bool IS_ADDRSTREET = true;
 constexpr bool IS_ADDRPLACE  = false;
 
