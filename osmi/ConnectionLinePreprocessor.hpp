@@ -4,7 +4,7 @@
 #include <math.h> 
 
 constexpr osmium::object_id_type DUMMY_ID = 0;
-constexpr double MAXDIST = 0.06;
+constexpr double MAXDIST = 0.01;
 constexpr bool IS_ADDRSTREET = true;
 constexpr bool IS_ADDRPLACE  = false;
 
