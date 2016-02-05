@@ -772,6 +772,54 @@ MAP
 
     #-------------------------------------------------------------------
     LAYER
+        NAME addrx_on_nonclosed_way
+        TYPE LINE
+        STATUS ON
+	#    POSTGIS osmi_addresses_ways_with_postal_code
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_addrx_on_nonclosed_way.sqlite"
+	DATA "osmi_addresses_addrx_on_nonclosed_way"
+	CONNECTIONTYPE OGR
+        TEMPLATE "/srv/tools/views/addresses/postal_code-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME addrx_on_nonclosed_way
+            OWS_TITLE "Tag addr:*=... on non-closed ways"
+            OWS_ABSTRACT "Ways which have a tag addr:*=... but are not closed ways."
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=postalcode,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+	#TEXT ("addr:*=... on non-closed way") # doesn't work
+        CLASS
+            NAME "Tag addr:*=... on non-closed ways"
+            STYLE
+                WIDTH 4
+                COLOR 200 0 0
+                ANTIALIAS true
+            END
+            LABEL
+	TEXT ("asdf")
+                SIZE 10
+                COLOR 200 0 0
+                ANTIALIAS true
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                OFFSET 0 0
+                ENCODING "utf-8"
+                ANGLE AUTO
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
         NAME no_addr_street
         TYPE POINT
         STATUS ON

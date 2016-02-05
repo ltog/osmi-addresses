@@ -5,6 +5,7 @@
 #include "Writer.hpp"
 #include "InterpolationWriter.hpp"
 #include "BuildingsWriter.hpp"
+#include "AddrXOnNonClosedWayWriter.hpp"
 #include "NodesWithAddressesWriter.hpp"
 #include "WaysWithAddressesWriter.hpp"
 #include "WaysWithPostalCodeWriter.hpp"
@@ -28,14 +29,15 @@ public:
 	  m_name2place_nody(name2place_nody),
 	  m_name2place_wayy(name2place_wayy)
 	{
-		nodes_with_addresses_writer  = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter(dir_name));
-		connection_line_preprocessor = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(dir_name, mp_name2highways_area, mp_name2highways_nonarea, m_name2place_nody, m_name2place_wayy));
-		entrances_writer             = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter(dir_name));
+		nodes_with_addresses_writer   = std::unique_ptr<NodesWithAddressesWriter>  (new NodesWithAddressesWriter  (dir_name));
+		connection_line_preprocessor  = std::unique_ptr<ConnectionLinePreprocessor>(new ConnectionLinePreprocessor(dir_name, mp_name2highways_area, mp_name2highways_nonarea, m_name2place_nody, m_name2place_wayy));
+		entrances_writer              = std::unique_ptr<EntrancesWriter>           (new EntrancesWriter           (dir_name));
 
-		interpolation_writer         = std::unique_ptr<InterpolationWriter>     (new InterpolationWriter     (dir_name, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
-		buildings_writer             = std::unique_ptr<BuildingsWriter>         (new BuildingsWriter         (dir_name));
-		ways_with_addresses_writer   = std::unique_ptr<WaysWithAddressesWriter> (new WaysWithAddressesWriter (dir_name));
-		ways_with_postal_code_writer = std::unique_ptr<WaysWithPostalCodeWriter>(new WaysWithPostalCodeWriter(dir_name));
+		interpolation_writer          = std::unique_ptr<InterpolationWriter>       (new InterpolationWriter       (dir_name, &m_addr_interpolation_node_map, *(nodes_with_addresses_writer.get()), *(connection_line_preprocessor.get()) ));
+		buildings_writer              = std::unique_ptr<BuildingsWriter>           (new BuildingsWriter           (dir_name));
+		addrx_on_nonclosed_way_writer = std::unique_ptr<AddrXOnNonClosedWayWriter> (new AddrXOnNonClosedWayWriter (dir_name));
+		ways_with_addresses_writer    = std::unique_ptr<WaysWithAddressesWriter>   (new WaysWithAddressesWriter   (dir_name));
+		ways_with_postal_code_writer  = std::unique_ptr<WaysWithPostalCodeWriter>  (new WaysWithPostalCodeWriter  (dir_name));
 	}
 
 
@@ -44,6 +46,7 @@ public:
 		entrances_writer.reset();
 		interpolation_writer.reset();
 		buildings_writer.reset();
+		addrx_on_nonclosed_way_writer.reset();
 		ways_with_addresses_writer.reset();
 		ways_with_postal_code_writer.reset();
 		nodes_with_addresses_writer.reset();
@@ -82,6 +85,7 @@ public:
 			if (m_geometry_helper.is_way_with_nonzero_length(way)) {
 				interpolation_writer->feed_way(way);
 				//buildings_writer->feed_way(way);
+				addrx_on_nonclosed_way_writer->feed_way(way);
 				ways_with_addresses_writer->feed_way(way);
 				ways_with_postal_code_writer->feed_way(way);
 
@@ -110,6 +114,7 @@ private:
 
 	std::unique_ptr<InterpolationWriter> interpolation_writer;
 	std::unique_ptr<BuildingsWriter> buildings_writer;
+	std::unique_ptr<AddrXOnNonClosedWayWriter> addrx_on_nonclosed_way_writer;
 	std::unique_ptr<NodesWithAddressesWriter> nodes_with_addresses_writer;
 	std::unique_ptr<WaysWithAddressesWriter> ways_with_addresses_writer;
 	std::unique_ptr<WaysWithPostalCodeWriter> ways_with_postal_code_writer;

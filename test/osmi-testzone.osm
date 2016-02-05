@@ -711,28 +711,71 @@
   <node id='-807' action='modify' visible='true' lat='47.25138756992' lon='8.7925540026'>
     <tag k='name' v='(My non-existing place)' />
   </node>
-  <node id='-1083' action='modify' visible='true' lat='47.25378440837' lon='8.78387690191' />
-  <node id='-1084' action='modify' visible='true' lat='47.25371114179' lon='8.78388899897' />
-  <node id='-1086' action='modify' visible='true' lat='47.25372314236' lon='8.78399135867' />
-  <node id='-1088' action='modify' visible='true' lat='47.25367956134' lon='8.78416071745' />
-  <node id='-1090' action='modify' visible='true' lat='47.25379767213' lon='8.78416723125' />
-  <node id='-1125' action='modify' visible='true' lat='47.25375620575' lon='8.78392451635' />
-  <node id='-1126' action='modify' visible='true' lat='47.25372813763' lon='8.78392740936' />
-  <node id='-1128' action='modify' visible='true' lat='47.25372991426' lon='8.78396482352' />
-  <node id='-1130' action='modify' visible='true' lat='47.25375798238' lon='8.7839619305' />
-  <node id='-1133' action='modify' visible='true' lat='47.2537674005' lon='8.78409337637'>
+  <node id='-809' action='modify' visible='true' lat='47.25378440837' lon='8.78387690191' />
+  <node id='-811' action='modify' visible='true' lat='47.25371114179' lon='8.78388899897' />
+  <node id='-813' action='modify' visible='true' lat='47.25372314236' lon='8.78399135867' />
+  <node id='-815' action='modify' visible='true' lat='47.25367956134' lon='8.78416071745' />
+  <node id='-817' action='modify' visible='true' lat='47.25379767213' lon='8.78416723125' />
+  <node id='-819' action='modify' visible='true' lat='47.25375620575' lon='8.78392451635' />
+  <node id='-821' action='modify' visible='true' lat='47.25372813763' lon='8.78392740936' />
+  <node id='-823' action='modify' visible='true' lat='47.25372991426' lon='8.78396482352' />
+  <node id='-825' action='modify' visible='true' lat='47.25375798238' lon='8.7839619305' />
+  <node id='-827' action='modify' visible='true' lat='47.2537674005' lon='8.78409337637'>
     <tag k='addr:housenumber' v='2' />
     <tag k='addr:street' v='Karlsruhe Square' />
   </node>
-  <node id='-1161' action='modify' visible='true' lat='47.25377629669' lon='8.7838117295' />
-  <node id='-1162' action='modify' visible='true' lat='47.25377497541' lon='8.78385293308' />
-  <node id='-1164' action='modify' visible='true' lat='47.25374622241' lon='8.78385093174' />
-  <node id='-1166' action='modify' visible='true' lat='47.25374754368' lon='8.78380972817' />
-  <node id='-1182' action='modify' visible='true' lat='47.25370398121' lon='8.78418286343'>
+  <node id='-829' action='modify' visible='true' lat='47.25377629669' lon='8.7838117295' />
+  <node id='-831' action='modify' visible='true' lat='47.25377497541' lon='8.78385293308' />
+  <node id='-833' action='modify' visible='true' lat='47.25374622241' lon='8.78385093174' />
+  <node id='-835' action='modify' visible='true' lat='47.25374754368' lon='8.78380972817' />
+  <node id='-837' action='modify' visible='true' lat='47.25370398121' lon='8.78418286343'>
     <tag k='addr:housenumber' v='4' />
     <tag k='addr:street' v='Karlsruhe Square' />
   </node>
-  <way id='-809' action='modify' visible='true'>
+  <node id='-1109' action='modify' visible='true' lat='47.253832484' lon='8.78479499673' />
+  <node id='-1111' action='modify' visible='true' lat='47.25402549221' lon='8.78488659535' />
+  <node id='-1113' action='modify' visible='true' lat='47.25429764114' lon='8.78478589824' />
+  <node id='-1131' action='modify' visible='true' lat='47.25427724388' lon='8.78466838332' />
+  <node id='-1132' action='modify' visible='true' lat='47.25427369299' lon='8.78476238776' />
+  <node id='-1134' action='modify' visible='true' lat='47.25420985733' lon='8.7847571537' />
+  <node id='-1136' action='modify' visible='true' lat='47.25421345109' lon='8.78466201465' />
+  <node id='-1171' action='modify' visible='true' lat='47.25427391882' lon='8.78485634074' />
+  <node id='-1172' action='modify' visible='true' lat='47.25426962963' lon='8.78496809362' />
+  <node id='-1173' action='modify' visible='true' lat='47.25419729179' lon='8.78496206709' />
+  <node id='-1174' action='modify' visible='true' lat='47.25420157354' lon='8.7848505083' />
+  <node id='-1214' action='modify' visible='true' lat='47.25418719514' lon='8.78488432474' />
+  <node id='-1215' action='modify' visible='true' lat='47.25417836048' lon='8.78499069579' />
+  <node id='-1216' action='modify' visible='true' lat='47.25411383368' lon='8.78497906284' />
+  <node id='-1217' action='modify' visible='true' lat='47.25412272906' lon='8.78487196083' />
+  <node id='-1238' action='modify' visible='true' lat='47.25419191384' lon='8.78470745315' />
+  <node id='-1239' action='modify' visible='true' lat='47.25418535517' lon='8.78478872963' />
+  <node id='-1240' action='modify' visible='true' lat='47.2541242349' lon='8.78477802381' />
+  <node id='-1241' action='modify' visible='true' lat='47.25413121739' lon='8.78469149531' />
+  <node id='-1356' action='modify' visible='true' lat='47.25395755511' lon='8.784800999'>
+    <tag k='name' v='Nody place of addr:* on non-closed ways' />
+    <tag k='place' v='hamet' />
+  </node>
+  <node id='-1376' action='modify' visible='true' lat='47.25401256168' lon='8.78465098817' />
+  <node id='-1377' action='modify' visible='true' lat='47.25400901077' lon='8.7847449926' />
+  <node id='-1378' action='modify' visible='true' lat='47.25394517479' lon='8.78473975855' />
+  <node id='-1379' action='modify' visible='true' lat='47.25394876857' lon='8.7846446195' />
+  <node id='-1387' action='modify' visible='true' lat='47.25402260943' lon='8.78494230666' />
+  <node id='-1388' action='modify' visible='true' lat='47.25401832023' lon='8.78505405955' />
+  <node id='-1389' action='modify' visible='true' lat='47.25394598204' lon='8.78504803302' />
+  <node id='-1390' action='modify' visible='true' lat='47.25395026381' lon='8.78493647423' />
+  <node id='-1408' action='modify' visible='true' lat='47.25390101564' lon='8.7847918578'>
+    <tag k='name' v='Wayy place of addr:* on non-closed ways' />
+    <tag k='place' v='hamet' />
+  </node>
+  <node id='-1416' action='modify' visible='true' lat='47.25393207298' lon='8.78465094408' />
+  <node id='-1417' action='modify' visible='true' lat='47.25392852206' lon='8.78474494852' />
+  <node id='-1418' action='modify' visible='true' lat='47.25386468598' lon='8.78473971446' />
+  <node id='-1419' action='modify' visible='true' lat='47.25386827976' lon='8.78464457541' />
+  <node id='-1427' action='modify' visible='true' lat='47.25392790606' lon='8.78487418443' />
+  <node id='-1428' action='modify' visible='true' lat='47.25392361684' lon='8.78498593732' />
+  <node id='-1429' action='modify' visible='true' lat='47.25385127853' lon='8.78497991079' />
+  <node id='-1430' action='modify' visible='true' lat='47.2538555603' lon='8.784868352' />
+  <way id='-839' action='modify' visible='true'>
     <nd ref='-15' />
     <nd ref='-11' />
     <nd ref='-17' />
@@ -742,7 +785,7 @@
     <tag k='addr:street' v='Multiname alley R' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-811' action='modify' visible='true'>
+  <way id='-841' action='modify' visible='true'>
     <nd ref='-25' />
     <nd ref='-21' />
     <nd ref='-27' />
@@ -752,7 +795,7 @@
     <tag k='addr:street' v='Multiname alley L' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-813' action='modify' visible='true'>
+  <way id='-843' action='modify' visible='true'>
     <nd ref='-39' />
     <nd ref='-37' />
     <nd ref='-35' />
@@ -762,14 +805,14 @@
     <tag k='addr:street' v='Multiname alley' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-815' action='modify' visible='true'>
+  <way id='-845' action='modify' visible='true'>
     <nd ref='-43' />
     <nd ref='-41' />
     <tag k='highway' v='residential' />
     <tag k='name:left' v='Multiname alley L' />
     <tag k='name:right' v='Multiname alley R' />
   </way>
-  <way id='-817' action='modify' visible='true'>
+  <way id='-847' action='modify' visible='true'>
     <nd ref='-49' />
     <nd ref='-47' />
     <tag k='alt_name' v='Multiname alley' />
@@ -780,7 +823,7 @@
     <tag k='name_1' v='Multiname alley' />
     <tag k='official_name' v='Multiname alley' />
   </way>
-  <way id='-819' action='modify' visible='true'>
+  <way id='-849' action='modify' visible='true'>
     <nd ref='-55' />
     <nd ref='-47' />
     <nd ref='-43' />
@@ -789,12 +832,12 @@
     <tag k='highway' v='residential' />
     <tag k='name' v='Multiname street' />
   </way>
-  <way id='-821' action='modify' visible='true'>
+  <way id='-851' action='modify' visible='true'>
     <nd ref='-61' />
     <nd ref='-59' />
     <tag k='addr:interpolation' v='alphabetic' />
   </way>
-  <way id='-823' action='modify' visible='true'>
+  <way id='-853' action='modify' visible='true'>
     <nd ref='-75' />
     <nd ref='-75' />
     <nd ref='-75' />
@@ -802,24 +845,24 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-825' action='modify' visible='true'>
+  <way id='-855' action='modify' visible='true'>
     <nd ref='-79' />
     <nd ref='-79' />
     <nd ref='-79' />
     <tag k='highway' v='residential' />
   </way>
-  <way id='-827' action='modify' visible='true'>
+  <way id='-857' action='modify' visible='true'>
     <nd ref='-717' />
     <tag k='highway' v='residential' />
     <tag k='name' v='Invalidenstrasse' />
   </way>
-  <way id='-829' action='modify' visible='true'>
+  <way id='-859' action='modify' visible='true'>
     <nd ref='-715' />
     <tag k='addr:housenumber' v='7' />
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-831' action='modify' visible='true'>
+  <way id='-861' action='modify' visible='true'>
     <nd ref='-91' />
     <nd ref='-89' />
     <nd ref='-87' />
@@ -827,87 +870,87 @@
     <tag k='highway' v='residential' />
     <tag k='name' v='' />
   </way>
-  <way id='-833' visible='true'>
+  <way id='-863' visible='true'>
     <nd ref='-97' />
     <nd ref='-95' />
     <tag k='addr:interpolation' v='alphabetic' />
   </way>
-  <way id='-835' visible='true'>
+  <way id='-865' visible='true'>
     <nd ref='-103' />
     <nd ref='-105' />
     <tag k='addr:interpolation' v='alphabetic' />
   </way>
-  <way id='-837' action='modify' visible='true'>
+  <way id='-867' action='modify' visible='true'>
     <nd ref='-109' />
     <nd ref='-107' />
     <tag k='addr:interpolation' v='alphabetic' />
   </way>
-  <way id='-839' action='modify' visible='true'>
+  <way id='-869' action='modify' visible='true'>
     <nd ref='-115' />
     <nd ref='-113' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-841' visible='true'>
+  <way id='-871' visible='true'>
     <nd ref='-131' />
     <nd ref='-129' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-843' visible='true'>
+  <way id='-873' visible='true'>
     <nd ref='-135' />
     <nd ref='-133' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-845' visible='true'>
+  <way id='-875' visible='true'>
     <nd ref='-139' />
     <nd ref='-137' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-847' visible='true'>
+  <way id='-877' visible='true'>
     <nd ref='-143' />
     <nd ref='-141' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-849' visible='true'>
+  <way id='-879' visible='true'>
     <nd ref='-147' />
     <nd ref='-145' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-851' visible='true'>
+  <way id='-881' visible='true'>
     <nd ref='-151' />
     <nd ref='-149' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-853' action='modify' visible='true'>
+  <way id='-883' action='modify' visible='true'>
     <nd ref='-169' />
     <nd ref='-167' />
     <tag k='addr:interpolation' v='even' />
   </way>
-  <way id='-855' action='modify' visible='true'>
+  <way id='-885' action='modify' visible='true'>
     <nd ref='-173' />
     <nd ref='-171' />
     <tag k='addr:interpolation' v='odd' />
   </way>
-  <way id='-857' action='modify' visible='true'>
+  <way id='-887' action='modify' visible='true'>
     <nd ref='-177' />
     <nd ref='-175' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-859' action='modify' visible='true'>
+  <way id='-889' action='modify' visible='true'>
     <nd ref='-181' />
     <nd ref='-179' />
     <tag k='addr:interpolation' v='even' />
   </way>
-  <way id='-861' action='modify' visible='true'>
+  <way id='-891' action='modify' visible='true'>
     <nd ref='-185' />
     <nd ref='-183' />
     <tag k='addr:interpolation' v='even' />
   </way>
-  <way id='-863' action='modify' visible='true'>
+  <way id='-893' action='modify' visible='true'>
     <nd ref='-189' />
     <nd ref='-187' />
     <tag k='addr:interpolation' v='odd' />
   </way>
-  <way id='-865' action='modify' visible='true'>
+  <way id='-895' action='modify' visible='true'>
     <nd ref='-197' />
     <nd ref='-195' />
     <nd ref='-193' />
@@ -916,7 +959,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-867' action='modify' visible='true'>
+  <way id='-897' action='modify' visible='true'>
     <nd ref='-207' />
     <nd ref='-205' />
     <nd ref='-203' />
@@ -924,7 +967,7 @@
     <nd ref='-207' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-869' action='modify' visible='true'>
+  <way id='-899' action='modify' visible='true'>
     <nd ref='-217' />
     <nd ref='-209' />
     <nd ref='-215' />
@@ -933,7 +976,7 @@
     <nd ref='-217' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-871' action='modify' visible='true'>
+  <way id='-901' action='modify' visible='true'>
     <nd ref='-219' />
     <nd ref='-221' />
     <nd ref='-223' />
@@ -959,7 +1002,7 @@
     <tag k='name' v='OSMI-Testzone' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-873' action='modify' visible='true'>
+  <way id='-903' action='modify' visible='true'>
     <nd ref='-257' />
     <nd ref='-259' />
     <nd ref='-263' />
@@ -968,7 +1011,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-875' action='modify' visible='true'>
+  <way id='-905' action='modify' visible='true'>
     <nd ref='-263' />
     <nd ref='-265' />
     <nd ref='-267' />
@@ -977,9 +1020,10 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='greenhouse' />
   </way>
-  <way id='-877' action='modify' visible='true'>
+  <way id='-907' action='modify' visible='true'>
     <nd ref='-271' />
     <nd ref='-789' />
+    <nd ref='-1109' />
     <nd ref='-275' />
     <nd ref='-281' />
     <nd ref='-283' />
@@ -992,7 +1036,7 @@
     <tag k='name' v='Primärstrasse' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-879' action='modify' visible='true'>
+  <way id='-909' action='modify' visible='true'>
     <nd ref='-275' />
     <nd ref='-293' />
     <nd ref='-475' />
@@ -1004,7 +1048,7 @@
     <tag k='name' v='Sekundärstrasse' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-881' action='modify' visible='true'>
+  <way id='-911' action='modify' visible='true'>
     <nd ref='-293' />
     <nd ref='-437' />
     <nd ref='-499' />
@@ -1016,7 +1060,7 @@
     <tag k='name' v='Karlsruher Strasse' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-883' action='modify' visible='true'>
+  <way id='-913' action='modify' visible='true'>
     <nd ref='-297' />
     <nd ref='-299' />
     <nd ref='-301' />
@@ -1025,7 +1069,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-885' action='modify' visible='true'>
+  <way id='-915' action='modify' visible='true'>
     <nd ref='-305' />
     <nd ref='-307' />
     <nd ref='-309' />
@@ -1034,7 +1078,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-887' action='modify' visible='true'>
+  <way id='-917' action='modify' visible='true'>
     <nd ref='-313' />
     <nd ref='-315' />
     <nd ref='-317' />
@@ -1045,7 +1089,7 @@
     <tag k='building' v='yes' />
     <tag k='name' v='housenumber, street' />
   </way>
-  <way id='-889' action='modify' visible='true'>
+  <way id='-919' action='modify' visible='true'>
     <nd ref='-321' />
     <nd ref='-323' />
     <nd ref='-325' />
@@ -1054,7 +1098,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-891' action='modify' visible='true'>
+  <way id='-921' action='modify' visible='true'>
     <nd ref='-329' />
     <nd ref='-331' />
     <nd ref='-333' />
@@ -1065,7 +1109,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-893' action='modify' visible='true'>
+  <way id='-923' action='modify' visible='true'>
     <nd ref='-341' />
     <nd ref='-343' />
     <nd ref='-345' />
@@ -1074,7 +1118,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-895' action='modify' visible='true'>
+  <way id='-925' action='modify' visible='true'>
     <nd ref='-349' />
     <nd ref='-351' />
     <nd ref='-353' />
@@ -1083,21 +1127,21 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-897' action='modify' visible='true'>
+  <way id='-927' action='modify' visible='true'>
     <nd ref='-357' />
     <nd ref='-359' />
     <nd ref='-361' />
     <nd ref='-363' />
     <nd ref='-357' />
   </way>
-  <way id='-899' action='modify' visible='true'>
+  <way id='-929' action='modify' visible='true'>
     <nd ref='-365' />
     <nd ref='-367' />
     <nd ref='-369' />
     <nd ref='-371' />
     <nd ref='-365' />
   </way>
-  <way id='-901' action='modify' visible='true'>
+  <way id='-931' action='modify' visible='true'>
     <nd ref='-373' />
     <nd ref='-375' />
     <nd ref='-377' />
@@ -1105,7 +1149,7 @@
     <nd ref='-373' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-903' action='modify' visible='true'>
+  <way id='-933' action='modify' visible='true'>
     <nd ref='-381' />
     <nd ref='-383' />
     <nd ref='-385' />
@@ -1114,14 +1158,14 @@
     <nd ref='-389' />
     <nd ref='-381' />
   </way>
-  <way id='-905' visible='true'>
+  <way id='-935' visible='true'>
     <nd ref='-389' />
     <nd ref='-391' />
     <nd ref='-393' />
     <nd ref='-395' />
     <nd ref='-389' />
   </way>
-  <way id='-907' visible='true'>
+  <way id='-937' visible='true'>
     <nd ref='-397' />
     <nd ref='-399' />
     <nd ref='-401' />
@@ -1129,7 +1173,7 @@
     <nd ref='-397' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-909' visible='true'>
+  <way id='-939' visible='true'>
     <nd ref='-405' />
     <nd ref='-407' />
     <nd ref='-409' />
@@ -1137,21 +1181,21 @@
     <nd ref='-405' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-911' visible='true'>
+  <way id='-941' visible='true'>
     <nd ref='-413' />
     <nd ref='-415' />
     <nd ref='-417' />
     <nd ref='-419' />
     <nd ref='-413' />
   </way>
-  <way id='-913' visible='true'>
+  <way id='-943' visible='true'>
     <nd ref='-421' />
     <nd ref='-423' />
     <nd ref='-425' />
     <nd ref='-427' />
     <nd ref='-421' />
   </way>
-  <way id='-915' action='modify' visible='true'>
+  <way id='-945' action='modify' visible='true'>
     <nd ref='-429' />
     <nd ref='-67' />
     <nd ref='-431' />
@@ -1164,7 +1208,7 @@
     <tag k='building' v='yes' />
     <tag k='name' v='housenumber, street, amenity=restaurant' />
   </way>
-  <way id='-917' action='modify' visible='true'>
+  <way id='-947' action='modify' visible='true'>
     <nd ref='-443' />
     <nd ref='-69' />
     <nd ref='-445' />
@@ -1178,7 +1222,7 @@
     <tag k='building' v='yes' />
     <tag k='name' v='housenumber, street, city' />
   </way>
-  <way id='-919' action='modify' visible='true'>
+  <way id='-949' action='modify' visible='true'>
     <nd ref='-451' />
     <nd ref='-65' />
     <nd ref='-453' />
@@ -1192,7 +1236,7 @@
     <tag k='building' v='yes' />
     <tag k='name' v='housenumber, street, city, postcode' />
   </way>
-  <way id='-921' action='modify' visible='true'>
+  <way id='-951' action='modify' visible='true'>
     <nd ref='-459' />
     <nd ref='-461' />
     <nd ref='-463' />
@@ -1207,7 +1251,7 @@
     <tag k='building' v='yes' />
     <tag k='name' v='housenumber, street, city, postcode, country' />
   </way>
-  <way id='-923' action='modify' visible='true'>
+  <way id='-953' action='modify' visible='true'>
     <nd ref='-467' />
     <nd ref='-63' />
     <nd ref='-469' />
@@ -1221,7 +1265,7 @@
     <tag k='building' v='yes' />
     <tag k='name' v='housenumber, street, city, country' />
   </way>
-  <way id='-925' action='modify' visible='true'>
+  <way id='-955' action='modify' visible='true'>
     <nd ref='-475' />
     <nd ref='-477' />
     <nd ref='-479' />
@@ -1234,7 +1278,7 @@
     <tag k='name' v='Relations-Strasse' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-927' action='modify' visible='true'>
+  <way id='-957' action='modify' visible='true'>
     <nd ref='-495' />
     <nd ref='-513' />
     <nd ref='-497' />
@@ -1242,7 +1286,7 @@
     <tag k='highway' v='residential' />
     <tag k='name' v='Invalidenstrasse' />
   </way>
-  <way id='-929' action='modify' visible='true'>
+  <way id='-959' action='modify' visible='true'>
     <nd ref='-501' />
     <nd ref='-503' />
     <nd ref='-505' />
@@ -1251,7 +1295,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-931' action='modify' visible='true'>
+  <way id='-961' action='modify' visible='true'>
     <nd ref='-503' />
     <nd ref='-509' />
     <nd ref='-511' />
@@ -1260,7 +1304,7 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-933' action='modify' visible='true'>
+  <way id='-963' action='modify' visible='true'>
     <nd ref='-513' />
     <nd ref='-515' />
     <nd ref='-519' />
@@ -1270,7 +1314,7 @@
     <tag k='highway' v='residential' />
     <tag k='name' v='Multipolygon-Gasse' />
   </way>
-  <way id='-935' action='modify' visible='true'>
+  <way id='-965' action='modify' visible='true'>
     <nd ref='-525' />
     <nd ref='-527' />
     <nd ref='-529' />
@@ -1279,7 +1323,7 @@
     <tag k='addr:housenumber' v='2' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-937' action='modify' visible='true'>
+  <way id='-967' action='modify' visible='true'>
     <nd ref='-533' />
     <nd ref='-535' />
     <nd ref='-537' />
@@ -1288,7 +1332,7 @@
     <tag k='addr:housenumber' v='3' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-939' action='modify' visible='true'>
+  <way id='-969' action='modify' visible='true'>
     <nd ref='-541' />
     <nd ref='-543' />
     <nd ref='-545' />
@@ -1297,7 +1341,7 @@
     <tag k='addr:housenumber' v='4' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-941' action='modify' visible='true'>
+  <way id='-971' action='modify' visible='true'>
     <nd ref='-489' />
     <nd ref='-609' />
     <nd ref='-491' />
@@ -1306,7 +1350,7 @@
     <tag k='name' v='Zur associatedStreet-Relation Wayname' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-943' action='modify' visible='true'>
+  <way id='-973' action='modify' visible='true'>
     <nd ref='-549' />
     <nd ref='-619' />
     <nd ref='-551' />
@@ -1315,7 +1359,7 @@
     <tag k='name' v='Zur street-Relation Wayname' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-945' action='modify' visible='true'>
+  <way id='-975' action='modify' visible='true'>
     <nd ref='-553' />
     <nd ref='-555' />
     <nd ref='-557' />
@@ -1324,7 +1368,7 @@
     <tag k='addr:housenumber' v='3' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-947' action='modify' visible='true'>
+  <way id='-977' action='modify' visible='true'>
     <nd ref='-561' />
     <nd ref='-563' />
     <nd ref='-565' />
@@ -1333,7 +1377,7 @@
     <tag k='addr:housenumber' v='1' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-949' action='modify' visible='true'>
+  <way id='-979' action='modify' visible='true'>
     <nd ref='-569' />
     <nd ref='-571' />
     <nd ref='-573' />
@@ -1342,7 +1386,7 @@
     <tag k='addr:housenumber' v='4' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-951' action='modify' visible='true'>
+  <way id='-981' action='modify' visible='true'>
     <nd ref='-577' />
     <nd ref='-579' />
     <nd ref='-581' />
@@ -1351,7 +1395,7 @@
     <tag k='addr:housenumber' v='2' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-953' action='modify' visible='true'>
+  <way id='-983' action='modify' visible='true'>
     <nd ref='-585' />
     <nd ref='-587' />
     <nd ref='-589' />
@@ -1360,7 +1404,7 @@
     <tag k='addr:housenumber' v='5' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-955' action='modify' visible='true'>
+  <way id='-985' action='modify' visible='true'>
     <nd ref='-593' />
     <nd ref='-595' />
     <nd ref='-597' />
@@ -1369,7 +1413,7 @@
     <tag k='addr:housenumber' v='6' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-957' action='modify' visible='true'>
+  <way id='-987' action='modify' visible='true'>
     <nd ref='-601' />
     <nd ref='-603' />
     <nd ref='-605' />
@@ -1378,21 +1422,21 @@
     <tag k='addr:housenumber' v='1' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-959' action='modify' visible='true'>
+  <way id='-989' action='modify' visible='true'>
     <nd ref='-609' />
     <nd ref='-611' />
     <nd ref='-613' />
     <tag k='highway' v='service' />
     <tag k='name' v='highway in Rolle house' />
   </way>
-  <way id='-961' action='modify' visible='true'>
+  <way id='-991' action='modify' visible='true'>
     <nd ref='-615' />
     <nd ref='-617' />
     <nd ref='-619' />
     <tag k='highway' v='service' />
     <tag k='name' v='highway in Rolle address' />
   </way>
-  <way id='-963' action='modify' visible='true'>
+  <way id='-993' action='modify' visible='true'>
     <nd ref='-621' />
     <nd ref='-623' />
     <nd ref='-625' />
@@ -1401,7 +1445,7 @@
     <tag k='addr:housenumber' v='5' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-965' action='modify' visible='true'>
+  <way id='-995' action='modify' visible='true'>
     <nd ref='-629' />
     <nd ref='-631' />
     <nd ref='-633' />
@@ -1410,7 +1454,7 @@
     <tag k='addr:housenumber' v='6' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-967' action='modify' visible='true'>
+  <way id='-997' action='modify' visible='true'>
     <nd ref='-637' />
     <nd ref='-643' />
     <nd ref='-645' />
@@ -1419,51 +1463,51 @@
     <tag k='name' v='Interpolationsstrasse' />
     <tag k='postal_code' v='8634' />
   </way>
-  <way id='-969' action='modify' visible='true'>
+  <way id='-999' action='modify' visible='true'>
     <nd ref='-641' />
     <nd ref='-647' />
     <nd ref='-639' />
     <tag k='highway' v='residential' />
     <tag k='name' v='Korrekte Interpolation' />
   </way>
-  <way id='-971' action='modify' visible='true'>
+  <way id='-1001' action='modify' visible='true'>
     <nd ref='-639' />
     <nd ref='-649' />
     <nd ref='-651' />
     <tag k='highway' v='residential' />
     <tag k='name' v='Fehlerhafte Interpolation' />
   </way>
-  <way id='-973' action='modify' visible='true'>
+  <way id='-1003' action='modify' visible='true'>
     <nd ref='-653' />
     <nd ref='-661' />
     <nd ref='-663' />
     <nd ref='-655' />
     <tag k='addr:interpolation' v='odd' />
   </way>
-  <way id='-975' action='modify' visible='true'>
+  <way id='-1005' action='modify' visible='true'>
     <nd ref='-659' />
     <nd ref='-665' />
     <nd ref='-667' />
     <nd ref='-657' />
     <tag k='addr:interpolation' v='even' />
   </way>
-  <way id='-977' action='modify' visible='true'>
+  <way id='-1007' action='modify' visible='true'>
     <nd ref='-669' />
     <nd ref='-701' />
     <nd ref='-671' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-979' action='modify' visible='true'>
+  <way id='-1009' action='modify' visible='true'>
     <nd ref='-673' />
     <nd ref='-675' />
     <tag k='addr:interpolation' v='7' />
   </way>
-  <way id='-981' action='modify' visible='true'>
+  <way id='-1011' action='modify' visible='true'>
     <nd ref='-677' />
     <nd ref='-679' />
     <tag k='addr:interpolation' v='my dummy interpolation' />
   </way>
-  <way id='-983' action='modify' visible='true'>
+  <way id='-1013' action='modify' visible='true'>
     <nd ref='-693' />
     <nd ref='-695' />
     <nd ref='-697' />
@@ -1472,48 +1516,48 @@
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-985' visible='true'>
+  <way id='-1015' visible='true'>
     <nd ref='-703' />
     <nd ref='-705' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-987' visible='true'>
+  <way id='-1017' visible='true'>
     <nd ref='-707' />
     <nd ref='-709' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-989' visible='true'>
+  <way id='-1019' visible='true'>
     <nd ref='-711' />
     <nd ref='-713' />
     <tag k='addr:interpolation' v='all' />
   </way>
-  <way id='-991' action='modify' visible='true'>
+  <way id='-1021' action='modify' visible='true'>
     <nd ref='-723' />
     <nd ref='-723' />
     <tag k='addr:housenumber' v='8' />
     <tag k='addr:street' v='Invalidenstrasse' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-993' action='modify' visible='true'>
+  <way id='-1023' action='modify' visible='true'>
     <nd ref='-727' />
     <nd ref='-727' />
     <tag k='highway' v='residential' />
   </way>
-  <way id='-995' action='modify' visible='true'>
+  <way id='-1025' action='modify' visible='true'>
     <nd ref='-731' />
     <nd ref='-733' />
     <tag k='addr:interpolation' v='alphabetic' />
   </way>
-  <way id='-997' action='modify' visible='true'>
+  <way id='-1027' action='modify' visible='true'>
     <nd ref='-737' />
     <nd ref='-739' />
     <tag k='addr:interpolation' v='alphabetic' />
   </way>
-  <way id='-999' action='modify' visible='true'>
+  <way id='-1029' action='modify' visible='true'>
     <nd ref='-741' />
     <nd ref='-101' />
   </way>
-  <way id='-1001' action='modify' visible='true'>
+  <way id='-1031' action='modify' visible='true'>
     <nd ref='-747' />
     <nd ref='-749' />
     <nd ref='-751' />
@@ -1523,7 +1567,7 @@
     <tag k='addr:place' v='My nody place' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-1003' action='modify' visible='true'>
+  <way id='-1033' action='modify' visible='true'>
     <nd ref='-755' />
     <nd ref='-757' />
     <nd ref='-759' />
@@ -1533,7 +1577,7 @@
     <tag k='addr:place' v='My non-existing place' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-1005' action='modify' visible='true'>
+  <way id='-1035' action='modify' visible='true'>
     <nd ref='-767' />
     <nd ref='-769' />
     <nd ref='-771' />
@@ -1543,7 +1587,7 @@
     <tag k='addr:place' v='My wayy place' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-1007' action='modify' visible='true'>
+  <way id='-1037' action='modify' visible='true'>
     <nd ref='-777' />
     <nd ref='-779' />
     <nd ref='-781' />
@@ -1551,7 +1595,7 @@
     <tag k='name' v='My wayy place' />
     <tag k='place' v='neighbourhood' />
   </way>
-  <way id='-1009' action='modify' visible='true'>
+  <way id='-1039' action='modify' visible='true'>
     <nd ref='-789' />
     <nd ref='-791' />
     <nd ref='-793' />
@@ -1559,7 +1603,7 @@
     <tag k='highway' v='residential' />
     <tag k='name' v='Street of non-existing addr:street' />
   </way>
-  <way id='-1011' action='modify' visible='true'>
+  <way id='-1041' action='modify' visible='true'>
     <nd ref='-799' />
     <nd ref='-801' />
     <nd ref='-803' />
@@ -1569,76 +1613,149 @@
     <tag k='addr:street' v='Non-existing street' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-1085' action='modify' visible='true'>
-    <nd ref='-1083' />
-    <nd ref='-1084' />
-    <nd ref='-1086' />
-    <nd ref='-1088' />
-    <nd ref='-1090' />
-    <nd ref='-1083' />
+  <way id='-1043' action='modify' visible='true'>
+    <nd ref='-809' />
+    <nd ref='-811' />
+    <nd ref='-813' />
+    <nd ref='-815' />
+    <nd ref='-817' />
+    <nd ref='-809' />
     <tag k='area' v='yes' />
     <tag k='highway' v='pedestrian' />
     <tag k='name' v='Karlsruhe Square' />
   </way>
-  <way id='-1127' action='modify' visible='true'>
-    <nd ref='-1125' />
-    <nd ref='-1126' />
-    <nd ref='-1128' />
-    <nd ref='-1130' />
-    <nd ref='-1125' />
+  <way id='-1045' action='modify' visible='true'>
+    <nd ref='-819' />
+    <nd ref='-821' />
+    <nd ref='-823' />
+    <nd ref='-825' />
+    <nd ref='-819' />
     <tag k='addr:housenumber' v='1' />
     <tag k='addr:street' v='Karlsruhe Square' />
     <tag k='building' v='yes' />
   </way>
-  <way id='-1163' action='modify' visible='true'>
-    <nd ref='-1161' />
-    <nd ref='-1162' />
-    <nd ref='-1164' />
-    <nd ref='-1166' />
-    <nd ref='-1161' />
+  <way id='-1047' action='modify' visible='true'>
+    <nd ref='-829' />
+    <nd ref='-831' />
+    <nd ref='-833' />
+    <nd ref='-835' />
+    <nd ref='-829' />
     <tag k='addr:housenumber' v='3' />
     <tag k='addr:street' v='Karlsruhe Square' />
     <tag k='building' v='yes' />
   </way>
-  <relation id='-1013' action='modify' visible='true'>
-    <member type='way' ref='-897' role='outer' />
-    <member type='way' ref='-899' role='inner' />
+  <way id='-1112' action='modify' visible='true'>
+    <nd ref='-1109' />
+    <nd ref='-1111' />
+    <nd ref='-1113' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Street of addr:* on non-closed ways' />
+  </way>
+  <way id='-1133' action='modify' visible='true'>
+    <nd ref='-1131' />
+    <nd ref='-1132' />
+    <nd ref='-1134' />
+    <nd ref='-1136' />
+    <tag k='addr:housenumber' v='1' />
+    <tag k='addr:street' v='Street of addr:* on non-closed ways' />
+  </way>
+  <way id='-1170' action='modify' visible='true'>
+    <nd ref='-1171' />
+    <nd ref='-1172' />
+    <nd ref='-1173' />
+    <nd ref='-1174' />
+    <tag k='addr:housenumber' v='2' />
+    <tag k='addr:street' v='Street of addr:* on non-closed ways' />
+    <tag k='building' v='yes' />
+  </way>
+  <way id='-1213' action='modify' visible='true'>
+    <nd ref='-1214' />
+    <nd ref='-1215' />
+    <nd ref='-1216' />
+    <nd ref='-1217' />
+    <tag k='addr:full' v='Street of addr:* on non-closed ways' />
+    <tag k='building' v='yes' />
+  </way>
+  <way id='-1237' action='modify' visible='true'>
+    <nd ref='-1238' />
+    <nd ref='-1239' />
+    <nd ref='-1240' />
+    <nd ref='-1241' />
+    <tag k='addr:full' v='Street of addr:* on non-closed ways' />
+  </way>
+  <way id='-1375' action='modify' visible='true'>
+    <nd ref='-1376' />
+    <nd ref='-1377' />
+    <nd ref='-1378' />
+    <nd ref='-1379' />
+    <tag k='addr:housenumber' v='1' />
+    <tag k='addr:street' v='Nody place of addr:* on non-closed ways' />
+  </way>
+  <way id='-1386' action='modify' visible='true'>
+    <nd ref='-1387' />
+    <nd ref='-1388' />
+    <nd ref='-1389' />
+    <nd ref='-1390' />
+    <tag k='addr:housenumber' v='2' />
+    <tag k='addr:street' v='Nody place of addr:* on non-closed ways' />
+    <tag k='building' v='yes' />
+  </way>
+  <way id='-1415' action='modify' visible='true'>
+    <nd ref='-1416' />
+    <nd ref='-1417' />
+    <nd ref='-1418' />
+    <nd ref='-1419' />
+    <tag k='addr:housenumber' v='1' />
+    <tag k='addr:street' v='Wayy place of addr:* on non-closed ways' />
+  </way>
+  <way id='-1426' action='modify' visible='true'>
+    <nd ref='-1427' />
+    <nd ref='-1428' />
+    <nd ref='-1429' />
+    <nd ref='-1430' />
+    <tag k='addr:housenumber' v='2' />
+    <tag k='addr:street' v='Wayy place of addr:* on non-closed ways' />
+    <tag k='building' v='yes' />
+  </way>
+  <relation id='-1049' action='modify' visible='true'>
+    <member type='way' ref='-927' role='outer' />
+    <member type='way' ref='-929' role='inner' />
     <tag k='building' v='yes' />
     <tag k='type' v='multipolygon' />
   </relation>
-  <relation id='-1015' action='modify' visible='true'>
-    <member type='way' ref='-903' role='outer' />
-    <member type='way' ref='-905' role='inner' />
+  <relation id='-1051' action='modify' visible='true'>
+    <member type='way' ref='-933' role='outer' />
+    <member type='way' ref='-935' role='inner' />
     <tag k='building' v='yes' />
     <tag k='type' v='multipolygon' />
   </relation>
-  <relation id='-1017' action='modify' visible='true'>
-    <member type='way' ref='-911' role='outer' />
-    <member type='way' ref='-913' role='inner' />
+  <relation id='-1053' action='modify' visible='true'>
+    <member type='way' ref='-941' role='outer' />
+    <member type='way' ref='-943' role='inner' />
     <tag k='building' v='yes' />
     <tag k='type' v='multipolygon' />
   </relation>
-  <relation id='-1019' action='modify' visible='true'>
-    <member type='way' ref='-941' role='street' />
-    <member type='way' ref='-959' role='house' />
-    <member type='way' ref='-957' role='house' />
-    <member type='way' ref='-935' role='house' />
-    <member type='way' ref='-937' role='house' />
-    <member type='way' ref='-939' role='house' />
-    <member type='way' ref='-955' role='house' />
-    <member type='way' ref='-953' role='street' />
+  <relation id='-1055' action='modify' visible='true'>
+    <member type='way' ref='-971' role='street' />
+    <member type='way' ref='-989' role='house' />
+    <member type='way' ref='-987' role='house' />
+    <member type='way' ref='-965' role='house' />
+    <member type='way' ref='-967' role='house' />
+    <member type='way' ref='-969' role='house' />
+    <member type='way' ref='-985' role='house' />
+    <member type='way' ref='-983' role='street' />
     <tag k='name' v='Zur associatedStreet-Relation Relationsname' />
     <tag k='type' v='associatedStreet' />
   </relation>
-  <relation id='-1021' action='modify' visible='true'>
-    <member type='way' ref='-943' role='street' />
-    <member type='way' ref='-961' role='address' />
-    <member type='way' ref='-945' role='address' />
-    <member type='way' ref='-947' role='address' />
-    <member type='way' ref='-951' role='address' />
-    <member type='way' ref='-949' role='address' />
-    <member type='way' ref='-965' role='address' />
-    <member type='way' ref='-963' role='street' />
+  <relation id='-1057' action='modify' visible='true'>
+    <member type='way' ref='-973' role='street' />
+    <member type='way' ref='-991' role='address' />
+    <member type='way' ref='-975' role='address' />
+    <member type='way' ref='-977' role='address' />
+    <member type='way' ref='-981' role='address' />
+    <member type='way' ref='-979' role='address' />
+    <member type='way' ref='-995' role='address' />
+    <member type='way' ref='-993' role='street' />
     <tag k='name' v='Zur street-Relation Relationname' />
     <tag k='type' v='street' />
   </relation>

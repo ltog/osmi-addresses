@@ -28,6 +28,8 @@ error=0
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_buildings" "=" "0"; ((error+=$?))
 
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_addrx_on_nonclosed_way" "=" "9"; ((error+=$?))
+
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_entrances" "=" "6"; ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_ways_with_postal_code" "=" "8"; ((error+=$?))
