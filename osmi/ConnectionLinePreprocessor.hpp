@@ -179,7 +179,7 @@ private:
 			osmium::unsigned_object_id_type& closest_obj_id,
 			std::string&                     lastchange) {
 
-		double best_dist = std::numeric_limits<double>::max();
+		double best_dist = MAXDIST;
 		double cur_dist = std::numeric_limits<double>::max();
 		bool is_assigned = false;
 
@@ -191,7 +191,7 @@ private:
 		for (name2place_type::iterator it = name2place_it_pair_nody.first; it!=name2place_it_pair_nody.second; ++it) {
 			cur_dist = it->second.ogrpoint->Distance(&ogr_point);
 
-			if (cur_dist < best_dist) { // TODO: add check for minimum distance to prevent long connection lines
+			if (cur_dist < best_dist) {
 				closest_point.reset(static_cast<OGRPoint*>(it->second.ogrpoint.get()->clone()));
 				is_nody     = true;
 				is_assigned = true;
