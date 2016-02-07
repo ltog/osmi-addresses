@@ -34,10 +34,10 @@ The software was tested on Ubuntu but probably runs under other Unix variants (i
 
 ## Branches
 
-You should find at least two branches in the Git repository:
+You should find at least two branches in the GitHub repository:
 
-- **master**: The software as it is running at http://tools.geofabrik.de/osmi/?view=addresses
-- **dev**: The development version containing the newest features and fixes
+- `master`: The development version containing the newest features and fixes
+- `currently_running_on_geofabrik_server`: The software as it is running at http://tools.geofabrik.de/osmi/?view=addresses
 
 ## Compilation
 
