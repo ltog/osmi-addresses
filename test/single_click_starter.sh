@@ -17,7 +17,7 @@ cd $DIR
 rm -rf osmi-addresses_sqlite_out/
 
 # read 'pos-osmi-testzone.osm' and generate directory 'osmi-addresses_sqlite_out/'
-../osmi/osmi-addresses pos-osmi-testzone.osm
+time ../osmi/osmi-addresses pos-osmi-testzone.osm
 
 # create spatial indices for 'osmi-addresses_sqlite_out/'
 ../create_spatial_indices.sh osmi-addresses_sqlite_out/
