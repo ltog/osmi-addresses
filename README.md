@@ -116,24 +116,7 @@ Activate CGI:
 Create a logfile with suitable permissions:  
 `sudo mkdir /var/log/mapserver/ ; sudo touch /var/log/mapserver/addresses.log ; chmod a+w /var/log/mapserver/addresses.log`
 
-Create a softlink to the proj files:  
-`sudo mkdir -p /srv/tools/svn-tools/osm-inspector ; sudo ln -s /usr/share/proj/ /srv/tools/svn-tools/osm-inspector/`
-
 Open `/usr/share/proj/epsg`, duplicate the line starting with `<3857>` and change the beginning to `<900913>` in one of the lines.
-
-Create a softlink for the symbolset and fontset files:  
-`cd X` where X is the directory containing the files `symbolset` and `fontset`
-`cd ..`
-`ln -s mapserver/symbolset`
-`ln -s mapserver/fontset`
-
-Create softlinks for entrance images (in the same directory as above):  
-`ln -s mapserver/entrance-emergency.png`
-`ln -s mapserver/entrance-exit.png`
-`ln -s mapserver/entrance-main.png`
-`ln -s mapserver/entrance-service.png`
-`ln -s mapserver/entrance-yes.png`
-`ln -s mapserver/entrance-deprecated.png`
 
 The `addresses.map` file is the configuration file as used on the server. The file `addresses.local.map` is adjusted to locally view MapServer's output. It was generated doing the following changes:
 

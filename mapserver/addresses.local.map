@@ -4,9 +4,9 @@
 MAP
     NAME geofabrik_tools_osminspector_addresses
     EXTENT -90 -180 90 180
-    FONTSET "../fontset"
-    SYMBOLSET "../symbolset"
-    CONFIG PROJ_LIB "/srv/tools/svn-tools/osm-inspector/proj/"
+    FONTSET "fontset"
+    SYMBOLSET "symbolset"
+    CONFIG PROJ_LIB "/usr/share/proj/"
     CONFIG MS_ERRORFILE "/var/log/mapserver/addresses.log"
     DEBUG 5
     SHAPEPATH "/srv/tools/shapes"
