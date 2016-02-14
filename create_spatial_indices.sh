@@ -21,7 +21,8 @@ create_indices() {
 	
 	# can't call .schema after usage of $spatialite_pragmas for some unknown reason...
 	# tables=$(spatialite $1 "$spatialite_pragmas .schema" | grep "CREATE TABLE '" | sed -e "s/^CREATE TABLE '\([^']*\)'.*$/\1/")
-	
+
+	# current versions of osmi-addresses produce only one table per .sqlite file, so this loop will be iterated only once
 	while read -r table; do
 		# starting from version 4.2.0 we can call spatialite with the option '-silent' which reduces output
 		# see e.g. https://stackoverflow.com/questions/23579001/how-do-i-make-the-spatialite-banner-go-away-under-django-manage-py
