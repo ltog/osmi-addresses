@@ -55,7 +55,7 @@ libosmium itself comes with a list of prerequisites, which you can find at https
 
 On Ubuntu/Debian, you should be able to get all of libosmium's and osmi-addresses's dependencies with:
 
-    sudo apt-get install clang libboost-program-options-dev libboost-dev libboost-filesystem-dev libgdal1-dev libsparsehash-dev libbz2-dev libosmpbf-dev libexpat1-dev libgeos++-dev sqlite3 spatialite-bin colordiff
+    sudo apt-get install clang libboost-program-options-dev libboost-dev libboost-filesystem-dev libgdal1-dev libsparsehash-dev libbz2-dev libosmpbf-dev libexpat1-dev libgeos++-dev sqlite3 spatialite-bin colordiff parallel realpath
 
 ### Compiling using make
 
