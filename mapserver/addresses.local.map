@@ -915,6 +915,54 @@ MAP
 
     #-------------------------------------------------------------------
     LAYER
+        NAME misformatted_housenumber_lenient
+        TYPE POINT
+        STATUS ON
+	#    POSTGIS osmi_addresses_nodes_with_addresses
+	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+	DATA "osmi_addresses_nodes_with_addresses"
+	CONNECTIONTYPE OGR
+	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        TEMPLATE "/srv/tools/views/addresses/street_not_found-template.html"
+        DUMP true
+        TOLERANCE 5
+        METADATA
+            OWS_NAME misformatted_housenumber_lenient
+            OWS_TITLE "Misformatted housenumber (lenient)"
+            OWS_ABSTRACT "Nodes/ways with unexpected characters in addr:housenumber=... (allow dashes and commas)"
+            OWS_KEYWORDLIST "datasrc=OSM,min=10,max=22,label=street name,labelmin=16,labelmax=22"
+            OWS_SRS "EPSG:4326 EPSG:900913"
+            GML_FEATUREID "ID"
+            GML_INCLUDE_ITEMS "all"
+        END
+        MAXSCALEDENOM 750000
+        MINSCALEDENOM 1
+        LABELMAXSCALEDENOM 12500
+        LABELMINSCALEDENOM 1
+        LABELITEM "houseno"
+        FILTERITEM "houseno"
+        FILTER /[^0-9a-zA-Z ,-]/
+        CLASS
+            NAME "Nodes/ways with unexpected characters in addr:housenumber=... (allow separation of multiple housenumbers with commas)"
+            STYLE
+                SYMBOL "circle"
+                SIZE 10
+                COLOR 200 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 200 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                POSITION lc
+            END
+        END
+    END
+
+    #-------------------------------------------------------------------
+    LAYER
         NAME street_not_found
         TYPE POINT
         STATUS ON

@@ -27,6 +27,7 @@ var entrances                         = ms_source.getLayer('entrances').addTo(ma
 var no_addr_street                    = ms_source.getLayer('no_addr_street').addTo(map);
 var street_not_found                  = ms_source.getLayer('street_not_found').addTo(map);
 var place_not_found                   = ms_source.getLayer('place_not_found').addTo(map);
+var misformatted_housenumber_lenient  = ms_source.getLayer('misformatted_housenumber_lenient').addTo(map);
 var misformatted_housenumber          = ms_source.getLayer('misformatted_housenumber').addTo(map);
 var nodes_with_addresses_defined      = ms_source.getLayer('nodes_with_addresses_defined').addTo(map);
 var nodes_with_addresses_interpolated = ms_source.getLayer('nodes_with_addresses_interpolated').addTo(map);
@@ -47,6 +48,7 @@ var control = L.control.layers({}, {
 	"No addr:street tag" : no_addr_street,
 	"Street not found" : street_not_found,
 	"Place not found" : place_not_found,
+	"Misformatted housenumber (lenient)" : misformatted_housenumber_lenient,
 	"Misformatted housenumber" : misformatted_housenumber,
 	"Defined addresses" : nodes_with_addresses_defined,
 	"Interpolated addresses" : nodes_with_addresses_interpolated,
