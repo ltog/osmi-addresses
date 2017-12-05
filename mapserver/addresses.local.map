@@ -943,6 +943,26 @@ MAP
         FILTER ("[houseno]" != '')
         CLASSITEM "houseno"
         CLASS
+            EXPRESSION ('[houseno]' = 'XXXXXXXXX')
+            # This hack is only necessary in order that the preview icons in
+            # OSMI are rendered. They show the first class of a layer.
+            NAME "demo how rendering would look like"
+            STYLE
+                SYMBOL "circle"
+                SIZE 10
+                COLOR 200 0 0
+                ANTIALIAS true
+            END
+            LABEL
+                SIZE 8
+                COLOR 200 0 0
+                OUTLINECOLOR 255 255 255
+                TYPE TRUETYPE
+                FONT "DejaVuSans,unifont"
+                POSITION lc
+            END
+        END
+        CLASS
             # empty class is necessary because the will catch all valid house
             # numbers and only the invalid ones will hit the next class
             EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,2}[ /]?[a-zA-Z]{0,3}([-,]*[1-9][0-9]{0,2}[ /]?[a-zA-Z]{0,3}){0,12}$')
