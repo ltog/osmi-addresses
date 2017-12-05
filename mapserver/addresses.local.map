@@ -945,7 +945,7 @@ MAP
         CLASS
             # empty class is necessary because the will catch all valid house
             # numbers and only the invalid ones will hit the next class
-            EXPRESSION /^[1-9][0-9]{0,2} ?[a-zA-Z]{0,3}([-,]*[1-9][0-9]{0,2} ?[a-zA-Z]{0,3}){0,12}$/
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,2}[ /]?[a-zA-Z]{0,3}([-,]*[1-9][0-9]{0,2}[ /]?[a-zA-Z]{0,3}){0,12}$')
             NAME "valid house numbers"
         END
         CLASS
