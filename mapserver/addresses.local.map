@@ -962,11 +962,27 @@ MAP
                 POSITION lc
             END
         END
+        # Empty classes are necessary because they will catch all valid house
+        # numbers and only the invalid ones will hit the next class.
+        # We start with simple regex and continue with more complicated ones
+        # to improve performance (4 instead of 10 seconds on zoom 11 in
+        # Germany).
         CLASS
-            # empty class is necessary because the will catch all valid house
-            # numbers and only the invalid ones will hit the next class
-            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,2}[ /]?[a-zA-Z]{0,3}([-,]*[1-9][0-9]{0,2}[ /]?[a-zA-Z]{0,3}){0,12}$')
-            NAME "valid house numbers"
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4}$')
+            NAME "simple valid house numbers"
+        END
+        CLASS
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4} ?[a-zA-Z]{0,3}( ?[-,]{1} ?[1-9][0-9]{0,4} ?[a-zA-Z]{0,3}){0,12}$')
+            NAME "valid house numbers with optional a-z suffix, optional concatenation separated by comma"
+        END
+        CLASS
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4}/[0-9][1-9]{0,4}( ?[-,]{1} ?[1-9][0-9]{0,4}(/[0-9][1-9]{0,4})?){0,12}$')
+            NAME "valid house numbers with /1 suffix, optional concatenation separated by comma"
+        END
+        CLASS
+            # This class might support conscription numbers in house numbers.
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4} [1-9]/[1-9][0-9]{0,2}( ?[a-zA-Z])?( ?[-,]{1} ?[1-9][0-9]{0,4}( [1-9]/[1-9][0-9]{0,2}( ?[a-z])?)?){0,12}$')
+            NAME "valid house numbers with fractions and optional alphabetic suffix after the fraction (sic!), optional concatenation separated by comma"
         END
         CLASS
             NAME "Nodes/ways with unexpected characters in addr:housenumber=... (allow separation of multiple housenumbers with commas)"
