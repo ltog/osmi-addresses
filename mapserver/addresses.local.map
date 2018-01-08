@@ -972,16 +972,16 @@ MAP
             NAME "simple valid house numbers"
         END
         CLASS
-            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4} ?[a-zA-Z]{0,3}( ?[-,]{1} ?[1-9][0-9]{0,4} ?[a-zA-Z]{0,3}){0,12}$')
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4} ?[a-zA-Z]{0,3}( ?[-,] ?[1-9][0-9]{0,4} ?[a-zA-Z]{0,3}){0,12}$')
             NAME "valid house numbers with optional a-z suffix, optional concatenation separated by comma"
         END
         CLASS
-            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4}/[0-9][1-9]{0,4}( ?[-,]{1} ?[1-9][0-9]{0,4}(/[0-9][1-9]{0,4})?){0,12}$')
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4}(/[1-9][0-9]{0,4})?( ?[-,] ?[1-9][0-9]{0,4}(/[1-9][0-9]{0,4})?){0,12}$')
             NAME "valid house numbers with /1 suffix, optional concatenation separated by comma"
         END
         CLASS
             # This class might support conscription numbers in house numbers.
-            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4} [1-9]/[1-9][0-9]{0,2}( ?[a-zA-Z])?( ?[-,]{1} ?[1-9][0-9]{0,4}( [1-9]/[1-9][0-9]{0,2}( ?[a-z])?)?){0,12}$')
+            EXPRESSION ('[houseno]' ~ '^[1-9][0-9]{0,4} [1-9]/[1-9][0-9]{0,2}( ?[a-zA-Z])?( ?[-,] ?[1-9][0-9]{0,4}( [1-9]/[1-9][0-9]{0,2}( ?[a-z])?)?){0,12}$')
             NAME "valid house numbers with fractions and optional alphabetic suffix after the fraction (sic!), optional concatenation separated by comma"
         END
         CLASS
