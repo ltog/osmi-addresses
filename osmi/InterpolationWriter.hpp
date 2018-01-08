@@ -159,9 +159,9 @@ public:
 					(first_taglist.get_value_by_key("addr:country")  != last_taglist.get_value_by_key("addr:country"))  ||
 					(first_taglist.get_value_by_key("addr:full")     != last_taglist.get_value_by_key("addr:full"))     ||
 					(first_taglist.get_value_by_key("addr:place")    != last_taglist.get_value_by_key("addr:place")) ) {
-
 					feature->SetField("error", "different tags on endpoints");
-
+				} else if (way.is_closed()) {
+				    feature->SetField("error", "interpolation is a closed way");
 				} else if ( // no interpolation error
 						(!strcmp(interpolation, "all")) ||
 						(!strcmp(interpolation, "odd")) ||
