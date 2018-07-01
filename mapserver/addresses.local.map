@@ -968,7 +968,7 @@ MAP
         CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
         DATA "osmi_addresses_nodes_with_addresses"
         CONNECTIONTYPE OGR
-        #DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        #DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null and nody_place_id is null and wayy_place_id is null"
         TEMPLATE "/srv/tools/views/addresses/street_not_found-template.html"
         DUMP true
         TOLERANCE 5
@@ -986,8 +986,8 @@ MAP
         LABELMAXSCALEDENOM 12500
         LABELMINSCALEDENOM 1
         LABELITEM "street"
-        #FILTER ([is_ip]=0 AND [street] IS NOT NULL AND [street] != '' AND [road_id] IS NULL)
-        FILTER (([is_ip]=0) AND ("[street]" != '') AND ("[road_id]" = ''))
+        #FILTER ([is_ip]=0 AND [street] IS NOT NULL AND [street] != '' AND [road_id] IS NULL AND [nody_place_id] IS NULL AND [wayy_place_id] IS NULL)
+        FILTER (([is_ip]=0) AND ("[street]" != '') AND ("[road_id]" = '') AND ("[nody_place_id]" = '') AND ("[wayy_place_id]" = ''))
         CLASS
             NAME "Nodes with defined addresses (addr:street=...) with road not found"
             STYLE

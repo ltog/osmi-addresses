@@ -12,18 +12,18 @@ error=0
 # template:
 #./test_engine.pl $1 "Description" "Query" "Table/File(.sqlite)" "=" "Expected result"; ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_connection_line" "=" "115"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_connection_line" "=" "116"; ((error+=$?))
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_points"  "=" "111"; ((error+=$?))
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_roads"   "=" "8";   ((error+=$?))
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nearest_areas"   "=" "1";   ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_interpolation"   "=" "27";  ((error+=$?))
 
-./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nodes_with_addresses" "=" "133"; ((error+=$?))
-./test_engine.pl $1 "Number of entries in ** with is_ip=false" "SELECT COUNT(*) FROM ** WHERE is_ip=0" "osmi_addresses_nodes_with_addresses" "=" "114"; ((error+=$?))
+./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_nodes_with_addresses" "=" "134"; ((error+=$?))
+./test_engine.pl $1 "Number of entries in ** with is_ip=false" "SELECT COUNT(*) FROM ** WHERE is_ip=0" "osmi_addresses_nodes_with_addresses" "=" "115"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with is_ip=true" "SELECT COUNT(*) FROM ** WHERE is_ip=1" "osmi_addresses_nodes_with_addresses" "=" "19"; ((error+=$?))
 ./test_engine.pl $1 "Number of entries in ** with road_id not null" "SELECT COUNT(*) FROM ** WHERE road_id IS NOT NULL" "osmi_addresses_nodes_with_addresses" "=" "111"; ((error+=$?))
-./test_engine.pl $1 "Number of entries in ** with nody/wayy_place_id not null" "SELECT COUNT(*) FROM ** WHERE nody_place_id IS NOT NULL OR wayy_place_id IS NOT NULL" "osmi_addresses_nodes_with_addresses" "=" "4"; ((error+=$?))
+./test_engine.pl $1 "Number of entries in ** with nody/wayy_place_id not null" "SELECT COUNT(*) FROM ** WHERE nody_place_id IS NOT NULL OR wayy_place_id IS NOT NULL" "osmi_addresses_nodes_with_addresses" "=" "5"; ((error+=$?))
 
 ./test_engine.pl $1 "Total number of entries in **" "SELECT COUNT(*) FROM **" "osmi_addresses_ways_with_addresses" "=" "48"; ((error+=$?))
 

@@ -827,6 +827,16 @@
     <tag k='addr:street' v='Multiname alley R' />
     <tag k='building' v='yes' />
   </way>
+  <node id='-40388' action='modify' visible='true' lat='47.25396339791' lon='8.78794318083'>
+    <tag k='name' v='Tellplatz' />
+    <tag k='place' v='square' />
+  </node>
+  <node id='-40397' action='modify' visible='true' lat='47.25396868785' lon='8.78810684739'>
+    <tag k='addr:city' v='Basel' />
+    <tag k='addr:housenumber' v='1' />
+    <tag k='addr:postcode' v='4053' />
+    <tag k='addr:street' v='Tellplatz' />
+  </node>
   <way id='-1243' action='modify' visible='true'>
     <nd ref='-981' />
     <nd ref='-985' />

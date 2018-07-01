@@ -69,6 +69,15 @@ public:
 			// road_id shall not be written by handle_connection_line
 		}
 
+		if (addrstreet && has_entry_in_name2place(std::string(addrstreet))) {
+			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
+			handle_connection_line_place(*ogr_point.get(),
+					object_type::node_object, addrstreet,
+					nody_place_id, wayy_place_id);
+		} else {
+			// road_id shall not be written by handle_connection_line
+		}
+
 		const char* addrplace = node.tags().get_value_by_key("addr:place");
 		if (addrplace && has_entry_in_name2place(node)) {
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
