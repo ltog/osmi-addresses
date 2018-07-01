@@ -122,7 +122,7 @@ private:
 			OGRPoint&                     ogr_point, // TODO: can we make this const ?
 			const osmium::object_id_type& objectid,
 			const object_type&            the_object_type,
-			const char*                   addrname,
+			const std::string&            addrname,
 			std::string&                  road_id,         // out
 			std::string&                  nody_place_id,   // out
 			std::string&                  wayy_place_id,   // out
@@ -177,7 +177,7 @@ private:
 	// return value: was a closest place found/written
 	bool get_closest_place(
 			const OGRPoint&                  ogr_point,      // in
-			const char*                      addrname,       // in
+			const std::string&               addrname,       // in
 			std::unique_ptr<OGRPoint>&       closest_point,  // out
 			bool&                            is_nody,        // out
 			osmium::unsigned_object_id_type& closest_obj_id,
@@ -189,8 +189,8 @@ private:
 
 		std::pair<name2place_type::iterator, name2place_type::iterator> name2place_it_pair_nody;
 		std::pair<name2place_type::iterator, name2place_type::iterator> name2place_it_pair_wayy;
-		name2place_it_pair_nody = m_name2place_nody.equal_range(std::string(addrname));
-		name2place_it_pair_wayy = m_name2place_wayy.equal_range(std::string(addrname));
+		name2place_it_pair_nody = m_name2place_nody.equal_range(addrname);
+		name2place_it_pair_wayy = m_name2place_wayy.equal_range(addrname);
 
 		for (name2place_type::iterator it = name2place_it_pair_nody.first; it!=name2place_it_pair_nody.second; ++it) {
 			cur_dist = it->second.ogrpoint->Distance(&ogr_point);
@@ -222,7 +222,7 @@ private:
 	/* return: was a way found/assigned to closest_way */
 	bool get_closest_way(
 			const OGRPoint&                  ogr_point,      // in
-			const char*                      addrname,       // in
+			const std::string&               addrname,       // in
 			std::unique_ptr<OGRLineString>&  closest_way,    // out
 			bool&                            is_area,        // out
 			osmium::unsigned_object_id_type& closest_way_id, // out
@@ -233,13 +233,13 @@ private:
 
 		std::pair<name2highways_type::iterator, name2highways_type::iterator> name2highw_it_pair;
 
-		name2highw_it_pair = mp_name2highways_area.equal_range(std::string(addrname));
+		name2highw_it_pair = mp_name2highways_area.equal_range(addrname);
 		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair)) {
 			is_area     = true;
 			is_assigned = true;
 		}
 
-		name2highw_it_pair = mp_name2highways_nonarea.equal_range(std::string(addrname));
+		name2highw_it_pair = mp_name2highways_nonarea.equal_range(addrname);
 		if (get_closest_way_from_argument(ogr_point, best_dist, closest_way, closest_way_id, lastchange, name2highw_it_pair)) {
 			is_area     = false;
 			is_assigned = true;

@@ -19,13 +19,13 @@ public:
 	void write_road(
 			const std::unique_ptr<OGRLineString>&  way,
 			const osmium::unsigned_object_id_type& way_id,
-			const char*                            addrstreet,
+			const std::string&                     addrstreet,
 			const std::string&                     lastchange) {
 		
 		if (written_ways.find(way_id) == written_ways.end()) {
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 			feature->SetGeometry(way.get());
-			feature->SetField("name", addrstreet);
+			feature->SetField("name", addrstreet.c_str());
 			feature->SetField("way_id", static_cast<double>(way_id)); //TODO: closest_way_id is of type int64_t. is this ok?
 			feature->SetField("lastchange", lastchange.c_str());
 
