@@ -872,7 +872,7 @@ MAP
         CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
         DATA "osmi_addresses_nodes_with_addresses"
         CONNECTIONTYPE OGR
-        #DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        #DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and place <> '' and nody_place_id is null and wayy_place_id is null"
         TEMPLATE "/srv/tools/views/addresses/place_not_found-template.html"
         DUMP true
         TOLERANCE 5
