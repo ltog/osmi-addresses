@@ -128,20 +128,15 @@ private:
 			std::string&                  wayy_place_id,   // out
 			const bool&                   is_addrstreet) {
 
-		std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);
-		std::unique_ptr<OGRPoint>       closest_point(new OGRPoint);    // TODO: check if new is necessary
-		std::unique_ptr<OGRLineString>  closest_way(new OGRLineString); // TODO: check if new is necessary
-		osmium::unsigned_object_id_type closest_obj_id = 0; // gets written later; wouldn't need an initialization, but gcc warns otherwise
-		osmium::unsigned_object_id_type closest_way_id = 0; // gets written later; wouldn't need an initialization, but gcc warns otherwise
-		int                             ind_closest_node;
-		std::string                     lastchange;
-		bool is_area;
-		bool is_nody;
 
 		// handle addr:place here
-		if (is_addrstreet == IS_ADDRPLACE &&
-				get_closest_place(ogr_point, addrname, closest_point, is_nody, closest_obj_id, lastchange)) {
-
+		if (is_addrstreet == IS_ADDRPLACE)
+		{
+		std::unique_ptr<OGRPoint>       closest_point(new OGRPoint);    // TODO: check if new is necessary
+		osmium::unsigned_object_id_type closest_obj_id = 0; // gets written later; wouldn't need an initialization, but gcc warns otherwise
+		bool is_nody;
+		std::string                     lastchange;
+		if (get_closest_place(ogr_point, addrname, closest_point, is_nody, closest_obj_id, lastchange)) {
 			if (is_nody) {
 				nody_place_id = "1";
 			} else {
@@ -150,11 +145,20 @@ private:
 
 			mp_connection_line_writer->write_line(ogr_point, closest_point, closest_obj_id, the_object_type);
 		}
+		}
 
 		// handle addr:street here
-		if (is_addrstreet == IS_ADDRSTREET &&
-				get_closest_way(ogr_point, addrname, closest_way, is_area, closest_way_id, lastchange)) {
-
+		if (is_addrstreet == IS_ADDRSTREET)
+		{
+		std::unique_ptr<OGRLineString>  closest_way(new OGRLineString); // TODO: check if new is necessary
+		std::unique_ptr<OGRPoint>       closest_point(new OGRPoint);    // TODO: check if new is necessary
+		bool is_area;
+		osmium::unsigned_object_id_type closest_way_id = 0; // gets written later; wouldn't need an initialization, but gcc warns otherwise
+		std::string                     lastchange;
+		if (get_closest_way(ogr_point, addrname, closest_way, is_area, closest_way_id, lastchange)) 
+		{
+			std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);
+			int ind_closest_node;
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get(), closest_point.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
@@ -171,6 +175,7 @@ private:
 			mp_connection_line_writer->write_line(ogr_point, closest_point, objectid, the_object_type);
 
 			road_id = "1"; // TODO: need to write the actual road_id
+		}
 		}
 	}
 
