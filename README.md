@@ -75,6 +75,33 @@ The compiled executable osmi is a standalone application and needs no installati
 
 If you have never used clang before, you should give it a try. It compiles (at least this software) slightly faster and gives better understandable error messages if you mess things up.
 
+## Running the included test suite (after building)
+
+switch to test dir
+
+    cd test
+
+remove the default output directory if it already exists
+
+    rm -rf osmi-addresses_sqlite_out
+
+make all the IDs in the testzone file positive, so that this tool can handle them
+
+    ./makeidpositive.sh osmi-testzone.osm
+
+process the testzone file
+
+    ../osmi/osmi-addresses pos-osmi-testzone.osm
+
+create spatial indices
+
+    ../create_spatial_indices.sh osmi-addresses_sqlite_out/
+
+check results
+
+    ./run_tests.sh osmi-addresses_sqlite_out
+
+
 ## MapServer setup
 
 ### Installation instructions

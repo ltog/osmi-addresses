@@ -1,0 +1,6 @@
+#!/bin/bash
+rm -rf osmi-addresses_sqlite_out
+./makeidpositive.sh osmi-testzone.osm
+../osmi/osmi-addresses pos-osmi-testzone.osm
+../create_spatial_indices.sh osmi-addresses_sqlite_out/
+./run_tests.sh osmi-addresses_sqlite_out
