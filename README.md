@@ -59,6 +59,10 @@ On Ubuntu/Debian, you should be able to get all of libosmium's and osmi-addresse
 
 ### Compiling using make
 
+Switch to the source directory:
+
+    cd osmi
+
 Compile using GCC:
 
     make
