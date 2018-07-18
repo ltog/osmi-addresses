@@ -24,9 +24,9 @@ public:
 	 m_use_transaction(use_transaction),
 	 m_layer(nullptr) {
 
-		m_data_source = get_data_source(dirname);
+		m_data_set = get_data_set(dirname);
 
-		if (!m_data_source) {
+		if (!m_data_set) {
 			std::cerr << "Creation of data source for layer '" << m_layer_name
 					<< "' failed." << std::endl;
 			exit(1);
@@ -35,14 +35,14 @@ public:
 		OGRSpatialReference spatialref;
 		spatialref.SetWellKnownGeogCS("WGS84");
 
-		this->create_layer(m_data_source, geom_type);
+		this->create_layer(m_data_set, geom_type);
 	}
 
 	virtual ~Writer() {
 		if (m_use_transaction) {
 			m_layer->CommitTransaction();
 		}
-		OGRDataSource::DestroyDataSource(m_data_source);
+		GDALClose(m_data_set);
 	}
 
 	virtual void feed_node(const osmium::Node&) = 0;
@@ -96,19 +96,19 @@ protected:
 	}
 
 private:
-	OGRDataSource* m_data_source;
+	GDALDataset* m_data_set;
 
 	unsigned int num_features = 0;
 
 	static bool is_output_dir_written;
 
-	void create_layer(OGRDataSource* data_source, const OGRwkbGeometryType& geom_type) {
+	void create_layer(GDALDataset* data_set, const OGRwkbGeometryType& geom_type) {
 		OGRSpatialReference sparef;
 		sparef.SetWellKnownGeogCS("WGS84");
 
 		const char* layer_options[] = { "SPATIAL_INDEX=no", "COMPRESS_GEOM=yes", nullptr };
 
-		this->m_layer = data_source->CreateLayer(m_layer_name.c_str(), &sparef,
+		this->m_layer = data_set->CreateLayer(m_layer_name.c_str(), &sparef,
 				geom_type, const_cast<char**>(layer_options));
 		if (!m_layer) {
 			std::cerr << "Creation of layer '"<< m_layer_name << "' failed.\n";
@@ -125,11 +125,10 @@ private:
 		}
 	}
 
-	OGRDataSource* get_data_source(const std::string& dir_name) {
-		const std::string driver_name = std::string("SQLite");
-		OGRSFDriver* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
+	GDALDataset* get_data_set(const std::string& dir_name) {
+		GDALDriver* driver = GetGDALDriverManager()->GetDriverByName("SQLite");
 		if (!driver) {
-			std::cerr << driver_name << " driver not available." << std::endl;
+			std::cerr << "SQLite driver not available." << std::endl;
 			exit(1);
 		}
 
@@ -147,7 +146,7 @@ private:
 
 		maybe_create_dir(full_dir);
 		bfs::path layer_path = full_dir / bfs::path(m_layer_name + ".sqlite");
-		return driver->CreateDataSource(layer_path.c_str(), const_cast<char**>(options));
+		return driver->Create(layer_path.c_str(), 0, 0, 0, GDT_Unknown, const_cast<char**>(options));
 	}
 
 	void maybe_create_dir(const bfs::path& dir) { // TODO: not thread-safe
