@@ -32,17 +32,18 @@ public:
 			exit(1);
 		}
 
-		OGRSpatialReference spatialref;
-		spatialref.SetWellKnownGeogCS("WGS84");
+		//OGRSpatialReference spatialref;
+		//spatialref.SetWellKnownGeogCS("WGS84");
 
 		this->create_layer(m_data_set, geom_type);
 	}
 
 	virtual ~Writer() {
 		if (m_use_transaction) {
-			m_layer->CommitTransaction();
+			//m_layer->CommitTransaction();
 		}
-		GDALClose(m_data_set);
+		//GDALClose(m_data_set);
+		//OGRDataSource::DestroyDataSource(m_data_set);
 	}
 
 	virtual void feed_node(const osmium::Node&) = 0;
@@ -87,7 +88,7 @@ protected:
 			std::cerr << "Failed to create feature. e = " << e << std::endl;
 			exit(1);
 		}
-		OGRFeature::DestroyFeature(feature);
+		//OGRFeature::DestroyFeature(feature); // https://stackoverflow.com/questions/49855955/gdal-destroyfeature-method-produces-segmentation-fault
 		maybe_commit_transaction();
 	}
 
@@ -126,9 +127,10 @@ private:
 	}
 
 	GDALDataset* get_data_set(const std::string& dir_name) {
-		GDALDriver* driver = GetGDALDriverManager()->GetDriverByName("SQLite");
+		const std::string driver_name = std::string("SQLite");
+		GDALDriver* driver = GetGDALDriverManager()->GetDriverByName(driver_name.c_str());
 		if (!driver) {
-			std::cerr << "SQLite driver not available." << std::endl;
+			std::cerr << driver_name << " driver not available." << std::endl;
 			exit(1);
 		}
 
