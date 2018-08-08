@@ -102,14 +102,16 @@ check results
     ./run_tests.sh osmi-addresses_sqlite_out
 
 
-## MapServer setup
+## MapServer Setup
+
+To test local changes, you can run a MapServer instance that serves the generated results as map overlays. The base layer tiles are loaded directly from the openstreetmap.org servers.
 
 ### Installation instructions
 
 Install MapServer (Ubuntu):  
 `sudo apt-get install mapserver-bin cgi-mapserver apache2 proj-data unifont`
 
-Activate CGI:  
+Activate CGI:
 `sudo a2enmod cgi; service apache2 restart`
 
 Create a logfile with suitable permissions:  
@@ -117,7 +119,7 @@ Create a logfile with suitable permissions:
 
 Open `/usr/share/proj/epsg`, duplicate the line starting with `<3857>` and change the beginning to `<900913>` in one of the lines.
 
-The `addresses.map` file is the configuration file as used on the server. The file `addresses.local.map` is adjusted to locally view MapServer's output. It was generated doing the following changes:
+The `addresses.map` file is the configuration file as used on the production server running the full OSM inspector. The file `addresses.local.map` is a derived version that configures MapServer to show the local results. It is generated from `adresses.map` as follows:
 
 - For each layer disable the lines starting with `TILEINDEX` or `TILEITEM`
 - For each layer add a line `CONNECTION "X"` where X is the path to the .sqlite file
@@ -125,11 +127,12 @@ The `addresses.map` file is the configuration file as used on the server. The fi
 
 Set the default location of the .map file: Add the line
 
-    SetEnvIf Request_URI "/cgi-bin/mapserv" MS_MAPFILE=X
+    SetEnvIf Request_URI "/cgi-bin/mapserv" MS_MAPFILE=/absolute/path/to/addresses.local.map
 
-(with X being the absolute path to the file `addresses.local.map`) into your apache site config, e.g. into `/etc/apache2/sites-available/000-default.conf`. Restart apache with `service apache2 restart`.
+into your Apache site config, e.g. into `/etc/apache2/sites-available/000-default.conf`. Restart apache with `service apache2 restart`.
+MapServer will then access `addresses.local.map`, which refers to the data in `test/osmi-addresses_sqlite_out/`.
 
-To comfortably look (locally) at the MapServer output, open `viewer/index.html` that accesses `addresses.local.map`, which in turn accesses the data in `test/osmi-addresses_sqlite_out/`.
+Copy the "viewer" directory to a place where it is served by the web server, e.g. `/var/www/html`. Then, open the contained index.html (e.g. `http://localhost/viewer/index.html`) in a browser to comfortably look at the (locally) detected address problems.
 
 ### Debugging MapServer
 
