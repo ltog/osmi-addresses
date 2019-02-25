@@ -7,7 +7,15 @@
 #define NO_WIDTH -1
 
 #define USE_TRANSACTIONS true
-#define DONT_USE_TRANSACTIONS false
+#define DONT_USE_TRANSACTIONS fals
+
+#if GDAL_VERSION_MAJOR >= 2
+using gdal_dataset_type = GDALDataset;
+using gdal_driver_type = GDALDriver;
+#else
+using gdal_dataset_type = OGRDataSource;
+using gdal_driver_type = OGRSFDriver;
+#endif
 
 namespace bfs = boost::filesystem;
 
@@ -97,13 +105,17 @@ protected:
 	}
 
 private:
+#if GDAL_VERSION_MAJOR >= 2
 	GDALDataset* m_data_set;
+#else
+	OGRDataSource* m_data_set;
+#endif
 
 	unsigned int num_features = 0;
 
 	static bool is_output_dir_written;
 
-	void create_layer(GDALDataset* data_set, const OGRwkbGeometryType& geom_type) {
+	void create_layer(gdal_dataset_type* data_set, const OGRwkbGeometryType& geom_type) {
 		OGRSpatialReference sparef;
 		sparef.SetWellKnownGeogCS("WGS84");
 
@@ -126,9 +138,13 @@ private:
 		}
 	}
 
-	GDALDataset* get_data_set(const std::string& dir_name) {
+	gdal_dataset_type* get_data_set(const std::string& dir_name) {
 		const std::string driver_name = std::string("SQLite");
-		GDALDriver* driver = GetGDALDriverManager()->GetDriverByName(driver_name.c_str());
+#if GDAL_VERSION_MAJOR >= 2
+		gdal_driver_type* driver = GetGDALDriverManager()->GetDriverByName(driver_name.c_str());
+#else
+		gdal_driver_type* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
+#endif
 		if (!driver) {
 			std::cerr << driver_name << " driver not available." << std::endl;
 			exit(1);
@@ -148,7 +164,11 @@ private:
 
 		maybe_create_dir(full_dir);
 		bfs::path layer_path = full_dir / bfs::path(m_layer_name + ".sqlite");
+#if GDAL_VERSION_MAJOR >= 2
 		return driver->Create(layer_path.c_str(), 0, 0, 0, GDT_Unknown, const_cast<char**>(options));
+#else
+		return driver->CreateDataSource(layer_path.c_str(), const_cast<char**>(options));
+#endif
 	}
 
 	void maybe_create_dir(const bfs::path& dir) { // TODO: not thread-safe

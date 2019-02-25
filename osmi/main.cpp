@@ -35,7 +35,11 @@
 
 int main(int argc, char* argv[]) {
 
+#if GDAL_VERSION_MAJOR >= 2
 	GDALAllRegister();
+#else
+	OGRRegisterAll();
+#endif
 
 	if (argc < 2 || argc > 3) {
 		std::cerr << "Usage: " << argv[0] << " INFILE [OUTFILE_DIR]" << std::endl;
@@ -99,9 +103,12 @@ int main(int argc, char* argv[]) {
 	osmium::apply(reader2, location_handler, second_handler);
 	reader2.close();
 
-	//OGRCleanupAll();
+#if GDAL_VERSION_MAJOR >= 2
 	GDALDestroyDriverManager();
 	CPLDumpSharedList( nullptr );
+#else
+	OGRCleanupAll();
+#endif
 
 	std::cout << std::endl;
 	mem_helper.print_max();
