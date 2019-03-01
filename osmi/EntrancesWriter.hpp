@@ -25,7 +25,7 @@ public:
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 
-			feature->SetGeometry(static_cast<OGRGeometry*>(ogr_point.get()));
+			feature->SetGeometryDirectly(static_cast<OGRGeometry*>(ogr_point.release()));
 			feature->SetField("node_id", static_cast<double>(node.id())); //TODO: way.id() is of type int64_t. is this ok?
 			feature->SetField("lastchange", node.timestamp().to_iso().c_str());
 			if (entrance) {
