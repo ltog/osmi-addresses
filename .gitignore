@@ -8,6 +8,7 @@ test/pos-osmi-testzone.osm
 osmi/last_use_of_clang.tmp
 osmi/last_use_of_gcc.tmp
 osmi/osmi-addresses
+osmi/*.o
 
 # files of profiling directory
 profiling/pmp-stacktraces
@@ -25,3 +26,5 @@ symbolset
 # vim swap files
 .*.sw?
 
+# Eclipse
+.cproject
