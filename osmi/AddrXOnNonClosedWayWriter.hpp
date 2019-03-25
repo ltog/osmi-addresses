@@ -46,7 +46,7 @@ public:
 				std::unique_ptr<OGRLineString> ogr_linestring = m_factory.create_linestring(way);
 				OGRFeature* const feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 
-				feature->SetGeometry(static_cast<OGRGeometry*>(ogr_linestring.get()));
+				feature->SetGeometryDirectly(static_cast<OGRGeometry*>(ogr_linestring.release()));
 				feature->SetField("way_id", static_cast<double>(way.id())); //TODO: node.id() is of type int64_t. is this ok?
 				feature->SetField("lastchange", way.timestamp().to_iso().c_str());
 

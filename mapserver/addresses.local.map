@@ -50,7 +50,7 @@ MAP
 #        NAME postcodeareas
 #        TYPE POLYGON
 #        STATUS ON
-#	    POSTGIS osmi_addresses_postcodeareas
+#            POSTGIS osmi_addresses_postcodeareas
 #        OPACITY 40
 #        DUMP true
 #        METADATA
@@ -108,7 +108,7 @@ MAP
 #        NAME postcodeoutline
 #        TYPE LINE
 #        STATUS ON
-#	    POSTGIS osmi_addresses_postcodeareas
+#            POSTGIS osmi_addresses_postcodeareas
 #        OPACITY 40
 #        DUMP true
 #        TOLERANCE 5
@@ -139,8 +139,8 @@ MAP
 #    END
 
     #-------------------------------------------------------------------
-	#CONFIG "MS_ERRORFILE" "/srv/tools/sqlite/debug.txt"
-  	#DEBUG 5
+        #CONFIG "MS_ERRORFILE" "/srv/tools/sqlite/debug.txt"
+        #DEBUG 5
 #   LAYER
 #       NAME uncovered_area
 #       TYPE POLYGON
@@ -187,8 +187,8 @@ MAP
         Name nearest_areas
         TYPE POLYGON
         STATUS ON
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_areas.sqlite"
-	DATA "osmi_addresses_nearest_areas"
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_areas.sqlite"
+        DATA "osmi_addresses_nearest_areas"
         CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/nearest_areas-template.html"
         TEMPLATE "/srv/tools/views/addresses/-template.html"
@@ -240,9 +240,9 @@ MAP
         NAME nearest_roads
         TYPE LINE
         STATUS ON
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_roads.sqlite"
-	DATA "osmi_addresses_nearest_roads"
-	CONNECTIONTYPE OGR
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_roads.sqlite"
+        DATA "osmi_addresses_nearest_roads"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/nearest_roads-template.html"
         DUMP true
         TOLERANCE 5
@@ -288,10 +288,10 @@ MAP
         NAME connection_lines
         TYPE LINE
         STATUS ON
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_connection_line.sqlite"
-	DATA "osmi_addresses_connection_line"
-	CONNECTIONTYPE OGR
-	#    POSTGIS osmi_addresses_connection_line
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_connection_line.sqlite"
+        DATA "osmi_addresses_connection_line"
+        CONNECTIONTYPE OGR
+        #    POSTGIS osmi_addresses_connection_line
         TEMPLATE "/srv/tools/views/addresses/connection_lines-template.html"
         DUMP true
         TOLERANCE 5
@@ -321,9 +321,9 @@ MAP
         NAME nearest_points
         TYPE POINT
         STATUS ON
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_points.sqlite"
-	DATA "osmi_addresses_nearest_points"
-	CONNECTIONTYPE OGR
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nearest_points.sqlite"
+        DATA "osmi_addresses_nearest_points"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/nearest_points-template.html"
         DUMP true
         TOLERANCE 5
@@ -355,9 +355,9 @@ MAP
         NAME interpolation
         TYPE LINE
         STATUS ON
-	CONNECTIONTYPE OGR
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_interpolation.sqlite"
-	DATA "osmi_addresses_interpolation"
+        CONNECTIONTYPE OGR
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_interpolation.sqlite"
+        DATA "osmi_addresses_interpolation"
         TEMPLATE "/srv/tools/views/addresses/interpolation-template.html"
         DUMP true
         TOLERANCE 5
@@ -412,11 +412,11 @@ MAP
         NAME buildings
         TYPE POLYGON
         STATUS ON
-	FEATURE 
-		WKT "POLYGON((0 0,0 0,0 0,0 0,0 0))"
-	END
+        FEATURE 
+                WKT "POLYGON((0 0,0 0,0 0,0 0,0 0))"
+        END
 
-#	    POSTGIS osmi_addresses_buildings
+#           POSTGIS osmi_addresses_buildings
         TEMPLATE "/srv/tools/views/addresses/buildings-template.html"
         DUMP true
         METADATA
@@ -445,11 +445,11 @@ MAP
         NAME buildings_with_addresses
         TYPE POLYGON
         STATUS ON
-	#    POSTGIS osmi_addresses_ways_with_addresses
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_ways_with_addresses.sqlite"
-	DATA "osmi_addresses_ways_with_addresses"
-	CONNECTIONTYPE OGR
-	#CONNECTION "/srv/tools/sqlite/europe-neu.sqlite"
+        #    POSTGIS osmi_addresses_ways_with_addresses
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_ways_with_addresses.sqlite"
+        DATA "osmi_addresses_ways_with_addresses"
+        CONNECTIONTYPE OGR
+        #CONNECTION "/srv/tools/sqlite/europe-neu.sqlite"
         TEMPLATE "/srv/tools/views/addresses/buildings_with_addresses-template.html"
         DUMP true
         METADATA
@@ -490,11 +490,11 @@ MAP
         NAME nodes_with_addresses_interpolated
         TYPE POINT
         STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
-	DATA "osmi_addresses_nodes_with_addresses"
-	CONNECTIONTYPE OGR
-	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=1"
+        #    POSTGIS osmi_addresses_nodes_with_addresses
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+        DATA "osmi_addresses_nodes_with_addresses"
+        CONNECTIONTYPE OGR
+        #DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=1"
         TEMPLATE "/srv/tools/views/addresses/nodes_with_addresses_interpolated-template.html"
         DUMP true
         TOLERANCE 5
@@ -537,11 +537,11 @@ MAP
         NAME nodes_with_addresses_defined
         TYPE POINT
         STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
-	DATA "osmi_addresses_nodes_with_addresses"
-	CONNECTIONTYPE OGR
-	#DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=0 and node_id is not null"
+        #    POSTGIS osmi_addresses_nodes_with_addresses
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+        DATA "osmi_addresses_nodes_with_addresses"
+        CONNECTIONTYPE OGR
+        #DATA "select geometry, houseno from osmi_addresses_nodes_with_addresses where is_ip=0 and node_id is not null"
         TEMPLATE "/srv/tools/views/addresses/nodes_with_addresses_defined-template.html"
         DUMP true
         TOLERANCE 5
@@ -585,10 +585,10 @@ MAP
         NAME postal_code
         TYPE LINE
         STATUS ON
-	#    POSTGIS osmi_addresses_ways_with_postal_code
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_ways_with_postal_code.sqlite"
-	DATA "osmi_addresses_ways_with_postal_code"
-	CONNECTIONTYPE OGR
+        #    POSTGIS osmi_addresses_ways_with_postal_code
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_ways_with_postal_code.sqlite"
+        DATA "osmi_addresses_ways_with_postal_code"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/postal_code-template.html"
         DUMP true
         TOLERANCE 5
@@ -633,8 +633,8 @@ MAP
         TYPE POINT
         STATUS ON
         CONNECTIONTYPE OGR
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_entrances.sqlite"
-	DATA "osmi_addresses_entrances"
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_entrances.sqlite"
+        DATA "osmi_addresses_entrances"
         #TEMPLATE ...
         DUMP true
         TOLERANCE 5
@@ -649,7 +649,7 @@ MAP
         END
         CLASS
             NAME "Deprecated entrances (building=entrance)"
-	    EXPRESSION ("[entrance]" = '')
+            EXPRESSION ("[entrance]" = '')
             STYLE
                 SYMBOL "entrance-deprecated"
                 SIZE 12
@@ -664,8 +664,8 @@ MAP
         NAME entrances
         TYPE POINT
         STATUS ON
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_entrances.sqlite"
-	DATA "osmi_addresses_entrances"
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_entrances.sqlite"
+        DATA "osmi_addresses_entrances"
         CONNECTIONTYPE OGR
         #TEMPLATE ...
         DUMP true
@@ -681,7 +681,7 @@ MAP
         END
         CLASS
             NAME "Entrances (entrance=emergency)"
-	    EXPRESSION ("[entrance]" = 'emergency')
+            EXPRESSION ("[entrance]" = 'emergency')
             STYLE
                 SYMBOL "entrance-emergency"
                 SIZE 12
@@ -690,7 +690,7 @@ MAP
         END
         CLASS
             NAME "Entrances (entrance=exit)"
-	    EXPRESSION ("[entrance]" = 'exit')
+            EXPRESSION ("[entrance]" = 'exit')
             STYLE
                 SYMBOL "entrance-exit"
                 SIZE 12
@@ -699,7 +699,7 @@ MAP
         END
         CLASS
             NAME "Entrances (entrance=main)"
-	    EXPRESSION ("[entrance]" = 'main')
+            EXPRESSION ("[entrance]" = 'main')
             STYLE
                 SYMBOL "entrance-main"
                 SIZE 12
@@ -708,7 +708,7 @@ MAP
         END
         CLASS
             NAME "Entrances (entrance=service)"
-	    EXPRESSION ("[entrance]" = 'service')
+            EXPRESSION ("[entrance]" = 'service')
             STYLE
                 SYMBOL "entrance-service"
                 SIZE 12
@@ -717,7 +717,7 @@ MAP
         END
         CLASS
             NAME "Entrances (entrance=yes)"
-	    EXPRESSION ("[entrance]" = 'yes')
+            EXPRESSION ("[entrance]" = 'yes')
             STYLE
                 SYMBOL "entrance-yes"
                 SIZE 12
@@ -731,10 +731,10 @@ MAP
         NAME interpolation_errors
         TYPE LINE
         STATUS ON
-	#    POSTGIS osmi_addresses_interpolation
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_interpolation.sqlite"
-	DATA "osmi_addresses_interpolation"
-	CONNECTIONTYPE OGR
+        #    POSTGIS osmi_addresses_interpolation
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_interpolation.sqlite"
+        DATA "osmi_addresses_interpolation"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/interpolation_errors-template.html"
         DUMP true
         TOLERANCE 5
@@ -777,10 +777,10 @@ MAP
         NAME addrx_on_nonclosed_way
         TYPE LINE
         STATUS ON
-	#    POSTGIS osmi_addresses_ways_with_postal_code
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_addrx_on_nonclosed_way.sqlite"
-	DATA "osmi_addresses_addrx_on_nonclosed_way"
-	CONNECTIONTYPE OGR
+        #    POSTGIS osmi_addresses_ways_with_postal_code
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_addrx_on_nonclosed_way.sqlite"
+        DATA "osmi_addresses_addrx_on_nonclosed_way"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/postal_code-template.html"
         DUMP true
         TOLERANCE 5
@@ -797,7 +797,7 @@ MAP
         MINSCALEDENOM 1
         LABELMAXSCALEDENOM 12500
         LABELMINSCALEDENOM 1
-	#TEXT ("addr:*=... on non-closed way") # doesn't work
+        #TEXT ("addr:*=... on non-closed way") # doesn't work
         CLASS
             NAME "Tag addr:*=... on non-closed ways"
             STYLE
@@ -806,7 +806,7 @@ MAP
                 ANTIALIAS true
             END
             LABEL
-	TEXT ("asdf")
+        TEXT ("asdf")
                 SIZE 10
                 COLOR 200 0 0
                 ANTIALIAS true
@@ -825,9 +825,9 @@ MAP
         NAME no_addr_street
         TYPE POINT
         STATUS ON
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
-	DATA "osmi_addresses_nodes_with_addresses"
-	CONNECTIONTYPE OGR
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+        DATA "osmi_addresses_nodes_with_addresses"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/no_addr_street-template.html"
         DUMP true
         TOLERANCE 5
@@ -870,11 +870,10 @@ MAP
         NAME misformatted_housenumber
         TYPE POINT
         STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
-	DATA "osmi_addresses_nodes_with_addresses"
-	CONNECTIONTYPE OGR
-	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        #    POSTGIS osmi_addresses_nodes_with_addresses
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+        DATA "osmi_addresses_nodes_with_addresses"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/street_not_found-template.html"
         DUMP true
         TOLERANCE 5
@@ -918,11 +917,10 @@ MAP
         NAME misformatted_housenumber_lenient
         TYPE POINT
         STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
-	DATA "osmi_addresses_nodes_with_addresses"
-	CONNECTIONTYPE OGR
-	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        #    POSTGIS osmi_addresses_nodes_with_addresses
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+        DATA "osmi_addresses_nodes_with_addresses"
+        CONNECTIONTYPE OGR
         TEMPLATE "/srv/tools/views/addresses/street_not_found-template.html"
         DUMP true
         TOLERANCE 5
@@ -1008,11 +1006,11 @@ MAP
         NAME street_not_found
         TYPE POINT
         STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
-	DATA "osmi_addresses_nodes_with_addresses"
-	CONNECTIONTYPE OGR
-	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        #    POSTGIS osmi_addresses_nodes_with_addresses
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+        DATA "osmi_addresses_nodes_with_addresses"
+        CONNECTIONTYPE OGR
+        #DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null and nody_place_id is null and wayy_place_id is null"
         TEMPLATE "/srv/tools/views/addresses/street_not_found-template.html"
         DUMP true
         TOLERANCE 5
@@ -1030,8 +1028,8 @@ MAP
         LABELMAXSCALEDENOM 12500
         LABELMINSCALEDENOM 1
         LABELITEM "street"
-        #FILTER ([is_ip]=0 AND [street] IS NOT NULL AND [street] != '' AND [road_id] IS NULL)
-        FILTER (([is_ip]=0) AND ("[street]" != '') AND ("[road_id]" = ''))
+        #FILTER ([is_ip]=0 AND [street] IS NOT NULL AND [street] != '' AND [road_id] IS NULL AND [nody_place_id] IS NULL AND [wayy_place_id] IS NULL)
+        FILTER (([is_ip]=0) AND ("[street]" != '') AND ("[road_id]" = '') AND ("[nody_place_id]" = '') AND ("[wayy_place_id]" = ''))
         CLASS
             NAME "Nodes with defined addresses (addr:street=...) with road not found"
             STYLE
@@ -1050,17 +1048,17 @@ MAP
             END
         END
     END
-    
+
     #-------------------------------------------------------------------
     LAYER
         NAME place_not_found
         TYPE POINT
         STATUS ON
-	#    POSTGIS osmi_addresses_nodes_with_addresses
-	CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
-	DATA "osmi_addresses_nodes_with_addresses"
-	CONNECTIONTYPE OGR
-	#DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and street is not null and street <> '' and road_id is null"
+        #    POSTGIS osmi_addresses_nodes_with_addresses
+        CONNECTION "../test/osmi-addresses_sqlite_out/osmi_addresses_nodes_with_addresses.sqlite"
+        DATA "osmi_addresses_nodes_with_addresses"
+        CONNECTIONTYPE OGR
+        #DATA "select geometry, street from osmi_addresses_nodes_with_addresses where is_ip=0 and place <> '' and nody_place_id is null and wayy_place_id is null"
         TEMPLATE "/srv/tools/views/addresses/place_not_found-template.html"
         DUMP true
         TOLERANCE 5
@@ -1097,6 +1095,7 @@ MAP
             END
         END
     END
+
     #-------------------------------------------------------------------
 
     LAYER
@@ -1113,11 +1112,11 @@ MAP
                 440 -6
             END
         END
-	CLASS
-	  STYLE
-	   COLOR "#88888801"
-	  END
-	END
+        CLASS
+          STYLE
+           COLOR "#88888801"
+          END
+        END
         UNITS PIXELS
     END
     LAYER

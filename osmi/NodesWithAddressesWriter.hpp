@@ -58,7 +58,7 @@ public:
 		if (addrstreet || houseno || postcode || city || country || fulladdr || place) {
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
-			feature->SetGeometry(ogr_point.get());
+			feature->SetGeometryDirectly(ogr_point.release());
 			feature->SetField("node_id", static_cast<double>(node.id())); //TODO: node.id() is of type int64_t. is this ok?
 			feature->SetField("is_ip", IS_NOT_INTERPOLATION);
 			feature->SetField("lastchange", node.timestamp().to_iso().c_str());

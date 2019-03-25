@@ -19,11 +19,9 @@ public:
 			const char* building = way.tags().get_value_by_key("building");
 
 			if (building && way.is_closed()) {
-				std::unique_ptr<OGRLineString> ogr_linestring = m_factory.create_linestring(way);
+				std::unique_ptr<OGRPolygon> polygon = m_factory.create_polygon(way);
 				OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
-				OGRPolygon polygon;
-				polygon.addRing(static_cast<OGRLinearRing*>(ogr_linestring.get()));
-				feature->SetGeometry(static_cast<OGRGeometry*>(&polygon));
+				feature->SetGeometryDirectly(static_cast<OGRGeometry*>(polygon.release()));
 
 				feature->SetField("way_id", static_cast<double>(way.id())); //TODO: node.id() is of type int64_t. is this ok?
 				feature->SetField("lastchange", way.timestamp().to_iso().c_str());

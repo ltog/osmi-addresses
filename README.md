@@ -59,6 +59,10 @@ On Ubuntu/Debian, you should be able to get all of libosmium's and osmi-addresse
 
 ### Compiling using make
 
+Switch to the source directory:
+
+    cd osmi
+
 Compile using GCC:
 
     make
@@ -71,46 +75,43 @@ The compiled executable osmi is a standalone application and needs no installati
 
 If you have never used clang before, you should give it a try. It compiles (at least this software) slightly faster and gives better understandable error messages if you mess things up.
 
-## Eclipse setup (incomplete)
+## Running the included test suite (after building)
 
-### Make Eclipse understand C++11 syntax
+switch to test dir
 
-In Eclipse go to: Window -> Preferences -> C/C++ -> Build -> Settings -> Discovery -> CDT GCC Built-in Compiler Settings [Shared]
+    cd test
 
-You should see
+remove the default output directory if it already exists
 
-    ${COMMAND} -E -P -v -dD "${INPUTS}"
+    rm -rf osmi-addresses_sqlite_out
 
-or
+make all the IDs in the testzone file positive, so that this tool can handle them
 
-    ${COMMAND} ${FLAGS} -E -P -v -dD "${INPUTS}"
+    ./makeidpositive.sh osmi-testzone.osm
 
-Change it to:
+process the testzone file
 
-    ${COMMAND} -std=c++11 ${FLAGS} -D__cplusplus=201103L -E -P -v -dD "${INPUTS}"
+    ../osmi/osmi-addresses pos-osmi-testzone.osm
 
-Find further information here: https://www.eclipse.org/forums/index.php/mv/msg/490066/1068004/#msg_1068004
+create spatial indices
 
-### Include GDAL
+    ../create_spatial_indices.sh osmi-addresses_sqlite_out/
 
-Project properties -> C/C++ General -> Paths and Symbols -> Tab: Includes -> Languages: GNU C++ -> Add... -> `/usr/include/gdal` ([X] Add to all configurations)
+check results
 
-### Set C++11 flag
+    ./run_tests.sh osmi-addresses_sqlite_out
 
-Project properties -> C/C++ Build -> Settings -> Tab: Tool Settings -> GCC C++ Compiler -> Miscellaneous -> Other flags: Change `-c -fmessage-length=0` to `-c -fmessage-length=0 -std=c++11`.
 
-### Define the preprocessor symbol `OSMIUM_WITH_SPARSEHASH`
+## MapServer Setup
 
-Project properties -> C/C++ General -> Paths and Symbols -> Tab: Symbols -> Languages C++ -> Add... -> Name: `OSMIUM_WITH_SPARSEHASH`, Value: 1, [X] Add to all configurations
-
-## MapServer setup
+To test local changes, you can run a MapServer instance that serves the generated results as map overlays. The base layer tiles are loaded directly from the openstreetmap.org servers.
 
 ### Installation instructions
 
 Install MapServer (Ubuntu):  
 `sudo apt-get install mapserver-bin cgi-mapserver apache2 proj-data unifont`
 
-Activate CGI:  
+Activate CGI:
 `sudo a2enmod cgi; service apache2 restart`
 
 Create a logfile with suitable permissions:  
@@ -118,7 +119,7 @@ Create a logfile with suitable permissions:
 
 Open `/usr/share/proj/epsg`, duplicate the line starting with `<3857>` and change the beginning to `<900913>` in one of the lines.
 
-The `addresses.map` file is the configuration file as used on the server. The file `addresses.local.map` is adjusted to locally view MapServer's output. It was generated doing the following changes:
+The `addresses.map` file is the configuration file as used on the production server running the full OSM inspector. The file `addresses.local.map` is a derived version that configures MapServer to show the local results. It is generated from `adresses.map` as follows:
 
 - For each layer disable the lines starting with `TILEINDEX` or `TILEITEM`
 - For each layer add a line `CONNECTION "X"` where X is the path to the .sqlite file
@@ -126,11 +127,12 @@ The `addresses.map` file is the configuration file as used on the server. The fi
 
 Set the default location of the .map file: Add the line
 
-    SetEnvIf Request_URI "/cgi-bin/mapserv" MS_MAPFILE=X
+    SetEnvIf Request_URI "/cgi-bin/mapserv" MS_MAPFILE=/absolute/path/to/addresses.local.map
 
-(with X being the absolute path to the file `addresses.local.map`) into your apache site config, e.g. into `/etc/apache2/sites-available/000-default.conf`. Restart apache with `service apache2 restart`.
+into your Apache site config, e.g. into `/etc/apache2/sites-available/000-default.conf`. Restart apache with `service apache2 restart`.
+MapServer will then access `addresses.local.map`, which refers to the data in `test/osmi-addresses_sqlite_out/`.
 
-To comfortably look (locally) at the MapServer output, open `viewer/index.html` that accesses `addresses.local.map`, which in turn accesses the data in `test/osmi-addresses_sqlite_out/`.
+Copy the "viewer" directory to a place where it is served by the web server, e.g. `/var/www/html`. Then, open the contained index.html (e.g. `http://localhost/viewer/index.html`) in a browser to comfortably look at the (locally) detected address problems.
 
 ### Debugging MapServer
 
@@ -182,60 +184,6 @@ Here is a hierarchical overview of calls/accesses:
   - `ConnectionLineWriter.write_line()`
   - `NearestRoadsWriter.write_road()` XOR `NearestAreasWriter.write_area()`
   - `NearestPointsWriter.write_point()`
-
-## Debugging
-
-### Using gdb
-
-You can compile the software with debug information by activating the corresponding line at the top of `osmi/Makefile` (basically adding `-g` to the compile options).
-
-Start gdb:
-
-    gdb [-ex run] --args osmi-addresses myfile.osm.pbf
-
-Use `-ex run` to immediately run the executable or do it in the gdb prompt (`(gdb)`):
-
-    run
-
-Attach the debugger after running a program (useful for analyzing deadlocks):
-
-    sudo gdb osmi-addresses $(pgrep osmi-addresses)
-
-Show the stack:
-
-    bt
-
-(This shows only the stack of one thread.)
-
-Show all threads:
-
-    info threads
-
-Switch to another thread:
-
-    thread 7
-
-Show stacks of all threads:
-
-    thread apply all bt
-
-Show where the debugged program stopped:
-
-    list
-
-Go *over* function call:
-
-    next
-
-Go *into* function call:
-
-    step
-
-Quit gdb with:
-
-    quit
-
-A nice tutorial: http://www.unknownroad.com/rtfm/gdbtut/gdbtoc.html
 
 ### Known issues
 

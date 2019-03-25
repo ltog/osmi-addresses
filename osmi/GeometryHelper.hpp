@@ -27,6 +27,15 @@ public:
 		}
 	}
 
+	~GeometryHelper() {
+		if (m_mercator2wgs) {
+			delete m_mercator2wgs;
+		}
+		if (m_wgs2mercator) {
+			delete m_wgs2mercator;
+		}
+	}
+
 	// PRE: way.is_closed() == true
 	std::unique_ptr<OGRPoint> centroid(const osmium::Way& way) {
 
