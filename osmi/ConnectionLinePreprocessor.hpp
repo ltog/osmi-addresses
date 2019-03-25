@@ -146,8 +146,8 @@ private:
 			const std::string&            addrname,
 			std::string&                  road_id)   // out
 	{
-		std::unique_ptr<OGRLineString>  closest_way(new OGRLineString); // TODO: check if new is necessary
-		std::unique_ptr<OGRPoint>       closest_point(new OGRPoint);    // TODO: check if new is necessary
+		std::unique_ptr<OGRLineString>  closest_way; // TODO: check if new is necessary
+		std::unique_ptr<OGRPoint>       closest_point;    // TODO: check if new is necessary
 		bool is_area;
 		osmium::unsigned_object_id_type closest_way_id = 0; // gets written later; wouldn't need an initialization, but gcc warns otherwise
 		std::string                     lastchange;
@@ -155,20 +155,20 @@ private:
 		{
 			std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);
 			int ind_closest_node;
-			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get(), closest_point.get()});
+			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
 			m_geometry_helper.mercator2wgs({&ogr_point, closest_way.get(), closest_point.get()});
 
 			// TODO: could this be parallelized?
-			mp_nearest_points_writer->write_point(closest_point, closest_way_id);
+			mp_connection_line_writer->write_line(ogr_point, closest_point, objectid, the_object_type);
 			if (is_area) {
 				mp_nearest_areas_writer->write_area(closest_way, closest_way_id, addrname, lastchange);
 			} else {
 				mp_nearest_roads_writer->write_road(closest_way, closest_way_id, addrname, lastchange);
 			}
 
-			mp_connection_line_writer->write_line(ogr_point, closest_point, objectid, the_object_type);
+			mp_nearest_points_writer->write_point(std::move(closest_point), closest_way_id);
 
 			road_id = "1"; // TODO: need to write the actual road_id
 		}

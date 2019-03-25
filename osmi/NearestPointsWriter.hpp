@@ -15,11 +15,11 @@ public:
 	}
 
 	void write_point(
-			const std::unique_ptr<OGRPoint>&       closest_point,
-			const osmium::unsigned_object_id_type& closest_way_id) {
+            std::unique_ptr<OGRPoint> closest_point, // cannot be const because in GDAL 1 OGRFeature::SetGeometry() does not accept const OGRGeometry*.
+			const osmium::unsigned_object_id_type closest_way_id) {
 
 		OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
-		feature->SetGeometry(closest_point.get());
+		feature->SetGeometryDirectly(closest_point.release());
 		feature->SetField("way_id", static_cast<double>(closest_way_id)); //TODO: closest_way_id is of type int64_t. is this ok?
 
 		create_feature(feature);
