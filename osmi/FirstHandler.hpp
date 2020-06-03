@@ -119,7 +119,7 @@ private:
 
 	std::set<std::string> get_streetnames(const osmium::TagList& taglist) {
 		std::set<std::string> streetnames; // std::set checks for duplicates when inserting elements. See http://stackoverflow.com/a/3451045
-		std::vector<std::string> keys = {"name", "name:left", "name:right", "alt_name", "official_name", "name_1"};
+		std::vector<std::string> keys = {"name", "name:left", "name:right", "alt_name", "official_name", "short_name", "ref"};
 		for (std::string key : keys) {
 			const char* value = taglist.get_value_by_key(key.c_str());
 			if (value) {
