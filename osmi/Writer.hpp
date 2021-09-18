@@ -39,10 +39,9 @@ public:
 	}
 
 	virtual ~Writer() {
-		if (m_use_transaction) {
-			m_layer->CommitTransaction();
+		if (m_data_source && m_use_transaction) {
+			m_data_source->CommitTransaction();
 		}
-		OGRDataSource::DestroyDataSource(m_data_source);
 	}
 
 	virtual void feed_node(const osmium::Node&) = 0;
@@ -77,7 +76,7 @@ protected:
 			}
 		}
 		if (m_use_transaction) {
-			m_layer->StartTransaction();
+			m_data_source->StartTransaction();
 		}
 	}
 
@@ -96,13 +95,13 @@ protected:
 	}
 
 private:
-	OGRDataSource* m_data_source;
+	GDALDataset* m_data_source;
 
 	unsigned int num_features = 0;
 
 	static bool is_output_dir_written;
 
-	void create_layer(OGRDataSource* data_source, const OGRwkbGeometryType& geom_type) {
+	void create_layer(GDALDataset* data_source, const OGRwkbGeometryType& geom_type) {
 		OGRSpatialReference sparef;
 		sparef.SetWellKnownGeogCS("WGS84");
 
@@ -119,15 +118,15 @@ private:
 	void maybe_commit_transaction() {
 		num_features++;
 		if (m_use_transaction && num_features > 10000) {
-			m_layer->CommitTransaction();
-			m_layer->StartTransaction();
+			m_data_source->CommitTransaction();
+			m_data_source->StartTransaction();
 			num_features = 0;
 		}
 	}
 
-	OGRDataSource* get_data_source(const std::string& dir_name) {
+	GDALDataset* get_data_source(const std::string& dir_name) {
 		const std::string driver_name = std::string("SQLite");
-		OGRSFDriver* driver = OGRSFDriverRegistrar::GetRegistrar()->GetDriverByName(driver_name.c_str());
+		GDALDriver* driver = GetGDALDriverManager()->GetDriverByName(driver_name.c_str());
 		if (!driver) {
 			std::cerr << driver_name << " driver not available." << std::endl;
 			exit(1);
@@ -147,7 +146,7 @@ private:
 
 		maybe_create_dir(full_dir);
 		bfs::path layer_path = full_dir / bfs::path(m_layer_name + ".sqlite");
-		return driver->CreateDataSource(layer_path.c_str(), const_cast<char**>(options));
+		return driver->Create(layer_path.c_str(), 0, 0, 0, GDT_Unknown, const_cast<char**>(options));
 	}
 
 	void maybe_create_dir(const bfs::path& dir) { // TODO: not thread-safe
