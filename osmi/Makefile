@@ -50,15 +50,9 @@ LIB_IO     := $(LIB_EXPAT) $(LIB_PBF) $(LIB_GZIP) $(LIB_BZIP2)
 
 LIB_OGR   := $(shell gdal-config --libs)
 LIB_SHAPE  := -lshp
-LIB_PRGOPT := -lboost_program_options
 
 LIB_BOOST_FS  := -lboost_filesystem
 LIB_BOOST_SYS := -lboost_system
-
-# this links libboost_program_options statically, because for some reason
-# it always wants the exact version which might not be available on a
-# different host
-#LIB_PRGOPT := -Wl,-Bstatic -lboost_program_options -Wl,-Bdynamic
 
 PROGRAMS := osmi-addresses
 
@@ -69,7 +63,7 @@ all: $(PROGRAMS)
 osmi-addresses: main.cpp Makefile *.hpp $(other_compiler_file)
 	@# $@ : name of the target
 	@# $< : first dependency
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_OGR) $(LIB_PRGOPT) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) && touch $(this_compiler_file)
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_OGR) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) && touch $(this_compiler_file)
 
 last_use_of_clang.tmp:
 	touch last_use_of_clang.tmp
