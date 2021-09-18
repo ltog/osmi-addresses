@@ -23,9 +23,6 @@
 #include <osmium/io/any_input.hpp>
 #include <osmium/handler.hpp>
 
-#include <geos/util/IllegalArgumentException.h>
-#include <geos/util/GEOSException.h>
-
 #include "main.hpp"
 #include "AltTagList.hpp"
 #include "FirstHandler.hpp"

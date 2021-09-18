@@ -8,7 +8,6 @@ ifeq ($(OS),Darwin)
 	LDFLAGS += -stdlib=libc++
 endif
 
-CXXFLAGS_GEOS     := $(shell geos-config --cflags)
 CXXFLAGS_OGR      := $(shell gdal-config --cflags | sed 's/^-I/-isystem/') # suppress warnings, see http://stackoverflow.com/a/6321926 and https://gcc.gnu.org/onlinedocs/cpp/System-Headers.html
 CXXFLAGS_WARNINGS := -Wall -Wextra -pedantic -Wredundant-decls -Wdisabled-optimization -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wsign-promo -Wold-style-cast -Wuninitialized
 
@@ -43,17 +42,14 @@ else # other compiler (g++)
 endif
 
 LIB_EXPAT := -lexpat
-LIB_PBF   := -pthread -lz -lprotobuf-lite -losmpbf
-# statically link protobuf-lite when libprotobuf-lite.so.8 (or similar) isn't available on the target system; explanation: http://stackoverflow.com/a/938947
-#LIB_PBF   := -pthread -lz -Wl,-Bstatic -lprotobuf-lite -Wl,-Bdynamic -losmpbf
+LIB_PBF   := -pthread -lz
 LIB_GZIP  := -lz
 LIB_BZIP2 := -lbz2
 
 LIB_IO     := $(LIB_EXPAT) $(LIB_PBF) $(LIB_GZIP) $(LIB_BZIP2)
 
 LIB_OGR   := $(shell gdal-config --libs)
-LIB_GEOS  := $(shell geos-config --libs)
-LIB_SHAPE  := -lshp $(LIB_GEOS)
+LIB_SHAPE  := -lshp
 LIB_PRGOPT := -lboost_program_options
 
 LIB_BOOST_FS  := -lboost_filesystem
@@ -73,7 +69,7 @@ all: $(PROGRAMS)
 osmi-addresses: main.cpp Makefile *.hpp $(other_compiler_file)
 	@# $@ : name of the target
 	@# $< : first dependency
-	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_GEOS) $(LIB_OGR) $(LIB_PRGOPT) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) && touch $(this_compiler_file)
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS_WARNINGS) $(CXXFLAGS_OGR) -o $@ $< $(LDFLAGS) $(LIB_IO) $(LIB_OGR) $(LIB_PRGOPT) $(LIB_BOOST_FS) $(LIB_BOOST_SYS) && touch $(this_compiler_file)
 
 last_use_of_clang.tmp:
 	touch last_use_of_clang.tmp
