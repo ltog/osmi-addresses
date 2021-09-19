@@ -1,14 +1,14 @@
 {
 	"data_format":  1,
 	"data_url":     "https://raw.githubusercontent.com/ltog/osmi-addresses/master/taginfo.json",
-	"data_updated": "20150305T220000Z",
+	"data_updated": "20210919T182600Z",
 	"project": {
 		"name":          "OSM Inspector - Addresses view",
 		"description":   "Visualizes OSM (postal) address data. Intended as an error detection tool for mappers.",
 		"project_url":   "http://tools.geofabrik.de/osmi/?view=addresses",
 		"doc_url":       "https://github.com/ltog/osmi-addresses",
 		"contact_name":  "Lukas Toggenburger",
-		"contact_email": "lukas.toggenburger X htwchur.ch"
+		"contact_email": "ltoggenburger X swissonline.ch"
 	},
         "tags": [
 		{ "key": "addr:city",                                 "object_types": [ "node",        "area" ] },
