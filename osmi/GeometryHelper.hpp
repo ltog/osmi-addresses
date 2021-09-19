@@ -39,13 +39,9 @@ public:
 	// PRE: way.is_closed() == true
 	std::unique_ptr<OGRPoint> centroid(const osmium::Way& way) {
 
-		std::unique_ptr<OGRLineString> ogr_linestring = m_factory.create_linestring(way);
-
-		OGRPolygon polygon;
-		polygon.addRing(static_cast<OGRLinearRing*>(ogr_linestring.get()));
-
+		std::unique_ptr<OGRPolygon> polygon = m_factory.create_polygon(way);
 		std::unique_ptr<OGRPoint> centroid(new OGRPoint);
-		int ret = polygon.Centroid(centroid.get());
+		int ret = polygon->Centroid(centroid.get());
 		if (ret == OGRERR_NONE) {
 			return centroid;
 		} else {

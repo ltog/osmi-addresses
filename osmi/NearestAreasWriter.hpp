@@ -17,7 +17,7 @@ public:
 	}
 
 	void write_area(
-			const std::unique_ptr<OGRLineString>&  way,
+			std::unique_ptr<OGRLineString>&        way,
 			const osmium::unsigned_object_id_type& way_id,
 			const std::string&                     addrarea,
 			const std::string&                     lastchange) {
@@ -25,7 +25,7 @@ public:
 		if (written_ways.find(way_id) == written_ways.end()) {
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
 			OGRPolygon polygon;
-			polygon.addRing(static_cast<OGRLinearRing*>(way.get()));
+			polygon.addRing(OGRCurve::CastToLinearRing(way.release()));
 			feature->SetGeometry(static_cast<OGRGeometry*>(&polygon));
 
 			// OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());
