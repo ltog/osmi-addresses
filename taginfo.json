@@ -1,7 +1,7 @@
 {
 	"data_format":  1,
 	"data_url":     "https://raw.githubusercontent.com/ltog/osmi-addresses/master/taginfo.json",
-	"data_updated": "20210919T182600Z",
+	"data_updated": "20210919T183800Z",
 	"project": {
 		"name":          "OSM Inspector - Addresses view",
 		"description":   "Visualizes OSM (postal) address data. Intended as an error detection tool for mappers.",
@@ -22,6 +22,7 @@
 		{ "key": "addr:place",                                "object_types": [ "node",        "area" ] },
 		{ "key": "addr:postcode",                             "object_types": [ "node",        "area" ] },
 		{ "key": "addr:street",                               "object_types": [ "node",        "area" ] },
+		{ "key": "alt_name",                                  "object_types": [         "way" ] },
 		{ "key": "area",               "value": "yes",        "object_types": [                "area" ] },
 		{ "key": "area",               "value": "true",       "object_types": [                "area" ], "description": "Unrecommended tagging style" },
 		{ "key": "building",                                  "object_types": [                "area" ] },
@@ -33,7 +34,12 @@
 		{ "key": "entrance",           "value": "yes",        "object_types": [ "node" ] },
 		{ "key": "highway",                                   "object_types": [         "way", "area" ] },
 		{ "key": "name",                                      "object_types": [         "way", "area" ] },
+		{ "key": "name:left",                                 "object_types": [         "way" ] },
+		{ "key": "name:right",                                "object_types": [         "way" ] },
+		{ "key": "official_name",                             "object_types": [         "way" ] },
 		{ "key": "postal_code",                               "object_types": [         "way", "area" ] },
-		{ "key": "place",                                     "object_types": [ "node",        "area" ] }
+		{ "key": "place",                                     "object_types": [ "node",        "area" ] },
+		{ "key": "short_name",                                "object_types": [         "way" ] },
+		{ "key": "ref",                                       "object_types": [         "way" ] }
 	]
 }
