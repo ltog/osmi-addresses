@@ -32,7 +32,7 @@
 
 int main(int argc, char* argv[]) {
 
-	OGRRegisterAll();
+	GDALAllRegister();
 
 	if (argc < 2 || argc > 3) {
 		std::cerr << "Usage: " << argv[0] << " INFILE [OUTFILE_DIR]" << std::endl;
@@ -95,8 +95,6 @@ int main(int argc, char* argv[]) {
 
 	osmium::apply(reader2, location_handler, second_handler);
 	reader2.close();
-
-	OGRCleanupAll();
 
 	std::cout << std::endl;
 	mem_helper.print_max();
