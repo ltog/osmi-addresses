@@ -35,7 +35,7 @@ public:
 		OGRSpatialReference spatialref;
 		spatialref.SetWellKnownGeogCS("CRS84");
 
-		this->create_layer(m_data_source, geom_type);
+		create_layer(m_data_source, geom_type);
 	}
 
 	virtual ~Writer() {
@@ -107,7 +107,7 @@ private:
 
 		const char* layer_options[] = { "SPATIAL_INDEX=no", "COMPRESS_GEOM=yes", nullptr };
 
-		this->m_layer = data_source->CreateLayer(m_layer_name.c_str(), &sparef,
+		m_layer = data_source->CreateLayer(m_layer_name.c_str(), &sparef,
 				geom_type, const_cast<char**>(layer_options));
 		if (!m_layer) {
 			std::cerr << "Creation of layer '"<< m_layer_name << "' failed.\n";
