@@ -90,7 +90,7 @@ public:
 					last = 0;
 				}
 
-				if (!strcmp(interpolation, "alphabetic") &&
+				if (!std::strcmp(interpolation, "alphabetic") &&
 						// second last characters are numbers?
 						!isalpha(first_raw[first_raw.length()-2]) &&
 						!isalpha(last_raw[last_raw.length()-2])){
@@ -118,15 +118,15 @@ public:
 				}
 
 				if (!(
-						!strcmp(interpolation, "all")  ||
-						!strcmp(interpolation, "even") ||
-						!strcmp(interpolation, "odd")  ||
-						!strcmp(interpolation, "alphabetic"))) {
+						!std::strcmp(interpolation, "all")  ||
+						!std::strcmp(interpolation, "even") ||
+						!std::strcmp(interpolation, "odd")  ||
+						!std::strcmp(interpolation, "alphabetic"))) {
 
 					feature->SetField("error", "unknown interpolation type");
 
 				} else if (
-						strcmp(interpolation, "alphabetic") && // don't overwrite more precise error messages set before
+						std::strcmp(interpolation, "alphabetic") && // don't overwrite more precise error messages set before
 						(first == 0 ||
 						 last  == 0 ||
 						 first_raw.length() != floor(log10(first))+1 || // make sure 123%& is not recognized as 123
@@ -138,14 +138,14 @@ public:
 				} else if (abs_diff(first,last) > 1000) {
 					feature->SetField("error", "range too large");
 
-				} else if (((!strcmp(interpolation,"even") || !strcmp(interpolation,"odd")) && abs_diff(first,last)==2) ||
-							(!strcmp(interpolation,"all")                                   && abs_diff(first,last)==1) ) {
+				} else if (((!std::strcmp(interpolation,"even") || !std::strcmp(interpolation,"odd")) && abs_diff(first,last)==2) ||
+							(!std::strcmp(interpolation,"all")                                        && abs_diff(first,last)==1) ) {
 					feature->SetField("error", "needless interpolation");
 
-				} else if (!strcmp(interpolation,"even") && ( first%2==1 || last%2==1 )) {
+				} else if (!std::strcmp(interpolation,"even") && ( first%2==1 || last%2==1 )) {
 					feature->SetField("error", "interpolation even but number odd");
 
-				} else if (!strcmp(interpolation,"odd") && ( first%2==0 || last%2==0 )) {
+				} else if (!std::strcmp(interpolation,"odd") && ( first%2==0 || last%2==0 )) {
 					feature->SetField("error", "interpolation odd but number even");
 
 				} else if (
@@ -159,14 +159,14 @@ public:
 				} else if (way.is_closed()) {
 				    feature->SetField("error", "interpolation is a closed way");
 				} else if ( // no interpolation error
-						(!strcmp(interpolation, "all")) ||
-						(!strcmp(interpolation, "odd")) ||
-						(!strcmp(interpolation, "even")) ||
+						(!std::strcmp(interpolation, "all")) ||
+						(!std::strcmp(interpolation, "odd")) ||
+						(!std::strcmp(interpolation, "even")) ||
 						(is_alphabetic_ip_correct == true)) {
 					double length = ogr_linestring.get()->get_Length();
 					int increment;
 
-					if (strcmp(interpolation, "all") && strcmp(interpolation, "alphabetic")) {
+					if (std::strcmp(interpolation, "all") && std::strcmp(interpolation, "alphabetic")) {
 						increment = 2; // even , odd
 					} else {
 						increment = 1; //all , alphabetic
@@ -198,7 +198,7 @@ public:
 						std::string road_id("");
 						std::string nrstr;
 						
-						if(strcmp(interpolation, "alphabetic")) {
+						if (std::strcmp(interpolation, "alphabetic")) {
 							nrstr = std::to_string(nr);
 						} else { // is alphabetic
 							// std::string strend = printf("%d", nr);

@@ -20,7 +20,7 @@ public:
 	void feed_node(const osmium::Node& node) override {
 		const char* entrance = node.tags().get_value_by_key("entrance");
 		const char* building = node.tags().get_value_by_key("building");
-		if (entrance || (building && !strcmp(building, "entrance") )) {
+		if (entrance || (building && !std::strcmp(building, "entrance") )) {
 
 			std::unique_ptr<OGRPoint> ogr_point = m_factory.create_point(node);
 			OGRFeature* feature = OGRFeature::CreateFeature(m_layer->GetLayerDefn());

@@ -77,7 +77,7 @@ public:
 
 						mylookup.compr_way = std::unique_ptr<CompressedWay>(new CompressedWay(m_factory.create_linestring(way)));
 
-						if (area && ( (!strcmp(area, "yes")) || (!strcmp(area, "true")) ) && way.is_closed()) {
+						if (area && ( (!std::strcmp(area, "yes")) || (!std::strcmp(area, "true")) ) && way.is_closed()) {
 							m_name2highways_area.insert(name2highways_element_type(streetname, std::move(mylookup)));
 						} else {
 							m_name2highways_nonarea.insert(name2highways_element_type(streetname, std::move(mylookup)));
