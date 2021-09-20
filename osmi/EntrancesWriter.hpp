@@ -17,7 +17,7 @@ public:
 		create_fields(field_configurations);
 	}
 
-	void feed_node(const osmium::Node& node) {
+	void feed_node(const osmium::Node& node) override {
 		const char* entrance = node.tags().get_value_by_key("entrance");
 		const char* building = node.tags().get_value_by_key("building");
 		if (entrance || (building && !strcmp(building, "entrance") )) {
@@ -34,14 +34,6 @@ public:
 
 			create_feature(feature);
 		}
-	}
-
-	void feed_way(const osmium::Way& /* way */) {
-
-	}
-
-	void feed_relation(const osmium::Relation& /* relation */) {
-
 	}
 
 };

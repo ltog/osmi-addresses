@@ -16,11 +16,7 @@ public:
 		create_fields(field_configurations);
 	}
 
-	void feed_node(const osmium::Node& /* node */) {
-
-	}
-
-	void feed_way(const osmium::Way& way) {
+	void feed_way(const osmium::Way& way) override {
 		try {
 			const char* postalcode = way.tags().get_value_by_key("postal_code");
 			if (postalcode) {
@@ -39,10 +35,6 @@ public:
 		catch (osmium::geometry_error& e) {
 			catch_geometry_error(e, way);
 		}
-	}
-
-	void feed_relation(const osmium::Relation& /* relation */) {
-
 	}
 
 };

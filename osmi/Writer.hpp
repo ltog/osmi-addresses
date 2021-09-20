@@ -44,11 +44,11 @@ public:
 		}
 	}
 
-	virtual void feed_node(const osmium::Node&) = 0;
+	virtual void feed_node(const osmium::Node&) {}
 
-	virtual void feed_way(const osmium::Way&) = 0;
+	virtual void feed_way(const osmium::Way&) {}
 
-	virtual void feed_relation(const osmium::Relation&) = 0;
+	virtual void feed_relation(const osmium::Relation&) {}
 
 protected:
 	osmium::geom::OGRFactory<> m_factory {};

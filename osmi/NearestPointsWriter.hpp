@@ -24,18 +24,6 @@ public:
 
 		create_feature(feature);
 	}
-
-	void feed_node(const osmium::Node& /* node */) {
-
-	}
-
-	void feed_way(const osmium::Way& /* way */) {
-
-	}
-
-	void feed_relation(const osmium::Relation& /* relation */) {
-
-	}
 };
 
 #endif /* NEARESTPOINTSWRITER_HPP_ */
