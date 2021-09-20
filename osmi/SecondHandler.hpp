@@ -95,9 +95,9 @@ public:
 				connection_line_preprocessor->process_way(way, road_id, nody_place_id, wayy_place_id); // overwrites IDs if matching street/place can be found
 				nodes_with_addresses_writer->process_way(way, road_id, nody_place_id, wayy_place_id);
 			}
-		} catch (osmium::geometry_error&) {
+		} catch (const osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
-		} catch (osmium::invalid_location&) {
+		} catch (const osmium::invalid_location&) {
 			std::cerr << "Ignoring dangling reference in way " << way.id() << std::endl;
 		}
 	}

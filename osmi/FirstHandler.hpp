@@ -101,9 +101,9 @@ public:
 				}
 
 			}
-		} catch (osmium::geometry_error&) {
+		} catch (const osmium::geometry_error&) {
 			std::cerr << "Ignoring illegal geometry for way " << way.id() << std::endl;
-        } catch (osmium::invalid_location&) {
+        } catch (const osmium::invalid_location&) {
             std::cerr << "Ignoring dangling reference in way " << way.id() << std::endl;
         }
 

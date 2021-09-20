@@ -29,7 +29,7 @@ public:
 				create_feature(feature);
 			}
 
-		} catch (osmium::geometry_error& e) {
+		} catch (const osmium::geometry_error& e) {
 			catch_geometry_error(e, way);
 		}
 	}
