@@ -56,9 +56,9 @@ public:
 	void node(const osmium::Node& node) {
 		entrances_writer->feed_node(node);
 
-		std::string road_id("");
-		std::string nody_place_id("");
-		std::string wayy_place_id("");
+		std::string road_id;
+		std::string nody_place_id;
+		std::string wayy_place_id;
 		connection_line_preprocessor->process_node(node, road_id, nody_place_id, wayy_place_id); // overwrites IDs if matching street/place can be found
 		nodes_with_addresses_writer->process_node(node,  road_id, nody_place_id, wayy_place_id);
 

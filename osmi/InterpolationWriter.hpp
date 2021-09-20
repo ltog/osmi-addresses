@@ -62,11 +62,11 @@ public:
 						m_addr_interpolation_node_map->get(last_node_id);
 
 				// the raw expression given in the first addr:housenumber= entry
-				std::string first_raw =
+				const std::string first_raw =
 						first_taglist.get_value_by_key("addr:housenumber");
 
 				// the raw expression given in the last addr:housenumber= entry
-				std::string last_raw  =
+				const std::string last_raw  =
 						last_taglist.get_value_by_key("addr:housenumber");
 
 				unsigned int first;
@@ -163,7 +163,7 @@ public:
 						(!std::strcmp(interpolation, "odd")) ||
 						(!std::strcmp(interpolation, "even")) ||
 						(is_alphabetic_ip_correct == true)) {
-					double length = ogr_linestring.get()->get_Length();
+					const double length = ogr_linestring.get()->get_Length();
 					int increment;
 
 					if (std::strcmp(interpolation, "all") && std::strcmp(interpolation, "alphabetic")) {

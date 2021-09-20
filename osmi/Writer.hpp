@@ -68,7 +68,7 @@ protected:
 			if (it->width != NO_WIDTH) {
 				field_defn.SetWidth(it->width);
 			}
-			OGRErr create_fields_err = m_layer->CreateField(&field_defn);
+			const OGRErr create_fields_err = m_layer->CreateField(&field_defn);
 			if (create_fields_err != OGRERR_NONE) {
 				std::cerr << "Creating field '" << it->name <<"' for layer '"
 						<< m_layer_name << "' failed with error " << create_fields_err << std::endl;
@@ -81,7 +81,7 @@ protected:
 	}
 
 	void create_feature(OGRFeature* feature) {
-		OGRErr e = m_layer->CreateFeature(feature);
+		const OGRErr e = m_layer->CreateFeature(feature);
 		if (e != OGRERR_NONE) {
 			std::cerr << "Failed to create feature. e = " << e << std::endl;
 			exit(1);
@@ -125,7 +125,7 @@ private:
 	}
 
 	GDALDataset* get_data_source(const std::string& dir_name) {
-		const std::string driver_name = std::string("SQLite");
+		const std::string driver_name{"SQLite"};
 		GDALDriver* driver = GetGDALDriverManager()->GetDriverByName(driver_name.c_str());
 		if (!driver) {
 			std::cerr << driver_name << " driver not available." << std::endl;

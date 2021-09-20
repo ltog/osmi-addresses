@@ -39,12 +39,12 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	std::string input_filename(argv[1]);
+	const std::string input_filename{argv[1]};
 	std::string output_dirname;
 	if (argc != 3) {
-		output_dirname = std::string("osmi-addresses_sqlite_out");
+		output_dirname = "osmi-addresses_sqlite_out";
 	} else {
-		output_dirname = std::string(argv[2]);
+		output_dirname = argv[2];
 	}
 
 	{
