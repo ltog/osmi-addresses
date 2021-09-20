@@ -154,7 +154,7 @@ private:
 		if (get_closest_way(ogr_point, addrname, closest_way, is_area, closest_way_id, lastchange)) 
 		{
 			std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);
-			int ind_closest_node;
+			int ind_closest_node = 0;
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
