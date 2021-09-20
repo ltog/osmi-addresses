@@ -21,10 +21,6 @@ public:
 
 	}
 
-	~FirstHandler() {
-
-	}
-
 	void node(const osmium::Node& node) {
 		const char* place = node.tags().get_value_by_key("place");
 		const char* name = node.tags().get_value_by_key("name");
