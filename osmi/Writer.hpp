@@ -33,7 +33,7 @@ public:
 		}
 
 		OGRSpatialReference spatialref;
-		spatialref.SetWellKnownGeogCS("WGS84");
+		spatialref.SetWellKnownGeogCS("CRS84");
 
 		this->create_layer(m_data_source, geom_type);
 	}
@@ -103,7 +103,7 @@ private:
 
 	void create_layer(GDALDataset* data_source, const OGRwkbGeometryType& geom_type) {
 		OGRSpatialReference sparef;
-		sparef.SetWellKnownGeogCS("WGS84");
+		sparef.SetWellKnownGeogCS("CRS84");
 
 		const char* layer_options[] = { "SPATIAL_INDEX=no", "COMPRESS_GEOM=yes", nullptr };
 

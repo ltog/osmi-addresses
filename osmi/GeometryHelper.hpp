@@ -13,7 +13,7 @@ class GeometryHelper{
 
 public:
 	GeometryHelper() {
-		m_wgs.SetWellKnownGeogCS("WGS84");
+		m_wgs.SetWellKnownGeogCS("CRS84");
 		m_mercator.importFromEPSG(3857);
 
 		m_wgs2mercator = OGRCreateCoordinateTransformation(&m_wgs, &m_mercator);
