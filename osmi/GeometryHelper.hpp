@@ -16,23 +16,14 @@ public:
 		m_wgs.SetWellKnownGeogCS("CRS84");
 		m_mercator.importFromEPSG(3857);
 
-		m_wgs2mercator = OGRCreateCoordinateTransformation(&m_wgs, &m_mercator);
-		if (m_wgs2mercator == NULL) {
+		m_wgs2mercator.reset(OGRCreateCoordinateTransformation(&m_wgs, &m_mercator));
+		if (!m_wgs2mercator) {
 			std::cerr << "ERROR: m_wgs2mercator is null" << std::endl;
 		}
 
-		m_mercator2wgs = OGRCreateCoordinateTransformation(&m_mercator, &m_wgs);
-		if (m_mercator2wgs == NULL) {
+		m_mercator2wgs.reset(OGRCreateCoordinateTransformation(&m_mercator, &m_wgs));
+		if (!m_mercator2wgs) {
 			std::cerr << "ERROR: m_mercator2wgs is null" << std::endl;
-		}
-	}
-
-	~GeometryHelper() {
-		if (m_mercator2wgs) {
-			delete m_mercator2wgs;
-		}
-		if (m_wgs2mercator) {
-			delete m_wgs2mercator;
 		}
 	}
 
@@ -41,37 +32,32 @@ public:
 
 		std::unique_ptr<OGRPolygon> polygon = m_factory.create_polygon(way);
 		std::unique_ptr<OGRPoint> centroid(new OGRPoint);
-		int ret = polygon->Centroid(centroid.get());
+		const int ret = polygon->Centroid(centroid.get());
 		if (ret == OGRERR_NONE) {
 			return centroid;
-		} else {
-			std::cerr << "Couldn't calculate centroid of way = " << way.id() << ".\n";
-			osmium::geometry_error e(std::string("Couldn't calculate centroid of way = ") + std::to_string(way.id()) + std::string(".\n"));
-			throw e;
-			return nullptr;
 		}
-
-		return nullptr;
+		std::cerr << "Couldn't calculate centroid of way = " << way.id() << ".\n";
+		throw osmium::geometry_error{"Couldn't calculate centroid of way = " + std::to_string(way.id()) + ".\n"};
 	}
 
 	void mercator2wgs(std::initializer_list<OGRGeometry*> geometries) {
 		for (auto& geometry : geometries) {
-			geometry->transform(m_mercator2wgs);
+			geometry->transform(m_mercator2wgs.get());
 		}
 	}
 
 	void mercator2wgs(OGRGeometry* geometry) {
-			geometry->transform(m_mercator2wgs);
+			geometry->transform(m_mercator2wgs.get());
 	}
 
 	void wgs2mercator(std::initializer_list<OGRGeometry*> geometries) {
 		for (auto& geometry : geometries) {
-			geometry->transform(m_wgs2mercator);
+			geometry->transform(m_wgs2mercator.get());
 		}
 	}
 
 	void wgs2mercator(OGRGeometry* geometry) {
-			geometry->transform(m_wgs2mercator);
+			geometry->transform(m_wgs2mercator.get());
 	}
 
 	osmium::unsigned_object_id_type get_first_node_id(const osmium::Way& way) {
@@ -191,8 +177,8 @@ public:
 private:
 	OGRSpatialReference m_wgs;
 	OGRSpatialReference m_mercator;
-	OGRCoordinateTransformation* m_wgs2mercator;
-	OGRCoordinateTransformation* m_mercator2wgs;
+	std::unique_ptr<OGRCoordinateTransformation> m_wgs2mercator;
+	std::unique_ptr<OGRCoordinateTransformation> m_mercator2wgs;
 
 	osmium::geom::OGRFactory<> m_factory;
 };

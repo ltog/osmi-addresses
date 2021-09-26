@@ -14,7 +14,7 @@ public:
 		create_fields(field_configurations);
 	}
 
-	void feed_way(const osmium::Way& way) {
+	void feed_way(const osmium::Way& way) override {
 		try {
 			const char* building = way.tags().get_value_by_key("building");
 
@@ -29,18 +29,11 @@ public:
 				create_feature(feature);
 			}
 
-		} catch (osmium::geometry_error& e) {
+		} catch (const osmium::geometry_error& e) {
 			catch_geometry_error(e, way);
 		}
 	}
 
-	void feed_node(const osmium::Node& /* node */) {
-
-	}
-
-	void feed_relation(const osmium::Relation& /* relation */) {
-
-	}
 };
 
 #endif /* BUILDINGSWRITER_HPP_ */

@@ -35,7 +35,7 @@ public:
 		OGRSpatialReference spatialref;
 		spatialref.SetWellKnownGeogCS("CRS84");
 
-		this->create_layer(m_data_source, geom_type);
+		create_layer(m_data_source, geom_type);
 	}
 
 	virtual ~Writer() {
@@ -44,11 +44,11 @@ public:
 		}
 	}
 
-	virtual void feed_node(const osmium::Node&) = 0;
+	virtual void feed_node(const osmium::Node&) {}
 
-	virtual void feed_way(const osmium::Way&) = 0;
+	virtual void feed_way(const osmium::Way&) {}
 
-	virtual void feed_relation(const osmium::Relation&) = 0;
+	virtual void feed_relation(const osmium::Relation&) {}
 
 protected:
 	osmium::geom::OGRFactory<> m_factory {};
@@ -68,7 +68,7 @@ protected:
 			if (it->width != NO_WIDTH) {
 				field_defn.SetWidth(it->width);
 			}
-			OGRErr create_fields_err = m_layer->CreateField(&field_defn);
+			const OGRErr create_fields_err = m_layer->CreateField(&field_defn);
 			if (create_fields_err != OGRERR_NONE) {
 				std::cerr << "Creating field '" << it->name <<"' for layer '"
 						<< m_layer_name << "' failed with error " << create_fields_err << std::endl;
@@ -81,7 +81,7 @@ protected:
 	}
 
 	void create_feature(OGRFeature* feature) {
-		OGRErr e = m_layer->CreateFeature(feature);
+		const OGRErr e = m_layer->CreateFeature(feature);
 		if (e != OGRERR_NONE) {
 			std::cerr << "Failed to create feature. e = " << e << std::endl;
 			exit(1);
@@ -107,7 +107,7 @@ private:
 
 		const char* layer_options[] = { "SPATIAL_INDEX=no", "COMPRESS_GEOM=yes", nullptr };
 
-		this->m_layer = data_source->CreateLayer(m_layer_name.c_str(), &sparef,
+		m_layer = data_source->CreateLayer(m_layer_name.c_str(), &sparef,
 				geom_type, const_cast<char**>(layer_options));
 		if (!m_layer) {
 			std::cerr << "Creation of layer '"<< m_layer_name << "' failed.\n";
@@ -125,7 +125,7 @@ private:
 	}
 
 	GDALDataset* get_data_source(const std::string& dir_name) {
-		const std::string driver_name = std::string("SQLite");
+		const std::string driver_name{"SQLite"};
 		GDALDriver* driver = GetGDALDriverManager()->GetDriverByName(driver_name.c_str());
 		if (!driver) {
 			std::cerr << driver_name << " driver not available." << std::endl;

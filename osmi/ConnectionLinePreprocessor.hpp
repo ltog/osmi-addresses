@@ -28,19 +28,12 @@ public:
   :	mp_name2highways_area(name2highways_area),
 	mp_name2highways_nonarea(name2highways_nonarea),
 	m_name2place_nody(name2place_nody),
-	m_name2place_wayy(name2place_wayy) {
-		mp_nearest_points_writer  = new NearestPointsWriter (dir_name);
-		mp_nearest_roads_writer   = new NearestRoadsWriter  (dir_name);
-		mp_nearest_areas_writer   = new NearestAreasWriter  (dir_name);
-		mp_connection_line_writer = new ConnectionLineWriter(dir_name);
-	}
-
-	~ConnectionLinePreprocessor() {
-		// those need to be explicitly to be deleted to perform the commit operations in their deconstructor
-		delete mp_nearest_points_writer;
-		delete mp_nearest_roads_writer;
-		delete mp_nearest_areas_writer;
-		delete mp_connection_line_writer;
+	m_name2place_wayy(name2place_wayy),
+	mp_nearest_points_writer(dir_name),
+	mp_nearest_roads_writer(dir_name),
+	mp_nearest_areas_writer(dir_name),
+	mp_connection_line_writer(dir_name)
+	{
 	}
 
 	void process_interpolated_node(
@@ -135,7 +128,7 @@ private:
 				wayy_place_id = "1";
 			}
 
-			mp_connection_line_writer->write_line(ogr_point, closest_point, 0, the_object_type);
+			mp_connection_line_writer.write_line(ogr_point, closest_point, 0, the_object_type);
 		}
 	}
 
@@ -154,21 +147,21 @@ private:
 		if (get_closest_way(ogr_point, addrname, closest_way, is_area, closest_way_id, lastchange)) 
 		{
 			std::unique_ptr<OGRPoint>       closest_node(new OGRPoint);
-			int ind_closest_node;
+			int ind_closest_node = 0;
 			m_geometry_helper.wgs2mercator({&ogr_point, closest_way.get()});
 			get_closest_node(ogr_point, closest_way, closest_node, ind_closest_node);
 			get_closest_point_from_node_neighbourhood(ogr_point, closest_way, ind_closest_node, closest_point);
 			m_geometry_helper.mercator2wgs({&ogr_point, closest_way.get(), closest_point.get()});
 
 			// TODO: could this be parallelized?
-			mp_connection_line_writer->write_line(ogr_point, closest_point, objectid, the_object_type);
+			mp_connection_line_writer.write_line(ogr_point, closest_point, objectid, the_object_type);
 			if (is_area) {
-				mp_nearest_areas_writer->write_area(closest_way, closest_way_id, addrname, lastchange);
+				mp_nearest_areas_writer.write_area(closest_way, closest_way_id, addrname, lastchange);
 			} else {
-				mp_nearest_roads_writer->write_road(closest_way, closest_way_id, addrname, lastchange);
+				mp_nearest_roads_writer.write_road(closest_way, closest_way_id, addrname, lastchange);
 			}
 
-			mp_nearest_points_writer->write_point(std::move(closest_point), closest_way_id);
+			mp_nearest_points_writer.write_point(std::move(closest_point), closest_way_id);
 
 			road_id = "1"; // TODO: need to write the actual road_id
 		}
@@ -403,10 +396,10 @@ private:
 	name2place_type& m_name2place_nody;
 	name2place_type& m_name2place_wayy;
 	osmium::geom::OGRFactory<> m_factory {};
-	NearestPointsWriter*  mp_nearest_points_writer;
-	NearestRoadsWriter*   mp_nearest_roads_writer;
-	NearestAreasWriter*   mp_nearest_areas_writer;
-	ConnectionLineWriter* mp_connection_line_writer;
+	NearestPointsWriter mp_nearest_points_writer;
+	NearestRoadsWriter mp_nearest_roads_writer;
+	NearestAreasWriter mp_nearest_areas_writer;
+	ConnectionLineWriter mp_connection_line_writer;
 	GeometryHelper m_geometry_helper;
 
 
